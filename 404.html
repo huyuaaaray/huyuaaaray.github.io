@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found | Yu Hu</title>
+  <meta name="robots" content="noindex">
+  <script>
+    // Send old links to their new place (e.g. the previous /CV.pdf on this site).
+    (function () {
+      var p = location.pathname.toLowerCase().replace(/\/+$/, '');
+      var moved = {
+        '/cv.pdf': '/resume.pdf',
+        '/cv.html': '/cv/',
+        '/resume': '/cv/',
+        '/about': '/',
+        '/contact': '/#contact'
+      };
+      if (moved[p]) location.replace(moved[p]);
+    })();
+  </script>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,600&display=swap">
+  <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/">
+        <img src="/images/header-icon.png" alt="" width="28" height="28">
+        Yu Hu
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a class="nav-link" href="/cv/">CV</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap not-found">
+    <h1>Page not found</h1>
+    <p>This page doesn't exist or has moved. Go back to the <a href="/">home page</a> or see my <a href="/cv/">CV</a>.</p>
+  </main>
+</body>
+</html>
