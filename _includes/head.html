@@ -7,6 +7,7 @@
 {%- assign share_image = page.og_image | default: "/images/og-card.png" | absolute_url -%}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.classList.add('js');</script>
 <title>{{ full_title }}</title>
 <meta name="description" content="{{ desc | escape }}">
 <link rel="canonical" href="{{ page.url | absolute_url }}">
@@ -23,7 +24,7 @@
 <meta property="og:image:alt" content="{{ page.og_title | default: full_title }}">
 <meta name="twitter:card" content="summary_large_image">
 
-<meta name="theme-color" content="#f2f1ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#fbf8f1" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e1320" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
@@ -32,8 +33,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,600&display=swap">
-{%- if page.leaflet %}
+{%- if page.map %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css" integrity="sha384-uTttxo/aOKbdE5RlD/SPzSDoDmNvGlUYPjONi2MN/b7c9HPSvW07OIuyP7uL6jxK" crossorigin>
 {%- endif %}
 <link rel="stylesheet" href="/assets/css/site.css">
 {% include analytics.html %}

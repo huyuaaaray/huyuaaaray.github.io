@@ -11,7 +11,7 @@ baseurl: ""
 
 # Google Analytics 4 measurement ID, e.g. "G-ABC123XYZ9".
 # Leave empty to turn analytics off. It only loads on the live site.
-google_analytics: "G-8Y3X786CMF"
+google_analytics: ""
 
 author:
   name: Yu Hu

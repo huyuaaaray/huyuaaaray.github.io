@@ -1,51 +1,48 @@
 ---
 layout: default
 title: Yu Hu
+network: true
+scripts:
+  - /assets/js/network.js
 ---
 {%- assign a = site.author -%}
-<div class="container home">
-  <aside class="profile" id="contact">
-    <div class="avatar">
-      <span aria-hidden="true">YH</span>
-      <!-- Put your photo at images/profile.jpg; until then the initials show instead. -->
-      <img src="/images/profile.jpg" alt="Portrait of {{ a.name }}" width="128" height="128" onerror="this.remove()">
+<div class="container">
+  <section class="intro" aria-labelledby="name">
+    <div class="intro-head" data-reveal>
+      <h1 class="display-name" id="name">{{ a.name }}</h1>
+      <p class="tagline">{{ a.role | escape }}, {{ a.group | escape }}<br>{{ a.org | escape }}</p>
     </div>
-    <h1>{{ a.name }}</h1>
-    <p class="role">{{ a.role | escape }}<br>{{ a.group | escape }}<br>{{ a.org | escape }}</p>
-    <ul class="profile-links">
-      <li><a href="mailto:{{ a.email }}">{% include icon.html name="mail" %}{{ a.email }}</a></li>
-      <li><a href="https://github.com/{{ a.github }}">{% include icon.html name="github" %}GitHub</a></li>
-      <li><a href="https://www.linkedin.com/in/{{ a.linkedin }}">{% include icon.html name="linkedin" %}LinkedIn</a></li>
-      <li><a href="https://scholar.google.com/citations?user={{ a.scholar }}">{% include icon.html name="scholar" %}Google Scholar</a></li>
-      <li><a href="/travel/">{% include icon.html name="pin" %}{{ a.location }}</a></li>
-    </ul>
-    <div class="profile-actions">
-      <a class="btn btn-primary" href="/cv/">View CV</a>
-      <a class="btn" href="/resume.pdf" download>{% include icon.html name="download" %}PDF</a>
-    </div>
-  </aside>
 
-  <div class="home-main">
-    <section class="home-section" aria-labelledby="about-title">
-      <h2 class="section-title" id="about-title">About</h2>
+    <div class="portrait reveal-delay-1" data-reveal>
+      <div class="photo" data-tilt>
+        <span class="photo-initials" aria-hidden="true">YH</span>
+        <!-- Put your photo at images/profile.jpg; until then the initials show instead. -->
+        <img src="/images/profile.jpg" alt="Portrait of {{ a.name }}" width="340" height="425" onerror="this.remove()">
+        <span class="glare" aria-hidden="true"></span>
+      </div>
+      <div class="photo-links" id="contact">{% include social-links.html email=true %}</div>
+    </div>
+
+    <div class="intro-about reveal-delay-2" data-reveal>
+      <h2 class="section-title">About</h2>
       <div class="prose">
         <p>I'm a data scientist at the University of Florida College of Medicine, where I work with the Quality &amp; Patient Safety group to build clinical AI systems. My work focuses on applying large language models to electronic health records and clinical notes, turning unstructured documentation into information that clinicians and quality teams can act on, from readmission analyses to care-coordination programs.</p>
         <p>Along the way, I've built a shared, configuration-driven LLM platform that now supports several clinical programs, developed an LLM-as-a-Judge framework to evaluate model outputs before they reach clinician review, and scaled inference on UF's HiPerGator supercomputer. Over the past three years, this work has led to six peer-reviewed publications in clinical informatics.</p>
         <p>What keeps me in this field is the gap between what AI can do on a benchmark and what it takes to make it reliable in real clinical workflows, and I enjoy closing that gap alongside clinicians, researchers, and engineers.</p>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="home-section" aria-labelledby="news-title">
-      <h2 class="section-title" id="news-title">News</h2>
-      <!-- Edit news in _data/news.yml -->
-      <ol class="news">
-        {%- for item in site.data.news %}
-        <li>
-          <time datetime="{{ item.datetime }}">{{ item.date }}</time>
-          <p>{{ item.text | markdownify | remove: "<p>" | remove: "</p>" | strip }}</p>
-        </li>
-        {%- endfor %}
-      </ol>
-    </section>
-  </div>
+  <section class="home-news" aria-labelledby="news-title">
+    <h2 class="section-title" id="news-title" data-reveal>News</h2>
+    <!-- Edit news in _data/news.yml -->
+    <ol class="news" data-reveal-stagger>
+      {%- for item in site.data.news %}
+      <li data-reveal>
+        <time datetime="{{ item.datetime }}">{{ item.date }}</time>
+        <p>{{ item.text | markdownify | remove: "<p>" | remove: "</p>" | strip }}</p>
+      </li>
+      {%- endfor %}
+    </ol>
+  </section>
 </div>

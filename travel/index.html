@@ -3,7 +3,7 @@ layout: default
 title: Travel
 description: Places Yu Hu has lived, worked, and visited, on a map with photos and videos.
 og_image: /images/og-travel.png
-leaflet: true
+map: true
 scripts:
   - /assets/js/travel.js
 ---
@@ -11,20 +11,20 @@ scripts:
 {%- assign places = site.data.travel -%}
 {%- assign countries = places | map: "country" | uniq -%}
 <div class="container">
-  <div class="page-head">
+  <div class="page-head" data-reveal>
     <h1>Travel</h1>
     <p>Places I've lived, worked, and visited. Hover over a marker for a quick preview, and click a marker or a card for photos and videos.</p>
-    <p class="travel-stats">{% include icon.html name="pin" %}{{ places.size }} {% if places.size == 1 %}place{% else %}places{% endif %} in {{ countries.size }} {% if countries.size == 1 %}country{% else %}countries{% endif %}</p>
+    <p class="travel-stats">{% include icon.html name="pin" %}<span><span class="count" data-count="{{ places.size }}">{{ places.size }}</span> {% if places.size == 1 %}place{% else %}places{% endif %} in <span class="count" data-count="{{ countries.size }}">{{ countries.size }}</span> {% if countries.size == 1 %}country{% else %}countries{% endif %}</span></p>
   </div>
 
-  <div class="map-wrap">
+  <div class="map-wrap reveal-delay-1" data-reveal>
     <section id="map" aria-label="Map of places I've been"></section>
   </div>
-  <p class="map-hint">Click the map to zoom with your mouse wheel.</p>
+  <p class="map-hint">Click the map to zoom with your mouse wheel. Lines show trips from home.</p>
 
-  <div class="places">
+  <div class="places" data-reveal-stagger>
     {%- for p in places %}
-    <button type="button" class="place-card" data-index="{{ forloop.index0 }}" aria-haspopup="dialog">
+    <button type="button" class="place-card" data-reveal data-index="{{ forloop.index0 }}" aria-haspopup="dialog">
       <span class="place-media">
         {%- if p.cover %}
         <img src="{{ p.cover }}" alt="" loading="lazy">
@@ -52,6 +52,18 @@ scripts:
     <button type="button" class="icon-btn dialog-close" id="dialog-close" aria-label="Close">{% include icon.html name="close" %}</button>
   </div>
   <div class="dialog-body" id="dialog-body"></div>
+</dialog>
+
+<dialog class="lightbox" id="lightbox" aria-labelledby="lb-title">
+  <h2 class="visually-hidden" id="lb-title">Photo viewer</h2>
+  <span class="lb-count" id="lb-count"></span>
+  <button type="button" class="lb-btn lb-close" id="lb-close" aria-label="Close">{% include icon.html name="close" %}</button>
+  <button type="button" class="lb-btn lb-prev" id="lb-prev" aria-label="Previous photo">{% include icon.html name="chevron-left" %}</button>
+  <figure class="lb-figure">
+    <img class="lb-img" id="lb-img" src="data:," alt="">
+    <figcaption class="lb-caption" id="lb-caption"></figcaption>
+  </figure>
+  <button type="button" class="lb-btn lb-next" id="lb-next" aria-label="Next photo">{% include icon.html name="chevron-right" %}</button>
 </dialog>
 
 <script id="travel-data" type="application/json">{{ places | jsonify }}</script>

@@ -10,6 +10,7 @@
 #   summary:  one or two sentences
 #   cover:    image for the card and the map preview
 #   photos:   any number of images (put files in images/travel/)
+#   home:     true for your home base; flight routes on the map start here
 #   videos:   YouTube or Bilibili. Paste the video link or just its ID:
 #               - youtube: https://www.youtube.com/watch?v=VIDEO_ID
 #               - bilibili: https://www.bilibili.com/video/BVxxxxxxxxxx
@@ -18,6 +19,7 @@
 # Replace the text and photos with your own.
 
 - name: Gainesville
+  home: true
   region: Florida, USA
   country: USA
   lat: 29.6516

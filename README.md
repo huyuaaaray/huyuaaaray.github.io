@@ -16,6 +16,10 @@ the `main` branch. Push a change and the live site updates in about a minute
 | Name, email, social links, Google Analytics ID | `_config.yml` |
 | Profile photo | add `images/profile.jpg` (square works best); the initials show until then |
 | Colors, fonts, layout, hover effects, dark mode | `assets/css/site.css` |
+| Icon hover colors (GitHub, LinkedIn, Scholar, email) | `--c-github`, `--c-linkedin`, `--c-scholar`, `--c-email` at the top of `assets/css/site.css` |
+| Background network on the home page | `assets/js/network.js`; delete `network: true` in `index.html` to turn it off |
+| Scroll reveal, photo tilt, count-up numbers | `assets/js/site.js` |
+| Map, flight routes, photo viewer | `assets/js/travel.js` |
 | Header and footer (shared by every page) | `_includes/header.html`, `_includes/footer.html` |
 | Share card images | `images/og-card.png`, `images/og-travel.png` (1200 × 630) |
 | Old links (e.g. `/CV.pdf`) | the `moved` list at the top of `404.html` |
@@ -53,6 +57,9 @@ Copy one block in `_data/travel.yml` and edit it. Put photos in
     - bilibili: https://www.bilibili.com/video/BVxxxxxxxxxx
 ```
 
+Mark your home base with `home: true` (Gainesville in the examples); the
+flight routes on the map start there.
+
 To get coordinates, right-click the spot in Google Maps and click the numbers
 at the top of the menu to copy them. Keep photos under about 1 MB each
 (resize to around 1600 px wide); GitHub limits single files to 100 MB.
@@ -60,6 +67,11 @@ at the top of the menu to copy them. Keep photos under about 1 MB each
 YAML is picky about indentation: use spaces (not tabs) and line things up
 like the examples. If the site stops updating after an edit, the Actions tab
 shows the error.
+
+## Map
+
+The Travel map uses OpenFreeMap tiles, which are free and need no API key or
+account. Map data © OpenStreetMap contributors.
 
 ## Google Analytics
 
