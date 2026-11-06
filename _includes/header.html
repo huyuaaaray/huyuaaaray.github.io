@@ -1,0 +1,22 @@
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="{{ site.author.name }}, home">
+      <img src="/images/header-icon.png" alt="" width="30" height="30">
+      <span class="brand-name">{{ site.author.name }}</span>
+    </a>
+    <div class="header-right">
+      <nav class="tabs" aria-label="Main">
+        <a class="tab" href="/" {% if page.url == "/" %}aria-current="page"{% endif %}>About</a>
+        <a class="tab" href="/travel/" {% if page.url contains "/travel/" %}aria-current="page"{% endif %}>Travel</a>
+        <a class="tab" href="/cv/" {% if page.url contains "/cv/" %}aria-current="page"{% endif %}>CV</a>
+      </nav>
+      <span class="header-divider" aria-hidden="true"></span>
+      <div class="social">
+        <a class="icon-btn" href="https://github.com/{{ site.author.github }}" aria-label="GitHub" title="GitHub">{% include icon.html name="github" %}</a>
+        <a class="icon-btn" href="https://www.linkedin.com/in/{{ site.author.linkedin }}" aria-label="LinkedIn" title="LinkedIn">{% include icon.html name="linkedin" %}</a>
+        <a class="icon-btn" href="https://scholar.google.com/citations?user={{ site.author.scholar }}" aria-label="Google Scholar" title="Google Scholar">{% include icon.html name="scholar" %}</a>
+      </div>
+    </div>
+  </div>
+</header>

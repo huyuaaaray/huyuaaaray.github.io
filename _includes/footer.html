@@ -1,0 +1,11 @@
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span>© {{ site.time | date: "%Y" }} {{ site.author.name }}</span>
+    <span class="footer-social">
+      <a class="icon-btn" href="mailto:{{ site.author.email }}" aria-label="Email" title="Email">{% include icon.html name="mail" %}</a>
+      <a class="icon-btn" href="https://github.com/{{ site.author.github }}" aria-label="GitHub" title="GitHub">{% include icon.html name="github" %}</a>
+      <a class="icon-btn" href="https://www.linkedin.com/in/{{ site.author.linkedin }}" aria-label="LinkedIn" title="LinkedIn">{% include icon.html name="linkedin" %}</a>
+      <a class="icon-btn" href="https://scholar.google.com/citations?user={{ site.author.scholar }}" aria-label="Google Scholar" title="Google Scholar">{% include icon.html name="scholar" %}</a>
+    </span>
+  </div>
+</footer>

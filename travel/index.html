@@ -1,0 +1,57 @@
+---
+layout: default
+title: Travel
+description: Places Yu Hu has lived, worked, and visited, on a map with photos and videos.
+og_image: /images/og-travel.png
+leaflet: true
+scripts:
+  - /assets/js/travel.js
+---
+{%- comment -%} Edit places in _data/travel.yml {%- endcomment -%}
+{%- assign places = site.data.travel -%}
+{%- assign countries = places | map: "country" | uniq -%}
+<div class="container">
+  <div class="page-head">
+    <h1>Travel</h1>
+    <p>Places I've lived, worked, and visited. Hover over a marker for a quick preview, and click a marker or a card for photos and videos.</p>
+    <p class="travel-stats">{% include icon.html name="pin" %}{{ places.size }} {% if places.size == 1 %}place{% else %}places{% endif %} in {{ countries.size }} {% if countries.size == 1 %}country{% else %}countries{% endif %}</p>
+  </div>
+
+  <div class="map-wrap">
+    <section id="map" aria-label="Map of places I've been"></section>
+  </div>
+  <p class="map-hint">Click the map to zoom with your mouse wheel.</p>
+
+  <div class="places">
+    {%- for p in places %}
+    <button type="button" class="place-card" data-index="{{ forloop.index0 }}" aria-haspopup="dialog">
+      <span class="place-media">
+        {%- if p.cover %}
+        <img src="{{ p.cover }}" alt="" loading="lazy">
+        {%- endif %}
+        {%- if p.date %}
+        <span class="place-badge">{{ p.date }}</span>
+        {%- endif %}
+      </span>
+      <span class="place-text">
+        <span class="place-name">{{ p.name }}</span>
+        <span class="place-meta">{{ p.region }}</span>
+        <span class="place-summary">{{ p.summary }}</span>
+      </span>
+    </button>
+    {%- endfor %}
+  </div>
+</div>
+
+<dialog class="place-dialog" id="place-dialog" aria-labelledby="dialog-title">
+  <div class="dialog-head">
+    <div>
+      <h2 id="dialog-title">Place</h2>
+      <p class="dialog-meta" id="dialog-meta"></p>
+    </div>
+    <button type="button" class="icon-btn dialog-close" id="dialog-close" aria-label="Close">{% include icon.html name="close" %}</button>
+  </div>
+  <div class="dialog-body" id="dialog-body"></div>
+</dialog>
+
+<script id="travel-data" type="application/json">{{ places | jsonify }}</script>

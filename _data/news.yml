@@ -1,0 +1,29 @@
+# News on the home page. Newest first.
+# To add an item, copy one block to the top and edit it.
+#   date:     what visitors see
+#   datetime: same date in YYYY-MM form (for search engines)
+#   text:     one sentence; *asterisks* make italics, [text](url) makes a link
+
+- date: Aug 2026
+  datetime: 2026-08
+  text: Co-first-author paper on adapting a fair individualized polysocial risk score for hospitalization risk prediction published in *JAMIA Open*.
+
+- date: "2026"
+  datetime: "2026"
+  text: Two papers on target trial emulation with decentralized real-world data published in *npj Health Systems* and *eBioMedicine*.
+
+- date: May 2026
+  datetime: 2026-05
+  text: Started building a GraphRAG knowledge graph over clinical notes to study heart failure readmission.
+
+- date: Apr 2026
+  datetime: 2026-04
+  text: Began leading a clinical LLM evaluation comparing Gemma 4 and MedGemma for patient-level readmission review.
+
+- date: Feb 2026
+  datetime: 2026-02
+  text: Started building a shared, configuration-driven LLMOps platform, now used by three clinical programs at UF.
+
+- date: Sep 2025
+  datetime: 2025-09
+  text: Joined the Quality & Patient Safety group at the UF College of Medicine as a Data Scientist III.
