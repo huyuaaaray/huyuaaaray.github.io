@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"{% if page.theme %} class="theme-{{ page.theme }}"{% endif %}>
 <head>
 {% include head.html %}
 </head>
 <body>
 {%- if page.network %}
 <canvas class="bg-network" aria-hidden="true"></canvas>
+{%- endif %}
+{%- if page.theme == "night" %}
+<canvas class="bg-stars" aria-hidden="true"></canvas>
 {%- endif %}
 {%- if page.progress %}
 <div class="read-progress" aria-hidden="true"></div>

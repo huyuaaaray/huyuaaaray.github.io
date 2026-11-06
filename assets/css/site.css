@@ -372,8 +372,9 @@ h3 {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 340px;
   grid-template-areas:
-    "head  head"
-    "about photo";
+    "head   head"
+    "banner banner"
+    "about  photo";
   column-gap: 80px;
   align-items: start;
   padding-top: 64px;
@@ -423,6 +424,65 @@ h3 {
 .intro-about {
   grid-area: about;
   padding-top: 44px;
+}
+
+/* Research-interest banner above About */
+.research-banner {
+  grid-area: banner;
+  margin-top: 36px;
+  padding: 26px 32px 28px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background:
+    radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 55%),
+    radial-gradient(120% 140% at 100% 100%, color-mix(in srgb, var(--mark) 8%, transparent), transparent 55%),
+    var(--surface);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.research-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  color: var(--mark);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.research-label .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.research-text {
+  position: relative;
+  margin: 0;
+  max-width: 62ch;
+  font-family: var(--serif);
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-weight: 600;
+  line-height: 1.38;
+  letter-spacing: -0.005em;
+}
+
+/* The invisible copy reserves the final height so nothing jumps while typing */
+.research-ghost {
+  visibility: hidden;
+}
+
+.research-live {
+  position: absolute;
+  inset: 0;
+}
+
+.research-banner .caret {
+  height: 0.95em;
+}
+
+.research-banner.is-typed .caret {
+  animation-duration: 1.2s;
 }
 
 .portrait {
@@ -1516,6 +1576,104 @@ main,
 }
 
 /* =========================================================
+   Night-sky theme (Travel page): dark colors plus a starfield
+   ========================================================= */
+:root.theme-night {
+  color-scheme: dark;
+  --bg: #070b1f;
+  --surface: rgba(20, 27, 52, 0.82);
+  --surface-2: #141b34;
+  --text: #e9ebf5;
+  --muted: #a3a9c4;
+  --line: rgba(160, 172, 230, 0.18);
+  --accent: #9fb0ff;
+  --accent-strong: #c3ceff;
+  --accent-soft: rgba(159, 176, 255, 0.14);
+  --mark: #ff7a50;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 14px 36px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 2px 6px rgba(0, 0, 0, 0.45), 0 24px 60px rgba(0, 0, 0, 0.6);
+  --c-github: #b48cff;
+  --c-linkedin: #5aa7f0;
+  --c-scholar: #8cc4ff;
+  --c-email: #ff8a5c;
+  background: #070b1f;
+}
+
+.theme-night body {
+  /* soft nebula glows behind the stars */
+  background:
+    radial-gradient(60% 50% at 15% 10%, rgba(88, 70, 190, 0.28), transparent 70%),
+    radial-gradient(50% 45% at 90% 25%, rgba(30, 90, 180, 0.25), transparent 70%),
+    radial-gradient(70% 60% at 60% 100%, rgba(150, 60, 120, 0.18), transparent 70%),
+    linear-gradient(180deg, #070b1f 0%, #0b1230 55%, #0d1029 100%);
+  background-attachment: fixed;
+}
+
+.bg-stars {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.theme-night .site-header {
+  background: rgba(7, 11, 31, 0.62);
+}
+
+.theme-night .map-wrap {
+  border-color: rgba(160, 172, 230, 0.25);
+  box-shadow: 0 0 0 1px rgba(159, 176, 255, 0.06), 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+.theme-night .place-card {
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.theme-night .leaflet-tooltip.place-tip {
+  background: #121933;
+}
+
+.theme-night .leaflet-tooltip-top.place-tip::before { border-top-color: #121933; }
+.theme-night .leaflet-tooltip-bottom.place-tip::before { border-bottom-color: #121933; }
+.theme-night .leaflet-tooltip-left.place-tip::before { border-left-color: #121933; }
+.theme-night .leaflet-tooltip-right.place-tip::before { border-right-color: #121933; }
+
+.theme-night .leaflet-bar a {
+  background: #141b34;
+  color: #e9ebf5;
+  border-bottom-color: rgba(160, 172, 230, 0.2);
+}
+
+.theme-night .leaflet-bar a:hover {
+  background: #1d2648;
+}
+
+.theme-night .leaflet-bar {
+  border-color: rgba(160, 172, 230, 0.25);
+}
+
+.theme-night .leaflet-control-attribution {
+  background: rgba(7, 11, 31, 0.72);
+  color: #a3a9c4;
+}
+
+.theme-night .leaflet-control-attribution a {
+  color: #9fb0ff;
+}
+
+.theme-night .place-dialog {
+  background: #10162e;
+}
+
+.theme-night .dialog-head {
+  background: #10162e;
+}
+
+/* =========================================================
    Footer and 404
    ========================================================= */
 .site-footer {
@@ -1552,9 +1710,15 @@ main,
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       "head"
+      "banner"
       "photo"
       "about";
     padding-top: 40px;
+  }
+
+  .research-banner {
+    margin-top: 28px;
+    padding: 20px 22px 22px;
   }
 
   .portrait {

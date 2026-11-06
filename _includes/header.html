@@ -7,8 +7,9 @@
     </a>
     <div class="header-right">
       <nav class="tabs" aria-label="Main">
-        <a class="tab" href="/travel/" {% if page.url contains "/travel/" %}aria-current="page"{% endif %}>Travel</a>
-        <a class="tab" href="/cv/" {% if page.url contains "/cv/" %}aria-current="page"{% endif %}>CV</a>
+        {%- for item in site.nav %}
+        <a class="tab" href="{{ item.url }}" {% if page.url == item.url %}aria-current="page"{% endif %}>{{ item.label | escape }}</a>
+        {%- endfor %}
       </nav>
       <span class="header-divider" aria-hidden="true"></span>
       <div class="social">{% include social-links.html %}</div>

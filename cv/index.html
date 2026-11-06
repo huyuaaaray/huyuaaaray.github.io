@@ -1,52 +1,53 @@
 ---
 layout: default
-title: CV
-description: Curriculum vitae of Yu Hu, covering clinical LLM evaluation, LLMOps, and machine learning on EHR data at the University of Florida College of Medicine.
+section: cv
 progress: true
 ---
-{%- comment -%} All CV text lives in _data/cv.yml {%- endcomment -%}
-{%- assign cv = site.data.cv -%}
+{%- comment -%} All text on this page is in the "cv" section of _config.yml {%- endcomment -%}
+{%- assign cv = site.cv -%}
 <div class="container">
   <div class="cv-layout">
     <nav class="toc" aria-label="On this page">
       <ol>
-        {%- if cv.experience.size > 0 %}<li><a href="#experience">Experience</a></li>{% endif %}
-        {%- if cv.education.size > 0 %}<li><a href="#education">Education</a></li>{% endif %}
-        {%- if cv.publications.size > 0 %}<li><a href="#publications">Publications</a></li>{% endif %}
-        {%- if cv.projects.size > 0 %}<li><a href="#projects">Selected Projects</a></li>{% endif %}
-        {%- if cv.skills.size > 0 %}<li><a href="#skills">Skills</a></li>{% endif %}
-        {%- if cv.honors.size > 0 %}<li><a href="#honors">Honors &amp; Service</a></li>{% endif %}
+        {%- if cv.experience.size > 0 %}<li><a href="#experience">{{ cv.experience_title | escape }}</a></li>{% endif %}
+        {%- if cv.education.size > 0 %}<li><a href="#education">{{ cv.education_title | escape }}</a></li>{% endif %}
+        {%- if cv.publications.size > 0 %}<li><a href="#publications">{{ cv.publications_title | escape }}</a></li>{% endif %}
+        {%- if cv.projects.size > 0 %}<li><a href="#projects">{{ cv.projects_title | escape }}</a></li>{% endif %}
+        {%- if cv.skills.size > 0 %}<li><a href="#skills">{{ cv.skills_title | escape }}</a></li>{% endif %}
+        {%- if cv.honors.size > 0 %}<li><a href="#honors">{{ cv.honors_title | escape }}</a></li>{% endif %}
       </ol>
     </nav>
     <div class="cv-body">
       <div class="page-head" data-reveal>
-        <h1>Curriculum Vitae</h1>
+        <h1>{{ cv.heading | escape }}</h1>
         {%- if cv.summary %}
         <p>{% include inline-md.html text=cv.summary %}</p>
         {%- endif %}
         <div class="actions">
-          <a class="btn btn-primary" href="/resume.pdf" download>{% include icon.html name="download" %}Download PDF</a>
+          <a class="btn btn-primary" href="/resume.pdf" download>{% include icon.html name="download" %}{{ cv.download_label | escape }}</a>
         </div>
       </div>
 
       {%- if cv.experience.size > 0 %}
       <section class="cv-section" id="experience">
-        <h2 data-reveal>Experience</h2>
+        <h2 data-reveal>{{ cv.experience_title | escape }}</h2>
         {%- include cv-entries.html items=cv.experience %}
       </section>
       {%- endif %}
 
       {%- if cv.education.size > 0 %}
       <section class="cv-section" id="education">
-        <h2 data-reveal>Education</h2>
+        <h2 data-reveal>{{ cv.education_title | escape }}</h2>
         {%- include cv-entries.html items=cv.education %}
       </section>
       {%- endif %}
 
       {%- if cv.publications.size > 0 %}
       <section class="cv-section" id="publications">
-        <h2 data-reveal>Publications</h2>
-        <p class="note">* Equal contribution. Full list on <a href="https://scholar.google.com/citations?user={{ site.author.scholar }}">Google Scholar</a>.</p>
+        <h2 data-reveal>{{ cv.publications_title | escape }}</h2>
+        {%- if cv.publications_note %}
+        <p class="note">{% include inline-md.html text=cv.publications_note %}</p>
+        {%- endif %}
         <ol class="pubs" data-reveal-stagger>
           {%- for p in cv.publications %}
           <li data-reveal>
@@ -69,14 +70,14 @@ progress: true
 
       {%- if cv.projects.size > 0 %}
       <section class="cv-section" id="projects">
-        <h2 data-reveal>Selected Projects</h2>
+        <h2 data-reveal>{{ cv.projects_title | escape }}</h2>
         {%- include cv-entries.html items=cv.projects %}
       </section>
       {%- endif %}
 
       {%- if cv.skills.size > 0 %}
       <section class="cv-section" id="skills">
-        <h2 data-reveal>Skills</h2>
+        <h2 data-reveal>{{ cv.skills_title | escape }}</h2>
         <dl class="skills">
           {%- for s in cv.skills %}
           <div data-reveal><dt>{{ s.group | escape }}</dt><dd>{{ s.items | escape }}</dd></div>
@@ -87,7 +88,7 @@ progress: true
 
       {%- if cv.honors.size > 0 %}
       <section class="cv-section" id="honors">
-        <h2 data-reveal>Honors &amp; Service</h2>
+        <h2 data-reveal>{{ cv.honors_title | escape }}</h2>
         {%- include cv-entries.html items=cv.honors %}
       </section>
       {%- endif %}

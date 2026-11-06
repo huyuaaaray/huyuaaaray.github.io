@@ -112,6 +112,33 @@
     }
   }
 
+  /* ---------- Research banner: type the sentence once when it scrolls into view ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll('[data-type-once]'), function (el) {
+    if (reduceMotion || !('IntersectionObserver' in window)) return;
+    var full = el.getAttribute('data-type-once') || '';
+    var banner = el.closest('.research-banner');
+    el.textContent = '\u200b';
+    var started = false;
+    var io2 = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting || started) return;
+      started = true;
+      io2.disconnect();
+      var i = 0;
+      var step = function () {
+        i++;
+        el.textContent = full.slice(0, i);
+        if (i < full.length) {
+          var ch = full.charAt(i - 1);
+          setTimeout(step, /[,.:;]/.test(ch) ? 260 : 26 + Math.random() * 30);
+        } else if (banner) {
+          banner.classList.add('is-typed');
+        }
+      };
+      setTimeout(step, 500);
+    }, { threshold: 0.5 });
+    io2.observe(el);
+  });
+
   /* ---------- Magnetic icons ---------- */
   if (finePointer && !reduceMotion) {
     Array.prototype.forEach.call(document.querySelectorAll('.icon-btn'), function (btn) {
@@ -153,9 +180,8 @@
     ticking = false;
     var y = window.scrollY || window.pageYOffset;
     if (portrait && !reduceMotion && wideScreen && wideScreen.matches) {
-      var b = portrait.getBoundingClientRect();
-      var offset = (b.top + b.height / 2 - window.innerHeight / 2) * -0.08;
-      portrait.style.setProperty('--parallax', Math.max(-28, Math.min(28, offset)).toFixed(1) + 'px');
+      // 0 at the top of the page (so the photo lines up with About), then it lags behind as you scroll.
+      portrait.style.setProperty('--parallax', Math.min(32, y * 0.08).toFixed(1) + 'px');
     }
     if (progressBar) {
       var max = document.documentElement.scrollHeight - window.innerHeight;

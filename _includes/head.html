@@ -1,9 +1,12 @@
-{%- if page.title and page.title != site.title -%}
-  {%- assign full_title = page.title | append: " | " | append: site.title -%}
+{%- comment -%} Page text comes from the matching section of _config.yml (home, travel, cv, not_found) {%- endcomment -%}
+{%- assign sec = site[page.section] -%}
+{%- assign page_title = sec.title | default: page.title -%}
+{%- if page_title and page_title != site.title -%}
+  {%- assign full_title = page_title | append: " | " | append: site.title -%}
 {%- else -%}
   {%- assign full_title = site.title -%}
 {%- endif -%}
-{%- assign desc = page.description | default: site.description | strip_newlines | strip -%}
+{%- assign desc = sec.description | default: page.description | default: site.home.description | strip_newlines | strip -%}
 {%- assign share_image = page.og_image | default: "/images/og-card.png" | absolute_url -%}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,8 +27,12 @@
 <meta property="og:image:alt" content="{{ page.og_title | default: full_title }}">
 <meta name="twitter:card" content="summary_large_image">
 
+{%- if page.theme == "night" %}
+<meta name="theme-color" content="#070b1f">
+{%- else %}
 <meta name="theme-color" content="#f6f5f8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e1320" media="(prefers-color-scheme: dark)">
+{%- endif %}
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">

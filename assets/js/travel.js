@@ -10,6 +10,8 @@
 
   var places = [];
   try { places = JSON.parse(dataEl.textContent || '[]') || []; } catch (e) { places = []; }
+  var text = { previewCta: 'Click for photos and videos' };
+  try { text = JSON.parse(document.getElementById('travel-text').textContent) || text; } catch (e) { /* keep defaults */ }
 
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var dialog = document.getElementById('place-dialog');
@@ -71,7 +73,10 @@
     map = L.map(mapEl, { scrollWheelZoom: false, worldCopyJump: true });
 
     var darkQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
-    var isDark = function () { return !!(darkQuery && darkQuery.matches); };
+    // The Travel page uses the night-sky theme, so the map is always dark there.
+    var isDark = function () {
+      return document.documentElement.classList.contains('theme-night') || !!(darkQuery && darkQuery.matches);
+    };
 
     // Base map: OpenFreeMap vector tiles (free, no API key), drawn by MapLibre GL.
     var OFM = 'https://tiles.openfreemap.org/styles/';
@@ -135,7 +140,7 @@
         '<span class="tip-title">' + esc(p.name) + '</span>' +
         '<span class="tip-meta">' + esc(metaText(p)) + '</span>' +
         (p.summary ? '<span class="tip-summary">' + esc(p.summary) + '</span>' : '') +
-        '<span class="tip-cta">Click for photos and videos</span>' +
+        (text.previewCta ? '<span class="tip-cta">' + esc(text.previewCta) + '</span>' : '') +
         '</span>';
       m.bindTooltip(tip, { direction: 'top', className: 'place-tip', opacity: 1, offset: [0, -14] });
       m.on('click', function () { openPlace(i); });

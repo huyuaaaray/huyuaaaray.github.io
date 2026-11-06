@@ -1,44 +1,28 @@
-# ---------------------------------------------------------------
-# Site settings. After changing this file, push and wait for
-# GitHub Pages to rebuild (about a minute).
-# ---------------------------------------------------------------
-title: Yu Hu
-description: >-
-  Yu Hu is a data scientist at the University of Florida College of Medicine
-  building clinical AI with large language models on EHR and clinical notes.
-url: "https://huyuaaaray.github.io"
+# =====================================================================
+#  网站内容总表（所有可以修改的文字都在这个文件里）
+#
+#  怎么改：直接改冒号后面的文字，保存后 push，GitHub 大约 1 分钟后更新网站。
+#  注意：
+#    1. 缩进只能用空格，不能用 Tab，并且要和上下文对齐。
+#    2. 文字里有冒号 : 或以 * 开头时，用英文双引号把整句包起来。
+#    3. 标着 (Markdown) 的地方可以用 *斜体*、**粗体**、[链接文字](https://...)
+#    4. 列表的每一项以 "- " 开头；想加一条就复制一整段再改。
+#
+#  目录：
+#    一、网站设置        二、个人信息与导航     三、首页
+#    四、Travel 页面     五、CV 页面            六、404 页面
+# =====================================================================
+
+
+# =====================================================================
+# 一、网站设置（一般不用改）
+# =====================================================================
+title: Yu Hu                         # 浏览器标签页上显示的网站名
+url: "https://huyuaaaray.github.io"  # 网站地址
 baseurl: ""
 
-# Google Analytics 4 measurement ID, e.g. "G-ABC123XYZ9".
-# Leave empty to turn analytics off. It only loads on the live site.
+# Google Analytics 的衡量 ID。清空引号里的内容即可关闭统计。
 google_analytics: "G-8Y3X786CMF"
-
-author:
-  name: Yu Hu
-  role: Data Scientist
-  group: Quality & Patient Safety
-  org: University of Florida College of Medicine
-  location: Gainesville, Florida
-  email: huyuaaaray@gmail.com
-  github: huyuaaaray
-  linkedin: yu-hu-769b02261
-  scholar: SL4Guq4AAAAJ
-
-  # Rotating line under your name on the home page (typed out one by one)
-  roles:
-    - Data Scientist
-    - Clinical NLP
-    - LLM Evaluation
-    - LLMOps
-
-  # "About" on the home page. Separate paragraphs with a blank line.
-  # *italics*, **bold** and [links](https://...) work here.
-  bio: |
-    I'm a data scientist at the University of Florida College of Medicine, where I work with the Quality & Patient Safety group to build clinical AI systems. My work focuses on applying large language models to electronic health records and clinical notes, turning unstructured documentation into information that clinicians and quality teams can act on, from readmission analyses to care-coordination programs.
-
-    Along the way, I've built a shared, configuration-driven LLM platform that now supports several clinical programs, developed an LLM-as-a-Judge framework to evaluate model outputs before they reach clinician review, and scaled inference on UF's HiPerGator supercomputer. Over the past three years, this work has led to six peer-reviewed publications in clinical informatics.
-
-    What keeps me in this field is the gap between what AI can do on a benchmark and what it takes to make it reliable in real clinical workflows, and I enjoy closing that gap alongside clinicians, researchers, and engineers.
 
 markdown: kramdown
 exclude:
@@ -46,3 +30,326 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - vendor
+
+
+# =====================================================================
+# 二、个人信息与导航（所有页面共用）
+# =====================================================================
+author:
+  name: Yu Hu                        # 左上角、首页大标题、页脚、论文加粗都用这个名字
+  email: huyuaaaray@gmail.com        # 邮件图标的地址
+  github: huyuaaaray                 # GitHub 用户名
+  linkedin: yu-hu-769b02261          # LinkedIn 地址 linkedin.com/in/ 后面那段
+  scholar: SL4Guq4AAAAJ              # Google Scholar 地址里 user= 后面那段
+
+# 右上角的菜单。label 是显示的文字，url 是链接。
+nav:
+  - label: Travel
+    url: /travel/
+  - label: CV
+    url: /cv/
+
+
+# =====================================================================
+# 三、首页
+# =====================================================================
+home:
+  # 搜索引擎和分享链接时显示的一句话介绍
+  description: >-
+    Yu Hu is a data scientist at the University of Florida College of Medicine
+    building clinical AI with large language models on EHR and clinical notes.
+
+  # 名字下方循环打字显示的身份，按顺序轮播
+  roles:
+    - Data Scientist
+    - Clinical NLP
+    - LLM Evaluation
+    - LLMOps
+
+  # 身份下面那一行（部门和单位）
+  tagline: "Quality & Patient Safety, University of Florida College of Medicine"
+
+  # About 上方的横幅：label 是小标题，text 是用打字机效果打出来的那句话
+  research:
+    label: Research interest
+    text: "I study how to make large language models reliable enough for real clinical work: reading EHR notes, surfacing risks, and supporting the clinicians who review them."
+
+  # About 部分
+  about_title: About
+  # 简介正文 (Markdown)。段落之间空一行。
+  bio: |
+    I'm a data scientist at the University of Florida College of Medicine, where I work with the Quality & Patient Safety group to build clinical AI systems. My work focuses on applying large language models to electronic health records and clinical notes, turning unstructured documentation into information that clinicians and quality teams can act on, from readmission analyses to care-coordination programs.
+
+    Along the way, I've built a shared, configuration-driven LLM platform that now supports several clinical programs, developed an LLM-as-a-Judge framework to evaluate model outputs before they reach clinician review, and scaled inference on UF's HiPerGator supercomputer. Over the past three years, this work has led to six peer-reviewed publications in clinical informatics.
+
+    What keeps me in this field is the gap between what AI can do on a benchmark and what it takes to make it reliable in real clinical workflows, and I enjoy closing that gap alongside clinicians, researchers, and engineers.
+
+  # News 部分
+  news_title: News
+  # 每条新闻：date 是显示的日期，datetime 是 年-月（给搜索引擎看），text 是内容 (Markdown)
+  # 最新的放最上面
+  news:
+    - date: Aug 2026
+      datetime: 2026-08
+      text: Co-first-author paper on adapting a fair individualized polysocial risk score for hospitalization risk prediction published in *JAMIA Open*.
+    - date: '2026'
+      datetime: '2026'
+      text: Two papers on target trial emulation with decentralized real-world data published in *npj Health Systems* and *eBioMedicine*.
+    - date: May 2026
+      datetime: 2026-05
+      text: Started building a GraphRAG knowledge graph over clinical notes to study heart failure readmission.
+    - date: Apr 2026
+      datetime: 2026-04
+      text: Began leading a clinical LLM evaluation comparing Gemma 4 and MedGemma for patient-level readmission review.
+    - date: Feb 2026
+      datetime: 2026-02
+      text: Started building a shared, configuration-driven LLMOps platform, now used by three clinical programs at UF.
+    - date: Sep 2025
+      datetime: 2025-09
+      text: Joined the Quality & Patient Safety group at the UF College of Medicine as a Data Scientist III.
+
+
+# =====================================================================
+# 四、Travel 页面
+# =====================================================================
+travel:
+  title: Travel                       # 页面大标题，也是浏览器标签页名
+  description: Places Yu Hu has lived, worked, and visited, on a map with photos and videos.
+  intro: Places I've lived, worked, and visited. Hover over a marker for a quick preview, and click a marker or a card for photos and videos.
+  map_hint: Click the map to zoom with your mouse wheel. Lines show trips from home; shaded countries are ones I've visited.
+  preview_cta: Click for photos and videos      # 地图预览卡片底部那行字
+
+  # 去过的地方。每个地方：
+  #   name     地名（大标题）
+  #   home     写 true 表示这是"家"，地图上的航线从这里出发（只标一个）
+  #   region   地名下面的小字，比如 "Florida, USA"
+  #   country  国家英文名（USA、China、Japan、UK 等），用来统计国家数和给地图上的国家填色
+  #   lat, lng 坐标：在 Google 地图上右键那个位置，点菜单最上面的数字就会复制下来
+  #   date     时间，随便写，比如 "Mar 2025" 或 "2016 – 2020"
+  #   summary  一两句话介绍
+  #   cover    封面照片（卡片和地图预览用），照片放在 images/travel/ 文件夹
+  #   photos   照片列表，src 是路径，caption 是说明（可不写）
+  #   videos   视频：粘贴 YouTube 或 Bilibili 链接，例如
+  #              - youtube: https://www.youtube.com/watch?v=xxxxxxxxxxx
+  #              - bilibili: https://www.bilibili.com/video/BVxxxxxxxxxx
+  #            没有视频就写 videos: []
+  # 下面三个是示例，照片是占位图，换成你自己的。
+  places:
+    - name: Gainesville
+      home: true
+      region: Florida, USA
+      country: USA
+      lat: 29.6516
+      lng: -82.3248
+      date: 2021 – present
+      summary: Home base since starting graduate school at the University of Florida. Go Gators!
+      cover: /images/travel/sample-gainesville.jpg
+      photos:
+        - src: /images/travel/sample-gainesville.jpg
+          caption: Placeholder photo. Replace with your own.
+      videos: []
+    - name: Indianapolis
+      region: Indiana, USA
+      country: USA
+      lat: 39.7684
+      lng: -86.1581
+      date: Summer 2025
+      summary: Spent the summer at the Regenstrief Institute working on clinical data pipelines.
+      cover: /images/travel/sample-indianapolis.jpg
+      photos:
+        - src: /images/travel/sample-indianapolis.jpg
+          caption: Placeholder photo. Replace with your own.
+      videos: []
+    - name: Wuhan
+      region: Hubei, China
+      country: China
+      lat: 30.5928
+      lng: 114.3055
+      date: 2016 – 2020
+      summary: Where I studied electrical engineering at Hubei University of Technology.
+      cover: /images/travel/sample-wuhan.jpg
+      photos:
+        - src: /images/travel/sample-wuhan.jpg
+          caption: Placeholder photo. Replace with your own.
+      videos: []
+
+
+# =====================================================================
+# 五、CV 页面
+# =====================================================================
+cv:
+  title: CV                           # 浏览器标签页名
+  heading: Curriculum Vitae           # 页面大标题
+  description: Curriculum vitae of Yu Hu, covering clinical LLM evaluation, LLMOps, and machine learning on EHR data at the University of Florida College of Medicine.
+  summary: Data scientist with 3+ years of experience in clinical LLM evaluation and safety on EHR and clinical notes, building evaluation workflows and end-to-end MLOps/LLMOps pipelines.
+  download_label: Download PDF        # 下载按钮文字（文件是网站根目录的 resume.pdf）
+
+  # 各部分的标题。想隐藏某一部分，把它下面的列表清空成 []
+  experience_title: Experience
+  education_title: Education
+  publications_title: Publications
+  projects_title: Selected Projects
+  skills_title: Skills
+  honors_title: Honors & Service
+  # 论文列表上方的说明 (Markdown)。开头的 \* 是星号本身，别删反斜杠。
+  publications_note: "\\* Equal contribution. Full list on [Google Scholar](https://scholar.google.com/citations?user=SL4Guq4AAAAJ)."
+
+  # 工作经历：title 职位，dates 时间，where 单位和城市，bullets 要点 (Markdown)
+  experience:
+    - title: Data Scientist III
+      dates: Sep 2025 – Present
+      where: University of Florida College of Medicine, Gainesville, FL
+      bullets:
+        - Drive clinical LLM evaluation for the Quality & Patient Safety group, comparing models against clinician review and building LLM-as-a-Judge workflows that route flagged outputs to clinician review.
+        - Architected a shared, config-driven LLMOps platform adopted by three clinical programs, processing EHR clinical notes with self-hosted long-context inference (vLLM, SLURM) on the HiPerGator HPC cluster.
+        - Translate clinical review workflows (readmission, mortality, transitional care) into structured, evidence-grounded LLM pipelines in partnership with clinical teams.
+        - Develop machine learning models on EHR data, including neonatal feeding-risk prediction, from clinician-validated feature definition through on-premise deployment.
+    - title: Application Programmer
+      dates: Jun 2025 – Aug 2025
+      where: Regenstrief Institute, Indianapolis, IN
+      bullets:
+        - Standardized U.S. EHR data by architecting pipelines for the OMOP and PCORnet common data models, improving data quality and harmonization.
+        - Engineered automated, scalable ETL pipelines and extracted longitudinal clinical features from raw EHR data using distributed cluster computing.
+        - Created web-based analytics dashboards that help clinicians interpret complex data.
+    - title: Application Programmer
+      dates: Mar 2024 – May 2025
+      where: University of Florida, Gainesville, FL
+      bullets:
+        - Implemented MLOps workflows with CI/CD and monitoring, enabling scalable deployment on Linux systems.
+        - Developed scalable ETL pipelines and engineered clinical features using cluster computing for large-scale healthcare data.
+        - Built and deployed secure, interactive healthcare web applications with FHIR integration on AWS.
+    - title: Research Assistant
+      dates: Dec 2022 – Feb 2024
+      where: University of Florida, Gainesville, FL
+      bullets:
+        - Cleaned and preprocessed large healthcare datasets and built visualizations to support data-driven research.
+        - Developed a computer vision object detection system with automated data acquisition pipelines.
+        - Built and deployed an interactive web platform for 3D modeling and predictive analytics.
+
+  # 教育：title 学位，dates 时间，where 学校和城市
+  education:
+    - title: M.S. in Electrical and Computer Engineering
+      dates: Aug 2021 – May 2023
+      where: University of Florida, Gainesville, FL
+    - title: B.S. in Electrical Engineering
+      dates: Sep 2016 – Jun 2020
+      where: Hubei University of Technology, Wuhan, China
+
+  # 论文：authors 作者（你的名字会自动加粗；* 表示共同一作），title 题目，
+  #       venue 期刊名（斜体显示），details 卷期页码年份，links 链接（可不写）
+  publications:
+    - authors: Jiayi Tong, Lu Li, Dazheng Zhang, Kyra S. O'Brien, Yiwen Lu, Qiong Wu, Ting Zhou, Bingyu Zhang, Yu Huang, Yu Hu, et al.
+      title: 'FLAT-WHITE: from target trial emulation to federated high-throughput causal machine learning using decentralized real-world data.'
+      venue: npj Health Systems
+      details: 3, 102 (2026).
+    - authors: Qiong Wu, Lu Li, Yuqing Lei, Ting Zhou, Huiling Tang, Bingyu Zhang, Yu Hu, et al.
+      title: 'Discovering repurposable drugs for Alzheimer''s disease and related dementias: target trial emulation using decentralised real-world data.'
+      venue: eBioMedicine
+      details: 132, 106466 (2026).
+    - authors: Qinglin Gou*, Yu Hu*, et al.
+      title: Adaptation of a fair individualized polysocial risk score for hospitalization risk prediction.
+      venue: JAMIA Open
+      details: 9(4), ooag161 (2026).
+      links:
+        - label: DOI
+          url: https://doi.org/10.1093/jamiaopen/ooag161
+    - authors: Yu Huang, Jie Xu, Zhengkang Fan, Yu Hu, et al.
+      title: Identifying Alzheimer's disease progression subphenotypes via a graph-based framework using electronic health records.
+      venue: Journal of Healthcare Informatics Research
+      details: 10, 317–339 (2026).
+    - authors: X. He, Y. Huang, Yu Hu, et al.
+      title: Toward integrating machine learning-powered polysocial risk scores into electronic health record workflows.
+      venue: AMIA Annual Symposium Proceedings
+      details: 2024, 451–460 (2025).
+      links:
+        - label: PMC
+          url: https://pmc.ncbi.nlm.nih.gov/articles/PMC12919456/
+    - authors: T. Zhou, A. Chen, Yu Hu, et al.
+      title: Automating Lung-RADS categorization and follow-up recommendations using in-context learning with large language models.
+      venue: AMIA Annual Symposium Proceedings
+      details: 2024, 1567–1576 (2025).
+      links:
+        - label: PMC
+          url: https://pmc.ncbi.nlm.nih.gov/articles/PMC12919574/
+    - authors: Jin Wang*, Yu Hu*, et al.
+      title: 'Technical note: ShinyAnimalCV: open-source cloud-based web application for object detection, segmentation, and three-dimensional visualization of animals using computer vision.'
+      venue: Journal of Animal Science
+      details: 102, skad416 (2024).
+      links:
+        - label: DOI
+          url: https://doi.org/10.1093/jas/skad416
+
+  # 项目：title 名称，dates 时间，然后写 bullets 要点列表，或者 summary 一段话
+  projects:
+    - title: Clinical LLM Evaluation and Model Selection for Readmission Review
+      dates: Apr 2026 – Present
+      bullets:
+        - Led a head-to-head evaluation of Gemma 4 31B and MedGemma for patient-level readmission review across 30K–80K-token contexts, validating outputs against clinician review.
+        - Identified a key safety failure mode, where the domain-tuned model inferred answers unsupported by the record while Gemma 4 abstained with evidence-specific rationales.
+        - Built an LLM-as-a-Judge framework (Llama 3.3-70B) with rubric-based JSON verdicts and an HTML report that routes flagged patients to clinician review.
+        - Benchmarked long-context inference on NVIDIA B200 GPUs (FP16 vs. FP8, tensor parallelism) and traced a throughput ceiling to vLLM's KV-cache handling of sliding-window attention.
+    - title: Clinical LLMOps Platform for EHR Note Processing
+      dates: Feb 2026 – Present
+      bullets:
+        - Generalized project-specific clinical NLP scripts into a reusable, config-driven LLM platform shared by three clinical programs, so new cohorts onboard through configuration rather than code changes.
+        - Designed a modular pipeline (data loading, prompt assembly, batched inference, post-processing, reporting) with checkpoint/resume and asynchronous concurrency control on HiPerGator via SLURM and vLLM.
+        - Re-engineered the clinical note summarizer into an OpenAI-compatible service with JSON Schema output contracts, Pydantic validation, and automatic retry on malformed generations.
+    - title: GraphRAG Knowledge Graph for Heart Failure Readmission
+      dates: May 2026 – Present
+      bullets:
+        - Built an end-to-end GraphRAG pipeline over a heart failure cohort's clinical notes, with LLM-based entity and relation extraction using MedGemma-27B served via vLLM.
+        - Constructed the patient knowledge graph with hierarchical Leiden community detection and map-reduce LLM community reports on readmission themes.
+    - title: Neonatal Lactation and Milk Intake Modeling
+      dates: Sep 2025 – Present
+      bullets:
+        - Partnered with neonatologists and lactation specialists to define clinically validated features from EHR feeding and lactation data.
+        - Developed models for early identification of infants at risk for inadequate milk intake or feeding complications, deployed on-premise with Power BI dashboards for clinical teams.
+    - title: Graph-Based Modeling for Alzheimer's Disease Progression
+      dates: Dec 2023 – Nov 2025
+      summary: Built patient similarity graphs from EHR data and graph neural networks (PyTorch, NetworkX) to identify progression subphenotypes and support early detection.
+    - title: EHR Continuity for Type 2 Diabetes Risk Prediction
+      dates: Feb 2024 – Nov 2025
+      summary: Engineered a PCORnet-based pipeline on OneFlorida+ data, used the Harmonized Encounter Proportion Score to quantify data continuity, and assessed model fairness across racial and ethnic groups.
+    - title: OCT Retinal Biomarkers for ADRD Prediction
+      dates: Dec 2023 – Sep 2025
+      summary: Automated processing of OCT DICOM scans and used retinal thickness metrics to model the risk of Alzheimer's disease and related dementias.
+    - title: Healthcare Risk Prediction Web Application
+      dates: Nov 2023 – Sep 2025
+      summary: React front end and Flask API serving causal inference risk models, with FHIR and Epic integration, containerized with Docker.
+    - title: OMOP–FHIR Database Integration Platform
+      dates: Apr 2024 – Sep 2025
+      summary: Designed an OMOP database and a web platform combining OMOP and FHIR queries for standardized, real-time healthcare data access.
+
+  # 技能：group 左边的类别，items 右边的内容
+  skills:
+    - group: LLM & NLP
+      items: Prompt engineering, RAG/GraphRAG, LLM-as-a-Judge, vLLM, LLM agents, Hugging Face Transformers, LangChain, spaCy, FAISS
+    - group: Clinical data standards
+      items: UMLS, SNOMED CT, RxNorm, OMOP, FHIR, PCORnet
+    - group: MLOps / LLMOps
+      items: SLURM, model serving and monitoring, CI/CD, structured output (JSON Schema, Pydantic), config-driven pipelines
+    - group: Machine learning
+      items: PyTorch, TensorFlow, scikit-learn, XGBoost, NetworkX, causal inference
+    - group: Programming
+      items: Python, SQL, R, C/C++, Java, JavaScript, HTML/CSS, Shell, MATLAB, LaTeX
+    - group: Tools & platforms
+      items: Docker, Linux, Git, Tableau, Power BI, cluster and cloud computing
+
+  # 荣誉与学术服务：title 名称，dates 时间，where 机构（可不写）
+  honors:
+    - title: Herbert Wertheim College of Engineering Achievement Award and Scholarship
+      dates: '2021'
+      where: University of Florida
+    - title: Undergraduate Scholarship, top 5% of students
+      dates: '2020'
+      where: Hubei University of Technology
+    - title: Reviewer, IEEE International Conference on Healthcare Informatics (ICHI)
+      dates: 2024 – 2026
+
+
+# =====================================================================
+# 六、404 页面（访问不存在的地址时显示）
+# =====================================================================
+not_found:
+  title: Page not found
+  text: "This page doesn't exist or has moved. Go back to the [home page](/), see my [CV](/cv/), or browse my [travels](/travel/)."

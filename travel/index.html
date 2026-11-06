@@ -1,26 +1,28 @@
 ---
 layout: default
-title: Travel
-description: Places Yu Hu has lived, worked, and visited, on a map with photos and videos.
+section: travel
+theme: night
 og_image: /images/og-travel.png
 map: true
 scripts:
+  - /assets/js/starfield.js
   - /assets/js/travel.js
 ---
-{%- comment -%} Edit places in _data/travel.yml {%- endcomment -%}
-{%- assign places = site.data.travel -%}
+{%- comment -%} All text on this page is in the "travel" section of _config.yml {%- endcomment -%}
+{%- assign t = site.travel -%}
+{%- assign places = t.places -%}
 {%- assign countries = places | map: "country" | uniq -%}
 <div class="container">
   <div class="page-head" data-reveal>
-    <h1>Travel</h1>
-    <p>Places I've lived, worked, and visited. Hover over a marker for a quick preview, and click a marker or a card for photos and videos.</p>
+    <h1>{{ t.title | escape }}</h1>
+    <p>{% include inline-md.html text=t.intro %}</p>
     <p class="travel-stats">{% include icon.html name="pin" %}<span><span class="count" data-count="{{ places.size }}">{{ places.size }}</span> {% if places.size == 1 %}place{% else %}places{% endif %} in <span class="count" data-count="{{ countries.size }}">{{ countries.size }}</span> {% if countries.size == 1 %}country{% else %}countries{% endif %}</span></p>
   </div>
 
   <div class="map-wrap reveal-delay-1" data-reveal>
     <section id="map" aria-label="Map of places I've been"></section>
   </div>
-  <p class="map-hint">Click the map to zoom with your mouse wheel. Lines show trips from home; shaded countries are ones I've visited.</p>
+  <p class="map-hint">{% include inline-md.html text=t.map_hint %}</p>
 
   <div class="places" data-reveal-stagger>
     {%- for p in places %}
@@ -67,3 +69,4 @@ scripts:
 </dialog>
 
 <script id="travel-data" type="application/json">{{ places | jsonify }}</script>
+<script id="travel-text" type="application/json">{"previewCta": {{ t.preview_cta | jsonify }}}</script>

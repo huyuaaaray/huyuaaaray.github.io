@@ -1,23 +1,38 @@
 ---
 layout: default
-title: Yu Hu
+section: home
 network: true
 scripts:
   - /assets/js/network.js
 ---
+{%- comment -%} All text on this page is in the "home" section of _config.yml {%- endcomment -%}
 {%- assign a = site.author -%}
+{%- assign h = site.home -%}
 <div class="container">
   <section class="intro" aria-labelledby="name">
     <div class="intro-head" data-reveal>
       <h1 class="display-name" id="name">{{ a.name }}</h1>
-      {%- if a.roles and a.roles.size > 0 %}
+      {%- if h.roles and h.roles.size > 0 %}
       <p class="roles">
-        <span class="visually-hidden">{{ a.roles | join: ", " }}</span>
-        <span class="roles-text" aria-hidden="true" data-roles="{{ a.roles | jsonify | escape }}">{{ a.roles.first | escape }}</span><span class="caret" aria-hidden="true"></span>
+        <span class="visually-hidden">{{ h.roles | join: ", " }}</span>
+        <span class="roles-text" aria-hidden="true" data-roles="{{ h.roles | jsonify | escape }}">{{ h.roles.first | escape }}</span><span class="caret" aria-hidden="true"></span>
       </p>
       {%- endif %}
-      <p class="tagline">{{ a.group | escape }}<br>{{ a.org | escape }}</p>
+      {%- if h.tagline %}
+      <p class="tagline">{{ h.tagline | escape }}</p>
+      {%- endif %}
     </div>
+
+    {%- if h.research.text %}
+    <div class="research-banner reveal-delay-1" data-reveal data-glow>
+      <p class="research-label">{% include icon.html name="spark" %}{{ h.research.label | escape }}</p>
+      <p class="research-text">
+        <span class="visually-hidden">{{ h.research.text | escape }}</span>
+        <span class="research-ghost" aria-hidden="true">{{ h.research.text | escape }}</span>
+        <span class="research-live" aria-hidden="true"><span class="research-typed" data-type-once="{{ h.research.text | escape }}">{{ h.research.text | escape }}</span><span class="caret"></span></span>
+      </p>
+    </div>
+    {%- endif %}
 
     <div class="portrait reveal-delay-1" data-reveal>
       <div class="photo" data-tilt>
@@ -30,23 +45,24 @@ scripts:
     </div>
 
     <div class="intro-about reveal-delay-2" data-reveal>
-      <h2 class="section-title">About</h2>
+      <h2 class="section-title">{{ h.about_title | escape }}</h2>
       <div class="prose">
-        {{ a.bio | markdownify }}
+        {{ h.bio | markdownify }}
       </div>
     </div>
   </section>
 
+  {%- if h.news and h.news.size > 0 %}
   <section class="home-news" aria-labelledby="news-title">
-    <h2 class="section-title" id="news-title" data-reveal>News</h2>
-    <!-- Edit news in _data/news.yml -->
+    <h2 class="section-title" id="news-title" data-reveal>{{ h.news_title | escape }}</h2>
     <ol class="news" data-reveal-stagger>
-      {%- for item in site.data.news %}
+      {%- for item in h.news %}
       <li data-reveal>
         <time datetime="{{ item.datetime }}">{{ item.date }}</time>
-        <p>{{ item.text | markdownify | remove: "<p>" | remove: "</p>" | strip }}</p>
+        <p>{% include inline-md.html text=item.text %}</p>
       </li>
       {%- endfor %}
     </ol>
   </section>
+  {%- endif %}
 </div>
