@@ -10,13 +10,19 @@ scripts:
   <section class="intro" aria-labelledby="name">
     <div class="intro-head" data-reveal>
       <h1 class="display-name" id="name">{{ a.name }}</h1>
-      <p class="tagline">{{ a.role | escape }}, {{ a.group | escape }}<br>{{ a.org | escape }}</p>
+      {%- if a.roles and a.roles.size > 0 %}
+      <p class="roles">
+        <span class="visually-hidden">{{ a.roles | join: ", " }}</span>
+        <span class="roles-text" aria-hidden="true" data-roles="{{ a.roles | jsonify | escape }}">{{ a.roles.first | escape }}</span><span class="caret" aria-hidden="true"></span>
+      </p>
+      {%- endif %}
+      <p class="tagline">{{ a.group | escape }}<br>{{ a.org | escape }}</p>
     </div>
 
     <div class="portrait reveal-delay-1" data-reveal>
       <div class="photo" data-tilt>
         <span class="photo-initials" aria-hidden="true">YH</span>
-        <!-- Put your photo at images/profile.jpg; until then the initials show instead. -->
+        <!-- Your photo: images/profile.jpg -->
         <img src="/images/profile.jpg" alt="Portrait of {{ a.name }}" width="340" height="425" onerror="this.remove()">
         <span class="glare" aria-hidden="true"></span>
       </div>
@@ -26,9 +32,7 @@ scripts:
     <div class="intro-about reveal-delay-2" data-reveal>
       <h2 class="section-title">About</h2>
       <div class="prose">
-        <p>I'm a data scientist at the University of Florida College of Medicine, where I work with the Quality &amp; Patient Safety group to build clinical AI systems. My work focuses on applying large language models to electronic health records and clinical notes, turning unstructured documentation into information that clinicians and quality teams can act on, from readmission analyses to care-coordination programs.</p>
-        <p>Along the way, I've built a shared, configuration-driven LLM platform that now supports several clinical programs, developed an LLM-as-a-Judge framework to evaluate model outputs before they reach clinician review, and scaled inference on UF's HiPerGator supercomputer. Over the past three years, this work has led to six peer-reviewed publications in clinical informatics.</p>
-        <p>What keeps me in this field is the gap between what AI can do on a benchmark and what it takes to make it reliable in real clinical workflows, and I enjoy closing that gap alongside clinicians, researchers, and engineers.</p>
+        {{ a.bio | markdownify }}
       </div>
     </div>
   </section>

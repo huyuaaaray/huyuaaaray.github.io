@@ -2,289 +2,95 @@
 layout: default
 title: CV
 description: Curriculum vitae of Yu Hu, covering clinical LLM evaluation, LLMOps, and machine learning on EHR data at the University of Florida College of Medicine.
+progress: true
 ---
+{%- comment -%} All CV text lives in _data/cv.yml {%- endcomment -%}
+{%- assign cv = site.data.cv -%}
 <div class="container">
   <div class="cv-layout">
     <nav class="toc" aria-label="On this page">
       <ol>
-        <li><a href="#experience">Experience</a></li>
-        <li><a href="#education">Education</a></li>
-        <li><a href="#publications">Publications</a></li>
-        <li><a href="#projects">Selected Projects</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#honors">Honors &amp; Service</a></li>
+        {%- if cv.experience.size > 0 %}<li><a href="#experience">Experience</a></li>{% endif %}
+        {%- if cv.education.size > 0 %}<li><a href="#education">Education</a></li>{% endif %}
+        {%- if cv.publications.size > 0 %}<li><a href="#publications">Publications</a></li>{% endif %}
+        {%- if cv.projects.size > 0 %}<li><a href="#projects">Selected Projects</a></li>{% endif %}
+        {%- if cv.skills.size > 0 %}<li><a href="#skills">Skills</a></li>{% endif %}
+        {%- if cv.honors.size > 0 %}<li><a href="#honors">Honors &amp; Service</a></li>{% endif %}
       </ol>
     </nav>
     <div class="cv-body">
       <div class="page-head" data-reveal>
         <h1>Curriculum Vitae</h1>
-        <p>Data scientist with 3+ years of experience in clinical LLM evaluation and safety on EHR and clinical notes, building evaluation workflows and end-to-end MLOps/LLMOps pipelines.</p>
+        {%- if cv.summary %}
+        <p>{% include inline-md.html text=cv.summary %}</p>
+        {%- endif %}
         <div class="actions">
-          <a class="btn btn-primary" href="/resume.pdf" download>
-            {% include icon.html name="download" %}
-            Download PDF
-          </a>
+          <a class="btn btn-primary" href="/resume.pdf" download>{% include icon.html name="download" %}Download PDF</a>
         </div>
       </div>
 
-      <!-- ===== Experience ===== -->
+      {%- if cv.experience.size > 0 %}
       <section class="cv-section" id="experience">
         <h2 data-reveal>Experience</h2>
-
-        <article class="entry" data-reveal>
-          <div class="entry-head">
-            <h3>Data Scientist III</h3>
-            <span class="when">Sep 2025 – Present</span>
-          </div>
-          <p class="where">University of Florida College of Medicine, Gainesville, FL</p>
-          <ul>
-            <li>Drive clinical LLM evaluation for the Quality &amp; Patient Safety group, comparing models against clinician review and building LLM-as-a-Judge workflows that route flagged outputs to clinician review.</li>
-            <li>Architected a shared, config-driven LLMOps platform adopted by three clinical programs, processing EHR clinical notes with self-hosted long-context inference (vLLM, SLURM) on the HiPerGator HPC cluster.</li>
-            <li>Translate clinical review workflows (readmission, mortality, transitional care) into structured, evidence-grounded LLM pipelines in partnership with clinical teams.</li>
-            <li>Develop machine learning models on EHR data, including neonatal feeding-risk prediction, from clinician-validated feature definition through on-premise deployment.</li>
-          </ul>
-        </article>
-
-        <article class="entry" data-reveal>
-          <div class="entry-head">
-            <h3>Application Programmer</h3>
-            <span class="when">Jun 2025 – Aug 2025</span>
-          </div>
-          <p class="where">Regenstrief Institute, Indianapolis, IN</p>
-          <ul>
-            <li>Standardized U.S. EHR data by architecting pipelines for the OMOP and PCORnet common data models, improving data quality and harmonization.</li>
-            <li>Engineered automated, scalable ETL pipelines and extracted longitudinal clinical features from raw EHR data using distributed cluster computing.</li>
-            <li>Created web-based analytics dashboards that help clinicians interpret complex data.</li>
-          </ul>
-        </article>
-
-        <article class="entry" data-reveal>
-          <div class="entry-head">
-            <h3>Application Programmer</h3>
-            <span class="when">Mar 2024 – May 2025</span>
-          </div>
-          <p class="where">University of Florida, Gainesville, FL</p>
-          <ul>
-            <li>Implemented MLOps workflows with CI/CD and monitoring, enabling scalable deployment on Linux systems.</li>
-            <li>Developed scalable ETL pipelines and engineered clinical features using cluster computing for large-scale healthcare data.</li>
-            <li>Built and deployed secure, interactive healthcare web applications with FHIR integration on AWS.</li>
-          </ul>
-        </article>
-
-        <article class="entry" data-reveal>
-          <div class="entry-head">
-            <h3>Research Assistant</h3>
-            <span class="when">Dec 2022 – Feb 2024</span>
-          </div>
-          <p class="where">University of Florida, Gainesville, FL</p>
-          <ul>
-            <li>Cleaned and preprocessed large healthcare datasets and built visualizations to support data-driven research.</li>
-            <li>Developed a computer vision object detection system with automated data acquisition pipelines.</li>
-            <li>Built and deployed an interactive web platform for 3D modeling and predictive analytics.</li>
-          </ul>
-        </article>
+        {%- include cv-entries.html items=cv.experience %}
       </section>
+      {%- endif %}
 
-      <!-- ===== Education ===== -->
+      {%- if cv.education.size > 0 %}
       <section class="cv-section" id="education">
         <h2 data-reveal>Education</h2>
-
-        <article class="entry" data-reveal>
-          <div class="entry-head">
-            <h3>M.S. in Electrical and Computer Engineering</h3>
-            <span class="when">Aug 2021 – May 2023</span>
-          </div>
-          <p class="where">University of Florida, Gainesville, FL</p>
-        </article>
-
-        <article class="entry" data-reveal>
-          <div class="entry-head">
-            <h3>B.S. in Electrical Engineering</h3>
-            <span class="when">Sep 2016 – Jun 2020</span>
-          </div>
-          <p class="where">Hubei University of Technology, Wuhan, China</p>
-        </article>
+        {%- include cv-entries.html items=cv.education %}
       </section>
+      {%- endif %}
 
-      <!-- ===== Publications ===== -->
+      {%- if cv.publications.size > 0 %}
       <section class="cv-section" id="publications">
         <h2 data-reveal>Publications</h2>
-        <p class="note">* Equal contribution. Full list on <a href="https://scholar.google.com/citations?user=SL4Guq4AAAAJ">Google Scholar</a>.</p>
+        <p class="note">* Equal contribution. Full list on <a href="https://scholar.google.com/citations?user={{ site.author.scholar }}">Google Scholar</a>.</p>
         <ol class="pubs" data-reveal-stagger>
+          {%- for p in cv.publications %}
           <li data-reveal>
-            Jiayi Tong, Lu Li, Dazheng Zhang, Kyra S. O'Brien, Yiwen Lu, Qiong Wu, Ting Zhou, Bingyu Zhang, Yu Huang, <strong>Yu Hu</strong>, et al.
-            <span class="pub-title">FLAT-WHITE: from target trial emulation to federated high-throughput causal machine learning using decentralized real-world data.</span>
-            <span class="pub-meta"><em>npj Health Systems</em> 3, 102 (2026).</span>
+            {%- assign names = p.authors | split: ", " -%}
+            {%- for n in names -%}
+              {%- assign bare = n | remove: "*" | strip -%}
+              {%- if bare == site.author.name -%}<strong>{{ n | escape }}</strong>{%- else -%}{{ n | escape }}{%- endif -%}
+              {%- unless forloop.last %}, {% endunless -%}
+            {%- endfor %}
+            <span class="pub-title">{{ p.title | escape }}</span>
+            <span class="pub-meta">{% if p.venue %}<em>{{ p.venue | escape }}</em> {% endif %}{{ p.details | escape }}</span>
+            {%- if p.links and p.links.size > 0 %}
+            <span class="pub-links">{% for l in p.links %}<a href="{{ l.url }}">{{ l.label | escape }}</a>{% endfor %}</span>
+            {%- endif %}
           </li>
-          <li data-reveal>
-            Qiong Wu, Lu Li, Yuqing Lei, Ting Zhou, Huiling Tang, Bingyu Zhang, <strong>Yu Hu</strong>, et al.
-            <span class="pub-title">Discovering repurposable drugs for Alzheimer's disease and related dementias: target trial emulation using decentralised real-world data.</span>
-            <span class="pub-meta"><em>eBioMedicine</em> 132, 106466 (2026).</span>
-          </li>
-          <li data-reveal>
-            Qinglin Gou*, <strong>Yu Hu*</strong>, et al.
-            <span class="pub-title">Adaptation of a fair individualized polysocial risk score for hospitalization risk prediction.</span>
-            <span class="pub-meta"><em>JAMIA Open</em> 9(4), ooag161 (2026).</span>
-            <span class="pub-links"><a href="https://doi.org/10.1093/jamiaopen/ooag161">DOI</a></span>
-          </li>
-          <li data-reveal>
-            Yu Huang, Jie Xu, Zhengkang Fan, <strong>Yu Hu</strong>, et al.
-            <span class="pub-title">Identifying Alzheimer's disease progression subphenotypes via a graph-based framework using electronic health records.</span>
-            <span class="pub-meta"><em>Journal of Healthcare Informatics Research</em> 10, 317–339 (2026).</span>
-          </li>
-          <li data-reveal>
-            X. He, Y. Huang, <strong>Yu Hu</strong>, et al.
-            <span class="pub-title">Toward integrating machine learning-powered polysocial risk scores into electronic health record workflows.</span>
-            <span class="pub-meta"><em>AMIA Annual Symposium Proceedings</em> 2024, 451–460 (2025).</span>
-            <span class="pub-links"><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12919456/">PMC</a></span>
-          </li>
-          <li data-reveal>
-            T. Zhou, A. Chen, <strong>Yu Hu</strong>, et al.
-            <span class="pub-title">Automating Lung-RADS categorization and follow-up recommendations using in-context learning with large language models.</span>
-            <span class="pub-meta"><em>AMIA Annual Symposium Proceedings</em> 2024, 1567–1576 (2025).</span>
-            <span class="pub-links"><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12919574/">PMC</a></span>
-          </li>
-          <li data-reveal>
-            Jin Wang*, <strong>Yu Hu*</strong>, et al.
-            <span class="pub-title">Technical note: ShinyAnimalCV: open-source cloud-based web application for object detection, segmentation, and three-dimensional visualization of animals using computer vision.</span>
-            <span class="pub-meta"><em>Journal of Animal Science</em> 102, skad416 (2024).</span>
-            <span class="pub-links"><a href="https://doi.org/10.1093/jas/skad416">DOI</a></span>
-          </li>
+          {%- endfor %}
         </ol>
       </section>
+      {%- endif %}
 
-      <!-- ===== Projects ===== -->
+      {%- if cv.projects.size > 0 %}
       <section class="cv-section" id="projects">
         <h2 data-reveal>Selected Projects</h2>
-
-        <article class="entry" data-reveal>
-          <div class="entry-head">
-            <h3>Clinical LLM Evaluation and Model Selection for Readmission Review</h3>
-            <span class="when">Apr 2026 – Present</span>
-          </div>
-          <ul>
-            <li>Led a head-to-head evaluation of Gemma 4 31B and MedGemma for patient-level readmission review across 30K–80K-token contexts, validating outputs against clinician review.</li>
-            <li>Identified a key safety failure mode, where the domain-tuned model inferred answers unsupported by the record while Gemma 4 abstained with evidence-specific rationales.</li>
-            <li>Built an LLM-as-a-Judge framework (Llama 3.3-70B) with rubric-based JSON verdicts and an HTML report that routes flagged patients to clinician review.</li>
-            <li>Benchmarked long-context inference on NVIDIA B200 GPUs (FP16 vs. FP8, tensor parallelism) and traced a throughput ceiling to vLLM's KV-cache handling of sliding-window attention.</li>
-          </ul>
-        </article>
-
-        <article class="entry" data-reveal>
-          <div class="entry-head">
-            <h3>Clinical LLMOps Platform for EHR Note Processing</h3>
-            <span class="when">Feb 2026 – Present</span>
-          </div>
-          <ul>
-            <li>Generalized project-specific clinical NLP scripts into a reusable, config-driven LLM platform shared by three clinical programs, so new cohorts onboard through configuration rather than code changes.</li>
-            <li>Designed a modular pipeline (data loading, prompt assembly, batched inference, post-processing, reporting) with checkpoint/resume and asynchronous concurrency control on HiPerGator via SLURM and vLLM.</li>
-            <li>Re-engineered the clinical note summarizer into an OpenAI-compatible service with JSON Schema output contracts, Pydantic validation, and automatic retry on malformed generations.</li>
-          </ul>
-        </article>
-
-        <article class="entry" data-reveal>
-          <div class="entry-head">
-            <h3>GraphRAG Knowledge Graph for Heart Failure Readmission</h3>
-            <span class="when">May 2026 – Present</span>
-          </div>
-          <ul>
-            <li>Built an end-to-end GraphRAG pipeline over a heart failure cohort's clinical notes, with LLM-based entity and relation extraction using MedGemma-27B served via vLLM.</li>
-            <li>Constructed the patient knowledge graph with hierarchical Leiden community detection and map-reduce LLM community reports on readmission themes.</li>
-          </ul>
-        </article>
-
-        <article class="entry" data-reveal>
-          <div class="entry-head">
-            <h3>Neonatal Lactation and Milk Intake Modeling</h3>
-            <span class="when">Sep 2025 – Present</span>
-          </div>
-          <ul>
-            <li>Partnered with neonatologists and lactation specialists to define clinically validated features from EHR feeding and lactation data.</li>
-            <li>Developed models for early identification of infants at risk for inadequate milk intake or feeding complications, deployed on-premise with Power BI dashboards for clinical teams.</li>
-          </ul>
-        </article>
-
-        <article class="entry" data-reveal>
-          <div class="entry-head">
-            <h3>Graph-Based Modeling for Alzheimer's Disease Progression</h3>
-            <span class="when">Dec 2023 – Nov 2025</span>
-          </div>
-          <p>Built patient similarity graphs from EHR data and graph neural networks (PyTorch, NetworkX) to identify progression subphenotypes and support early detection.</p>
-        </article>
-
-        <article class="entry" data-reveal>
-          <div class="entry-head">
-            <h3>EHR Continuity for Type 2 Diabetes Risk Prediction</h3>
-            <span class="when">Feb 2024 – Nov 2025</span>
-          </div>
-          <p>Engineered a PCORnet-based pipeline on OneFlorida+ data, used the Harmonized Encounter Proportion Score to quantify data continuity, and assessed model fairness across racial and ethnic groups.</p>
-        </article>
-
-        <article class="entry" data-reveal>
-          <div class="entry-head">
-            <h3>OCT Retinal Biomarkers for ADRD Prediction</h3>
-            <span class="when">Dec 2023 – Sep 2025</span>
-          </div>
-          <p>Automated processing of OCT DICOM scans and used retinal thickness metrics to model the risk of Alzheimer's disease and related dementias.</p>
-        </article>
-
-        <article class="entry" data-reveal>
-          <div class="entry-head">
-            <h3>Healthcare Risk Prediction Web Application</h3>
-            <span class="when">Nov 2023 – Sep 2025</span>
-          </div>
-          <p>React front end and Flask API serving causal inference risk models, with FHIR and Epic integration, containerized with Docker.</p>
-        </article>
-
-        <article class="entry" data-reveal>
-          <div class="entry-head">
-            <h3>OMOP–FHIR Database Integration Platform</h3>
-            <span class="when">Apr 2024 – Sep 2025</span>
-          </div>
-          <p>Designed an OMOP database and a web platform combining OMOP and FHIR queries for standardized, real-time healthcare data access.</p>
-        </article>
+        {%- include cv-entries.html items=cv.projects %}
       </section>
+      {%- endif %}
 
-      <!-- ===== Skills ===== -->
+      {%- if cv.skills.size > 0 %}
       <section class="cv-section" id="skills">
         <h2 data-reveal>Skills</h2>
         <dl class="skills">
-          <div><dt>LLM &amp; NLP</dt><dd>Prompt engineering, RAG/GraphRAG, LLM-as-a-Judge, vLLM, LLM agents, Hugging Face Transformers, LangChain, spaCy, FAISS</dd></div>
-          <div><dt>Clinical data standards</dt><dd>UMLS, SNOMED CT, RxNorm, OMOP, FHIR, PCORnet</dd></div>
-          <div><dt>MLOps / LLMOps</dt><dd>SLURM, model serving and monitoring, CI/CD, structured output (JSON Schema, Pydantic), config-driven pipelines</dd></div>
-          <div><dt>Machine learning</dt><dd>PyTorch, TensorFlow, scikit-learn, XGBoost, NetworkX, causal inference</dd></div>
-          <div><dt>Programming</dt><dd>Python, SQL, R, C/C++, Java, JavaScript, HTML/CSS, Shell, MATLAB, LaTeX</dd></div>
-          <div><dt>Tools &amp; platforms</dt><dd>Docker, Linux, Git, Tableau, Power BI, cluster and cloud computing</dd></div>
+          {%- for s in cv.skills %}
+          <div data-reveal><dt>{{ s.group | escape }}</dt><dd>{{ s.items | escape }}</dd></div>
+          {%- endfor %}
         </dl>
       </section>
+      {%- endif %}
 
-      <!-- ===== Honors & Service ===== -->
+      {%- if cv.honors.size > 0 %}
       <section class="cv-section" id="honors">
         <h2 data-reveal>Honors &amp; Service</h2>
-
-        <article class="entry" data-reveal>
-          <div class="entry-head">
-            <h3>Herbert Wertheim College of Engineering Achievement Award and Scholarship</h3>
-            <span class="when">2021</span>
-          </div>
-          <p class="where">University of Florida</p>
-        </article>
-
-        <article class="entry" data-reveal>
-          <div class="entry-head">
-            <h3>Undergraduate Scholarship, top 5% of students</h3>
-            <span class="when">2020</span>
-          </div>
-          <p class="where">Hubei University of Technology</p>
-        </article>
-
-        <article class="entry" data-reveal>
-          <div class="entry-head">
-            <h3>Reviewer, IEEE International Conference on Healthcare Informatics (ICHI)</h3>
-            <span class="when">2024 – 2026</span>
-          </div>
-        </article>
+        {%- include cv-entries.html items=cv.honors %}
       </section>
+      {%- endif %}
     </div>
   </div>
 </div>

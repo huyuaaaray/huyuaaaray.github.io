@@ -20,11 +20,11 @@ scripts:
   <div class="map-wrap reveal-delay-1" data-reveal>
     <section id="map" aria-label="Map of places I've been"></section>
   </div>
-  <p class="map-hint">Click the map to zoom with your mouse wheel. Lines show trips from home.</p>
+  <p class="map-hint">Click the map to zoom with your mouse wheel. Lines show trips from home; shaded countries are ones I've visited.</p>
 
   <div class="places" data-reveal-stagger>
     {%- for p in places %}
-    <button type="button" class="place-card" data-reveal data-index="{{ forloop.index0 }}" aria-haspopup="dialog">
+    <button type="button" class="place-card" data-reveal data-glow data-index="{{ forloop.index0 }}" aria-haspopup="dialog">
       <span class="place-media">
         {%- if p.cover %}
         <img src="{{ p.cover }}" alt="" loading="lazy">

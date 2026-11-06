@@ -1,0 +1,162 @@
+# ---------------------------------------------------------------
+# CV page content (shown at /cv/). Edit text here; the page updates
+# after you push. Keep the indentation (spaces, not tabs).
+#
+# Formatting inside text: *italics*, **bold**, [link text](https://...)
+# In publications, "Yu Hu" is bolded automatically.
+# To hide a whole section, delete its entries and leave e.g. `projects: []`.
+# ---------------------------------------------------------------
+
+# One or two sentences under the page title
+summary: Data scientist with 3+ years of experience in clinical LLM evaluation and safety on EHR and clinical notes, building evaluation workflows and end-to-end MLOps/LLMOps pipelines.
+
+# Newest first. Each job: title, dates, where, bullets
+experience:
+  - title: Data Scientist III
+    dates: Sep 2025 – Present
+    where: University of Florida College of Medicine, Gainesville, FL
+    bullets:
+      - Drive clinical LLM evaluation for the Quality & Patient Safety group, comparing models against clinician review and building LLM-as-a-Judge workflows that route flagged outputs to clinician review.
+      - Architected a shared, config-driven LLMOps platform adopted by three clinical programs, processing EHR clinical notes with self-hosted long-context inference (vLLM, SLURM) on the HiPerGator HPC cluster.
+      - Translate clinical review workflows (readmission, mortality, transitional care) into structured, evidence-grounded LLM pipelines in partnership with clinical teams.
+      - Develop machine learning models on EHR data, including neonatal feeding-risk prediction, from clinician-validated feature definition through on-premise deployment.
+  - title: Application Programmer
+    dates: Jun 2025 – Aug 2025
+    where: Regenstrief Institute, Indianapolis, IN
+    bullets:
+      - Standardized U.S. EHR data by architecting pipelines for the OMOP and PCORnet common data models, improving data quality and harmonization.
+      - Engineered automated, scalable ETL pipelines and extracted longitudinal clinical features from raw EHR data using distributed cluster computing.
+      - Created web-based analytics dashboards that help clinicians interpret complex data.
+  - title: Application Programmer
+    dates: Mar 2024 – May 2025
+    where: University of Florida, Gainesville, FL
+    bullets:
+      - Implemented MLOps workflows with CI/CD and monitoring, enabling scalable deployment on Linux systems.
+      - Developed scalable ETL pipelines and engineered clinical features using cluster computing for large-scale healthcare data.
+      - Built and deployed secure, interactive healthcare web applications with FHIR integration on AWS.
+  - title: Research Assistant
+    dates: Dec 2022 – Feb 2024
+    where: University of Florida, Gainesville, FL
+    bullets:
+      - Cleaned and preprocessed large healthcare datasets and built visualizations to support data-driven research.
+      - Developed a computer vision object detection system with automated data acquisition pipelines.
+      - Built and deployed an interactive web platform for 3D modeling and predictive analytics.
+
+# title = degree, where = school and city
+education:
+  - title: M.S. in Electrical and Computer Engineering
+    dates: Aug 2021 – May 2023
+    where: University of Florida, Gainesville, FL
+  - title: B.S. in Electrical Engineering
+    dates: Sep 2016 – Jun 2020
+    where: Hubei University of Technology, Wuhan, China
+
+# authors, title, venue (shown in italics), details, optional links. * = equal contribution
+publications:
+  - authors: Jiayi Tong, Lu Li, Dazheng Zhang, Kyra S. O'Brien, Yiwen Lu, Qiong Wu, Ting Zhou, Bingyu Zhang, Yu Huang, Yu Hu, et al.
+    title: 'FLAT-WHITE: from target trial emulation to federated high-throughput causal machine learning using decentralized real-world data.'
+    venue: npj Health Systems
+    details: 3, 102 (2026).
+  - authors: Qiong Wu, Lu Li, Yuqing Lei, Ting Zhou, Huiling Tang, Bingyu Zhang, Yu Hu, et al.
+    title: 'Discovering repurposable drugs for Alzheimer''s disease and related dementias: target trial emulation using decentralised real-world data.'
+    venue: eBioMedicine
+    details: 132, 106466 (2026).
+  - authors: Qinglin Gou*, Yu Hu*, et al.
+    title: Adaptation of a fair individualized polysocial risk score for hospitalization risk prediction.
+    venue: JAMIA Open
+    details: 9(4), ooag161 (2026).
+    links:
+      - label: DOI
+        url: https://doi.org/10.1093/jamiaopen/ooag161
+  - authors: Yu Huang, Jie Xu, Zhengkang Fan, Yu Hu, et al.
+    title: Identifying Alzheimer's disease progression subphenotypes via a graph-based framework using electronic health records.
+    venue: Journal of Healthcare Informatics Research
+    details: 10, 317–339 (2026).
+  - authors: X. He, Y. Huang, Yu Hu, et al.
+    title: Toward integrating machine learning-powered polysocial risk scores into electronic health record workflows.
+    venue: AMIA Annual Symposium Proceedings
+    details: 2024, 451–460 (2025).
+    links:
+      - label: PMC
+        url: https://pmc.ncbi.nlm.nih.gov/articles/PMC12919456/
+  - authors: T. Zhou, A. Chen, Yu Hu, et al.
+    title: Automating Lung-RADS categorization and follow-up recommendations using in-context learning with large language models.
+    venue: AMIA Annual Symposium Proceedings
+    details: 2024, 1567–1576 (2025).
+    links:
+      - label: PMC
+        url: https://pmc.ncbi.nlm.nih.gov/articles/PMC12919574/
+  - authors: Jin Wang*, Yu Hu*, et al.
+    title: 'Technical note: ShinyAnimalCV: open-source cloud-based web application for object detection, segmentation, and three-dimensional visualization of animals using computer vision.'
+    venue: Journal of Animal Science
+    details: 102, skad416 (2024).
+    links:
+      - label: DOI
+        url: https://doi.org/10.1093/jas/skad416
+
+# Each project: title, dates, then either bullets or a one-paragraph summary
+projects:
+  - title: Clinical LLM Evaluation and Model Selection for Readmission Review
+    dates: Apr 2026 – Present
+    bullets:
+      - Led a head-to-head evaluation of Gemma 4 31B and MedGemma for patient-level readmission review across 30K–80K-token contexts, validating outputs against clinician review.
+      - Identified a key safety failure mode, where the domain-tuned model inferred answers unsupported by the record while Gemma 4 abstained with evidence-specific rationales.
+      - Built an LLM-as-a-Judge framework (Llama 3.3-70B) with rubric-based JSON verdicts and an HTML report that routes flagged patients to clinician review.
+      - Benchmarked long-context inference on NVIDIA B200 GPUs (FP16 vs. FP8, tensor parallelism) and traced a throughput ceiling to vLLM's KV-cache handling of sliding-window attention.
+  - title: Clinical LLMOps Platform for EHR Note Processing
+    dates: Feb 2026 – Present
+    bullets:
+      - Generalized project-specific clinical NLP scripts into a reusable, config-driven LLM platform shared by three clinical programs, so new cohorts onboard through configuration rather than code changes.
+      - Designed a modular pipeline (data loading, prompt assembly, batched inference, post-processing, reporting) with checkpoint/resume and asynchronous concurrency control on HiPerGator via SLURM and vLLM.
+      - Re-engineered the clinical note summarizer into an OpenAI-compatible service with JSON Schema output contracts, Pydantic validation, and automatic retry on malformed generations.
+  - title: GraphRAG Knowledge Graph for Heart Failure Readmission
+    dates: May 2026 – Present
+    bullets:
+      - Built an end-to-end GraphRAG pipeline over a heart failure cohort's clinical notes, with LLM-based entity and relation extraction using MedGemma-27B served via vLLM.
+      - Constructed the patient knowledge graph with hierarchical Leiden community detection and map-reduce LLM community reports on readmission themes.
+  - title: Neonatal Lactation and Milk Intake Modeling
+    dates: Sep 2025 – Present
+    bullets:
+      - Partnered with neonatologists and lactation specialists to define clinically validated features from EHR feeding and lactation data.
+      - Developed models for early identification of infants at risk for inadequate milk intake or feeding complications, deployed on-premise with Power BI dashboards for clinical teams.
+  - title: Graph-Based Modeling for Alzheimer's Disease Progression
+    dates: Dec 2023 – Nov 2025
+    summary: Built patient similarity graphs from EHR data and graph neural networks (PyTorch, NetworkX) to identify progression subphenotypes and support early detection.
+  - title: EHR Continuity for Type 2 Diabetes Risk Prediction
+    dates: Feb 2024 – Nov 2025
+    summary: Engineered a PCORnet-based pipeline on OneFlorida+ data, used the Harmonized Encounter Proportion Score to quantify data continuity, and assessed model fairness across racial and ethnic groups.
+  - title: OCT Retinal Biomarkers for ADRD Prediction
+    dates: Dec 2023 – Sep 2025
+    summary: Automated processing of OCT DICOM scans and used retinal thickness metrics to model the risk of Alzheimer's disease and related dementias.
+  - title: Healthcare Risk Prediction Web Application
+    dates: Nov 2023 – Sep 2025
+    summary: React front end and Flask API serving causal inference risk models, with FHIR and Epic integration, containerized with Docker.
+  - title: OMOP–FHIR Database Integration Platform
+    dates: Apr 2024 – Sep 2025
+    summary: Designed an OMOP database and a web platform combining OMOP and FHIR queries for standardized, real-time healthcare data access.
+
+# group = label on the left, items = text on the right
+skills:
+  - group: LLM & NLP
+    items: Prompt engineering, RAG/GraphRAG, LLM-as-a-Judge, vLLM, LLM agents, Hugging Face Transformers, LangChain, spaCy, FAISS
+  - group: Clinical data standards
+    items: UMLS, SNOMED CT, RxNorm, OMOP, FHIR, PCORnet
+  - group: MLOps / LLMOps
+    items: SLURM, model serving and monitoring, CI/CD, structured output (JSON Schema, Pydantic), config-driven pipelines
+  - group: Machine learning
+    items: PyTorch, TensorFlow, scikit-learn, XGBoost, NetworkX, causal inference
+  - group: Programming
+    items: Python, SQL, R, C/C++, Java, JavaScript, HTML/CSS, Shell, MATLAB, LaTeX
+  - group: Tools & platforms
+    items: Docker, Linux, Git, Tableau, Power BI, cluster and cloud computing
+
+# Awards and service: title, dates, optional where
+honors:
+  - title: Herbert Wertheim College of Engineering Achievement Award and Scholarship
+    dates: '2021'
+    where: University of Florida
+  - title: Undergraduate Scholarship, top 5% of students
+    dates: '2020'
+    where: Hubei University of Technology
+  - title: Reviewer, IEEE International Conference on Healthcare Informatics (ICHI)
+    dates: 2024 – 2026

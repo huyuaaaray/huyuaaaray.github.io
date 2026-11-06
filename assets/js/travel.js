@@ -154,6 +154,52 @@
     }
 
     drawRoutes();
+    shadeCountries();
+  }
+
+  /* ---------- Countries I've been to ---------- */
+  function shadeCountries() {
+    if (!window.topojson || !window.fetch) return;
+    // Names in travel.yml are matched to the map's country names; common short forms work too.
+    var COUNTRY_ALIASES = {
+      'usa': 'united states of america', 'us': 'united states of america', 'u.s.': 'united states of america',
+      'united states': 'united states of america', 'america': 'united states of america',
+      'uk': 'united kingdom', 'england': 'united kingdom', 'scotland': 'united kingdom', 'wales': 'united kingdom',
+      'great britain': 'united kingdom', 'britain': 'united kingdom',
+      'korea': 'south korea', 'republic of korea': 'south korea',
+      'czech republic': 'czechia', 'uae': 'united arab emirates', 'holland': 'netherlands',
+      'russian federation': 'russia', 'viet nam': 'vietnam'
+    };
+
+    var wanted = {};
+    places.forEach(function (p) {
+      if (!p.country) return;
+      var key = String(p.country).trim().toLowerCase();
+      wanted[COUNTRY_ALIASES[key] || key] = true;
+    });
+    if (!Object.keys(wanted).length) return;
+
+    fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json', {
+      integrity: 'sha384-yOCJ+8ShBm8UDqtAVtAvxTDDf4gXo5edxl/YG0FmVC5OTmqVLl7utuVGBDEeZWHf'
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (world) {
+        var all = topojson.feature(world, world.objects.countries).features;
+        var visited = all.filter(function (f) {
+          return wanted[String(f.properties.name).toLowerCase()];
+        });
+        if (!visited.length) return;
+        if (!map.getPane('countries')) {
+          map.createPane('countries');
+          map.getPane('countries').style.zIndex = 350;   // above the base map, below routes and markers
+        }
+        L.geoJSON({ type: 'FeatureCollection', features: visited }, {
+          pane: 'countries',
+          interactive: false,
+          style: function () { return { className: 'country-visited' }; }
+        }).addTo(map);
+      })
+      .catch(function () { /* shading is optional */ });
   }
 
   /* ---------- Flight routes from home ---------- */

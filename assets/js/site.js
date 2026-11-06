@@ -1,5 +1,7 @@
-/* Site-wide effects: scroll reveal, photo tilt, and count-up numbers.
-   Everything here is optional polish; the site works without it. */
+/* Site-wide effects: scroll reveal, photo tilt and parallax, rotating roles,
+   magnetic icons, card spotlight, count-up numbers, CV progress bar,
+   and a Gators easter egg. Everything here is optional polish; the site
+   works without it. */
 (function () {
   'use strict';
 
@@ -84,5 +86,189 @@
       });
     }, { threshold: 0.6 });
     counters.forEach(function (el) { cio.observe(el); });
+  }
+  /* ---------- Rotating roles under the name (typewriter) ---------- */
+  var rolesEl = document.querySelector('[data-roles]');
+  if (rolesEl && !reduceMotion) {
+    var roles = [];
+    try { roles = JSON.parse(rolesEl.getAttribute('data-roles')) || []; } catch (e) { roles = []; }
+    if (roles.length > 1) {
+      var r = 0, chars = roles[0].length, deleting = true;
+      var typeStep = function () {
+        var delay;
+        if (deleting) {
+          chars--;
+          delay = 45;
+          if (chars <= 0) { deleting = false; r = (r + 1) % roles.length; delay = 350; }
+        } else {
+          chars++;
+          delay = 85;
+          if (chars >= roles[r].length) { deleting = true; delay = 2200; }
+        }
+        rolesEl.textContent = roles[r].slice(0, Math.max(chars, 0)) || '\u200b';
+        setTimeout(typeStep, delay);
+      };
+      setTimeout(typeStep, 2600);
+    }
+  }
+
+  /* ---------- Magnetic icons ---------- */
+  if (finePointer && !reduceMotion) {
+    Array.prototype.forEach.call(document.querySelectorAll('.icon-btn'), function (btn) {
+      btn.addEventListener('pointermove', function (e) {
+        var b = btn.getBoundingClientRect();
+        var dx = e.clientX - (b.left + b.width / 2);
+        var dy = e.clientY - (b.top + b.height / 2);
+        btn.classList.add('is-magnet');
+        btn.style.setProperty('--mx', (dx * 0.35).toFixed(1) + 'px');
+        btn.style.setProperty('--my', (dy * 0.35).toFixed(1) + 'px');
+      });
+      btn.addEventListener('pointerleave', function () {
+        btn.classList.remove('is-magnet');
+        btn.style.setProperty('--mx', '0px');
+        btn.style.setProperty('--my', '0px');
+      });
+    });
+  }
+
+  /* ---------- Card spotlight ---------- */
+  if (finePointer) {
+    document.addEventListener('pointermove', function (e) {
+      var card = e.target.closest && e.target.closest('[data-glow]');
+      if (!card) return;
+      var b = card.getBoundingClientRect();
+      card.style.setProperty('--gx', (e.clientX - b.left).toFixed(0) + 'px');
+      card.style.setProperty('--gy', (e.clientY - b.top).toFixed(0) + 'px');
+    }, { passive: true });
+  }
+
+  /* ---------- Scroll-linked: photo parallax, CV progress, back to top ---------- */
+  var portrait = document.querySelector('.portrait');
+  var progressBar = document.querySelector('.read-progress');
+  var toTop = document.querySelector('.to-top');
+  var wideScreen = window.matchMedia && window.matchMedia('(min-width: 1001px)');
+  var ticking = false;
+
+  function onScroll() {
+    ticking = false;
+    var y = window.scrollY || window.pageYOffset;
+    if (portrait && !reduceMotion && wideScreen && wideScreen.matches) {
+      var b = portrait.getBoundingClientRect();
+      var offset = (b.top + b.height / 2 - window.innerHeight / 2) * -0.08;
+      portrait.style.setProperty('--parallax', Math.max(-28, Math.min(28, offset)).toFixed(1) + 'px');
+    }
+    if (progressBar) {
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.setProperty('--progress', max > 0 ? Math.min(1, y / max).toFixed(4) : '0');
+    }
+    if (toTop) toTop.classList.toggle('is-shown', y > 600);
+  }
+
+  if (portrait || progressBar || toTop) {
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
+    }, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+  if (toTop) {
+    toTop.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
+  }
+
+  /* ---------- Easter egg: type "gogators", or tap the header gator 5 times ---------- */
+  var secret = 'gogators';
+  var typed = '';
+  document.addEventListener('keydown', function (e) {
+    var t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (!e.key || e.key.length !== 1) return;
+    typed = (typed + e.key.toLowerCase()).slice(-secret.length);
+    if (typed === secret) { typed = ''; goGators(); }
+  });
+
+  // On the home page the header gator doesn't need to navigate, so taps count instead.
+  var brandImg = document.querySelector('.brand img');
+  if (brandImg && location.pathname === '/') {
+    var taps = 0, tapTimer = null;
+    brandImg.addEventListener('click', function (e) {
+      e.preventDefault();
+      taps++;
+      clearTimeout(tapTimer);
+      tapTimer = setTimeout(function () { taps = 0; }, 1500);
+      if (taps >= 5) {
+        taps = 0;
+        goGators();
+      } else if (taps === 1) {
+        window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+      }
+    });
+  }
+
+  var celebrating = false;
+  function goGators() {
+    if (celebrating) return;
+    celebrating = true;
+
+    var toast = document.createElement('div');
+    toast.className = 'gator-toast';
+    toast.setAttribute('role', 'status');
+    toast.innerHTML = 'Go Gators<span>!</span>';
+    document.body.appendChild(toast);
+    requestAnimationFrame(function () { toast.classList.add('is-shown'); });
+
+    var finish = function () {
+      toast.classList.remove('is-shown');
+      setTimeout(function () { toast.remove(); celebrating = false; }, 400);
+    };
+    if (reduceMotion) { setTimeout(finish, 1800); return; }
+
+    var canvas = document.createElement('canvas');
+    canvas.className = 'confetti';
+    document.body.appendChild(canvas);
+    var ctx = canvas.getContext('2d');
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W = canvas.width = Math.round(window.innerWidth * dpr);
+    var H = canvas.height = Math.round(window.innerHeight * dpr);
+    var colors = ['#fa4616', '#ff8a5c', '#0021a5', '#4a6cf7'];
+    var bits = [];
+    for (var i = 0; i < 170; i++) {
+      var fromLeft = i % 2 === 0;
+      bits.push({
+        x: (fromLeft ? 0.02 : 0.98) * W,
+        y: H * 0.75,
+        vx: (fromLeft ? 1 : -1) * (Math.random() * 9 + 5) * dpr,
+        vy: -(Math.random() * 15 + 11) * dpr,
+        w: (Math.random() * 6 + 5) * dpr,
+        h: (Math.random() * 10 + 6) * dpr,
+        rot: Math.random() * Math.PI,
+        vr: (Math.random() - 0.5) * 0.3,
+        color: colors[i % colors.length]
+      });
+    }
+    var start = null;
+    var draw = function (now) {
+      if (start === null) start = now;
+      var t = now - start;
+      ctx.clearRect(0, 0, W, H);
+      bits.forEach(function (b) {
+        b.vy += 0.38 * dpr;
+        b.vx *= 0.99;
+        b.x += b.vx;
+        b.y += b.vy;
+        b.rot += b.vr;
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, 1 - Math.max(0, t - 2200) / 900);
+        ctx.translate(b.x, b.y);
+        ctx.rotate(b.rot);
+        ctx.fillStyle = b.color;
+        ctx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h * Math.abs(Math.cos(b.rot * 2)));
+        ctx.restore();
+      });
+      if (t < 3100) requestAnimationFrame(draw);
+      else { canvas.remove(); finish(); }
+    };
+    requestAnimationFrame(draw);
   }
 })();

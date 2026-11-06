@@ -11,7 +11,7 @@ baseurl: ""
 
 # Google Analytics 4 measurement ID, e.g. "G-ABC123XYZ9".
 # Leave empty to turn analytics off. It only loads on the live site.
-google_analytics: ""
+google_analytics: "G-8Y3X786CMF"
 
 author:
   name: Yu Hu
@@ -23,6 +23,22 @@ author:
   github: huyuaaaray
   linkedin: yu-hu-769b02261
   scholar: SL4Guq4AAAAJ
+
+  # Rotating line under your name on the home page (typed out one by one)
+  roles:
+    - Data Scientist
+    - Clinical NLP
+    - LLM Evaluation
+    - LLMOps
+
+  # "About" on the home page. Separate paragraphs with a blank line.
+  # *italics*, **bold** and [links](https://...) work here.
+  bio: |
+    I'm a data scientist at the University of Florida College of Medicine, where I work with the Quality & Patient Safety group to build clinical AI systems. My work focuses on applying large language models to electronic health records and clinical notes, turning unstructured documentation into information that clinicians and quality teams can act on, from readmission analyses to care-coordination programs.
+
+    Along the way, I've built a shared, configuration-driven LLM platform that now supports several clinical programs, developed an LLM-as-a-Judge framework to evaluate model outputs before they reach clinician review, and scaled inference on UF's HiPerGator supercomputer. Over the past three years, this work has led to six peer-reviewed publications in clinical informatics.
+
+    What keeps me in this field is the gap between what AI can do on a benchmark and what it takes to make it reliable in real clinical workflows, and I enjoy closing that gap alongside clinicians, researchers, and engineers.
 
 markdown: kramdown
 exclude:

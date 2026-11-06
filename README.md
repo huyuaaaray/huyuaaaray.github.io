@@ -6,23 +6,34 @@ the `main` branch. Push a change and the live site updates in about a minute
 
 ## Where things are
 
+All the words on the site live in three files. You rarely need to touch HTML.
+
 | To change | Edit |
 | --- | --- |
+| Name, title, email, social links, Google Analytics ID | `_config.yml` |
+| About text and the rotating roles under your name | `_config.yml` (`bio:` and `roles:`) |
 | News on the home page | `_data/news.yml` |
+| Everything on the CV page | `_data/cv.yml` |
 | Places on the Travel page | `_data/travel.yml` (photos go in `images/travel/`) |
-| Bio | `index.html` |
-| CV page | `cv/index.html` |
 | Downloadable CV | replace `resume.pdf` (keep the file name) |
-| Name, email, social links, Google Analytics ID | `_config.yml` |
-| Profile photo | add `images/profile.jpg` (square works best); the initials show until then |
+| Profile photo | replace `images/profile.jpg` (4:5 portrait works best) |
+| Header gator icon | `images/header-icon.png` |
+| Share card images | `images/og-card.png`, `images/og-travel.png` (1200 × 630) |
 | Colors, fonts, layout, hover effects, dark mode | `assets/css/site.css` |
 | Icon hover colors (GitHub, LinkedIn, Scholar, email) | `--c-github`, `--c-linkedin`, `--c-scholar`, `--c-email` at the top of `assets/css/site.css` |
 | Background network on the home page | `assets/js/network.js`; delete `network: true` in `index.html` to turn it off |
-| Scroll reveal, photo tilt, count-up numbers | `assets/js/site.js` |
-| Map, flight routes, photo viewer | `assets/js/travel.js` |
-| Header and footer (shared by every page) | `_includes/header.html`, `_includes/footer.html` |
-| Share card images | `images/og-card.png`, `images/og-travel.png` (1200 × 630) |
+| Effects (scroll reveal, tilt, parallax, roles, magnetic icons, spotlight, progress bar, easter egg) | `assets/js/site.js` |
+| Map, flight routes, country shading, photo viewer | `assets/js/travel.js` |
 | Old links (e.g. `/CV.pdf`) | the `moved` list at the top of `404.html` |
+
+Easter egg: type `gogators` on any page, or tap the header gator five times
+on the home page.
+
+## Editing the CV
+
+Open `_data/cv.yml`. Each section is a list; copy an entry and change it.
+Bullets can use `*italics*`, `**bold**` and `[links](https://...)`. In
+publications your name is bolded automatically.
 
 ## Adding a news item
 
@@ -56,6 +67,10 @@ Copy one block in `_data/travel.yml` and edit it. Put photos in
     - youtube: https://www.youtube.com/watch?v=VIDEO_ID
     - bilibili: https://www.bilibili.com/video/BVxxxxxxxxxx
 ```
+
+Write `country` in English (for example `China`, `Japan`, `USA`, `UK`);
+visited countries are shaded on the map. Very small places such as
+Singapore or Hong Kong are too small for the world map to shade.
 
 Mark your home base with `home: true` (Gainesville in the examples); the
 flight routes on the map start there.
