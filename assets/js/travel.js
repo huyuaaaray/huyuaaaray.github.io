@@ -13,6 +13,23 @@
   var text = { previewCta: 'Click for photos and videos' };
   try { text = JSON.parse(document.getElementById('travel-text').textContent) || text; } catch (e) { /* keep defaults */ }
 
+  // Photos dropped into each place's folder (images/travel/<place-name>/) are added automatically.
+  var folders = [];
+  try { folders = JSON.parse((document.getElementById('travel-folders') || {}).textContent || '[]') || []; } catch (e) { folders = []; }
+  places.forEach(function (p, i) {
+    var listed = (p.photos || []).map(function (ph) { return typeof ph === 'string' ? ph : ph && ph.src; });
+    var extra = (folders[i] || []).filter(function (src) { return listed.indexOf(src) === -1; });
+    p.photos = (p.photos || []).concat(extra);
+    if (!p.cover && p.photos.length) {
+      var first = p.photos[0];
+      p.cover = typeof first === 'string' ? first : first.src;
+    }
+  });
+
+  var fxList = (document.documentElement.getAttribute('data-fx') || '').split(/\s+/);
+  var fxOn = function (name) { return fxList.indexOf(name) !== -1; };
+  var isLite = function () { return document.documentElement.classList.contains('lite'); };
+
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var dialog = document.getElementById('place-dialog');
   var titleEl = document.getElementById('dialog-title');
@@ -252,25 +269,26 @@
         })
         .arcStroke(function (d) { return d.i === activeIndex ? 1.15 : 0.55; });
     }
-    world
-      .arcsData(arcs)
-      .arcAltitudeAutoScale(0.45)
-      .arcDashLength(reduceMotion ? 1 : 0.45)
-      .arcDashGap(reduceMotion ? 0 : 0.2)
-      .arcDashInitialGap(function (d) { return reduceMotion ? 0 : 1 + (arcs.indexOf(d) % 3) * 0.3; })
-      .arcDashAnimateTime(reduceMotion ? 0 : 2800)
-      .arcsTransitionDuration(0);
+    world.arcAltitudeAutoScale(0.45).arcsTransitionDuration(0);
+    function arcMotion(moving) {
+      world
+        .arcDashLength(moving ? 0.45 : 1)
+        .arcDashGap(moving ? 0.2 : 0)
+        .arcDashInitialGap(function (d) { return moving ? 1 + (arcs.indexOf(d) % 3) * 0.3 : 0; })
+        .arcDashAnimateTime(moving ? 2800 : 0);
+    }
+    world.arcsData(arcs);
+    arcMotion(!reduceMotion && !isLite());
     paintArcs();
 
     // Ripples spreading out from home
-    if (home && !reduceMotion) {
-      world
-        .ringsData([{ lat: home.lat, lng: home.lng }])
-        .ringColor(function () { return function (t) { return 'rgba(255, 122, 80, ' + (1 - t).toFixed(3) + ')'; }; })
-        .ringMaxRadius(4.5)
-        .ringPropagationSpeed(2.2)
-        .ringRepeatPeriod(1500);
-    }
+    world
+      .ringColor(function () { return function (t) { return 'rgba(255, 122, 80, ' + (1 - t).toFixed(3) + ')'; }; })
+      .ringMaxRadius(4.5)
+      .ringPropagationSpeed(2.2)
+      .ringRepeatPeriod(1500);
+    function rings(on) { world.ringsData(on && home ? [{ lat: home.lat, lng: home.lng }] : []); }
+    rings(!reduceMotion && !isLite());
 
     // Countries drawn as dots; the ones I've been to are orange.
     if (window.topojson && window.fetch) {
@@ -365,7 +383,9 @@
     // Slow spin that stops while you're interacting and resumes a few seconds later.
     var controls = world.controls();
     var resumeTimer = null;
-    controls.autoRotate = !reduceMotion;
+    var replaying = false;
+    var globeVisible = true;
+    controls.autoRotate = !reduceMotion && !isLite();
     controls.autoRotateSpeed = 0.5;
     controls.enableZoom = false;          // the mouse wheel scrolls the page until you click the globe
     controls.enablePan = false;
@@ -376,13 +396,206 @@
       clearTimeout(resumeTimer);
       if (reduceMotion) return;
       resumeTimer = setTimeout(function () {
-        if (!(dialog && dialog.open) && hoverIndex < 0) controls.autoRotate = true;
+        if (!(dialog && dialog.open) && hoverIndex < 0 && !isLite() && !replaying) controls.autoRotate = true;
       }, ms || 3500);
     }
     controls.addEventListener('start', function () { hold(); hideTip(); });
     controls.addEventListener('end', function () { resumeSoon(3500); });
     mapEl.addEventListener('click', function () { controls.enableZoom = true; });
     mapEl.addEventListener('mouseleave', function () { controls.enableZoom = false; });
+
+    /* ---------- Little planes flying the routes ----------
+       A plane follows the same curve globe.gl uses for an arc (a cubic Bézier lifted
+       off the surface), is hidden while behind the globe, and makes the destination
+       marker flash when it lands. */
+    var R = 100;                                   // globe.gl's globe radius
+    var toXYZ = function (lat, lng, alt) {
+      var phi = (90 - lat) * Math.PI / 180, theta = (90 - lng) * Math.PI / 180, r = R * (1 + alt);
+      return [r * Math.sin(phi) * Math.cos(theta), r * Math.cos(phi), r * Math.sin(phi) * Math.sin(theta)];
+    };
+    var toGeo = function (v) {
+      var r = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+      var lat = 90 - Math.acos(v[1] / r) * 180 / Math.PI;
+      var lng = 90 - Math.atan2(v[2], v[0]) * 180 / Math.PI;
+      lng = ((lng + 540) % 360) - 180;
+      return { lat: lat, lng: lng, alt: r / R - 1 };
+    };
+    var angleBetween = function (a, b) {
+      var d = (a[0] * b[0] + a[1] * b[1] + a[2] * b[2]) /
+        (Math.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]) * Math.sqrt(b[0] * b[0] + b[1] * b[1] + b[2] * b[2]));
+      return Math.acos(Math.max(-1, Math.min(1, d)));
+    };
+    var slerpGeo = function (a, b, t) {                // point on the great circle, as lat/lng
+      var A = toXYZ(a.lat, a.lng, 0), B = toXYZ(b.lat, b.lng, 0), w = angleBetween(A, B);
+      if (w < 1e-6) return { lat: a.lat, lng: a.lng };
+      var s1 = Math.sin((1 - t) * w) / Math.sin(w), s2 = Math.sin(t * w) / Math.sin(w);
+      var g = toGeo([A[0] * s1 + B[0] * s2, A[1] * s1 + B[1] * s2, A[2] * s1 + B[2] * s2]);
+      return { lat: g.lat, lng: g.lng };
+    };
+    function makeRoute(a, b) {
+      var w = angleBetween(toXYZ(a.lat, a.lng, 0), toXYZ(b.lat, b.lng, 0));
+      var top = (w / 2) * 0.45;                      // same as arcAltitudeAutoScale(0.45)
+      var m1 = slerpGeo(a, b, 0.25), m2 = slerpGeo(a, b, 0.75);
+      var P = [toXYZ(a.lat, a.lng, 0), toXYZ(m1.lat, m1.lng, top * 1.5), toXYZ(m2.lat, m2.lng, top * 1.5), toXYZ(b.lat, b.lng, 0)];
+      return {
+        angle: w,
+        at: function (t) {
+          var u = 1 - t, c = [u * u * u, 3 * u * u * t, 3 * u * t * t, t * t * t];
+          return toGeo([0, 1, 2].map(function (k) { return c[0] * P[0][k] + c[1] * P[1][k] + c[2] * P[2][k] + c[3] * P[3][k]; }));
+        }
+      };
+    }
+    function behindGlobe(g) {
+      var cam = world.camera().position, p = toXYZ(g.lat, g.lng, g.alt);
+      var d = [p[0] - cam.x, p[1] - cam.y, p[2] - cam.z];
+      var a = d[0] * d[0] + d[1] * d[1] + d[2] * d[2];
+      var b = 2 * (cam.x * d[0] + cam.y * d[1] + cam.z * d[2]);
+      var c = cam.x * cam.x + cam.y * cam.y + cam.z * cam.z - R * R;
+      var disc = b * b - 4 * a * c;
+      if (disc < 0) return false;
+      var t1 = (-b - Math.sqrt(disc)) / (2 * a);
+      return t1 > 0 && t1 < 0.999;
+    }
+
+    var planeLayer = document.createElement('div');
+    planeLayer.className = 'plane-layer';
+    planeLayer.setAttribute('aria-hidden', 'true');
+    mapEl.appendChild(planeLayer);
+    var PLANE_SVG = '<svg viewBox="0 0 24 24"><path d="M21 12.5c0-.6-.5-1-1.1-1H14L9.6 4.4c-.2-.3-.5-.4-.8-.4H7.6l2.2 7.5H5.2L3.6 9.6c-.2-.2-.4-.3-.7-.3H2l1.2 3.2L2 15.7h.9c.3 0 .5-.1.7-.3l1.6-1.9h4.6L7.6 21h1.2c.3 0 .6-.2.8-.4L14 13.5h5.9c.6 0 1.1-.4 1.1-1z"/></svg>';
+    var flights = [];
+    var nextFlight = 0;
+    var flightLoop = null;
+
+    function launch(fromIdx, toIdx, opts) {
+      var a = places[fromIdx], b = places[toIdx];
+      var route = makeRoute(a, b);
+      var el = document.createElement('span');
+      el.className = 'plane' + (opts && opts.lead ? ' is-lead' : '');
+      el.innerHTML = PLANE_SVG;
+      planeLayer.appendChild(el);
+      var f = { el: el, route: route, to: toIdx, start: performance.now(),
+                dur: (opts && opts.dur) || Math.min(6500, 2000 + route.angle * 2300), done: opts && opts.done };
+      flights.push(f);
+      if (!flightLoop) flightLoop = requestAnimationFrame(flyFrame);
+      return f;
+    }
+    function land(f) {
+      f.el.remove();
+      var m = markers[f.to];
+      if (m) { m.classList.remove('is-arrived'); void m.offsetWidth; m.classList.add('is-arrived'); }
+      if (f.done) f.done();
+    }
+    function flyFrame(now) {
+      flightLoop = null;
+      var randomOn = fxOn('planes') && !reduceMotion && !isLite() && !replaying && globeVisible && arcs.length;
+      if (randomOn && now > nextFlight && flights.length < 3) {
+        var busyTo = flights.map(function (f) { return f.to; });
+        var pick = arcs.filter(function (a) { return busyTo.indexOf(a.i) === -1; });
+        if (pick.length) launch(homeIndex, pick[(Math.random() * pick.length) | 0].i);
+        nextFlight = now + 1500 + Math.random() * 2000;
+      }
+      for (var k = flights.length - 1; k >= 0; k--) {
+        var f = flights[k];
+        var t = (now - f.start) / f.dur;
+        if (t >= 1) { flights.splice(k, 1); land(f); continue; }
+        var e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;      // ease in and out
+        var g = f.route.at(e), g2 = f.route.at(Math.min(1, e + 0.01));
+        var s = world.getScreenCoords(g.lat, g.lng, g.alt), s2 = world.getScreenCoords(g2.lat, g2.lng, g2.alt);
+        var ang = Math.atan2(s2.y - s.y, s2.x - s.x) * 180 / Math.PI;
+        var fade = Math.min(1, t * 10, (1 - t) * 10);
+        f.el.style.opacity = behindGlobe(g) ? 0 : fade;
+        f.el.style.transform = 'translate(' + s.x.toFixed(1) + 'px,' + s.y.toFixed(1) + 'px) rotate(' + ang.toFixed(1) + 'deg)';
+      }
+      if (flights.length || (fxOn('planes') && !reduceMotion && !isLite() && !replaying)) flightLoop = requestAnimationFrame(flyFrame);
+    }
+    function clearFlights() {
+      flights.forEach(function (f) { f.el.remove(); });
+      flights = [];
+    }
+    if (fxOn('planes') && !reduceMotion && !isLite()) { nextFlight = performance.now() + 2500; flightLoop = requestAnimationFrame(flyFrame); }
+
+    /* ---------- Replay my travels: the places in date order, one leg at a time ---------- */
+    var replayBtn = wrap.querySelector('.replay-btn');
+    var caption = wrap.querySelector('.replay-caption');
+    var replayTimer = null;
+    var replayArcs = [];
+    function yearOf(p) { var m = String(p.date || '').match(/\d{4}/); return m ? Number(m[0]) : Infinity; }
+    function setReplayBtn(on) {
+      if (!replayBtn) return;
+      replayBtn.classList.toggle('is-playing', on);
+      replayBtn.querySelector('.replay-text').textContent = on ? (text.replayStop || 'Stop') : (text.replayLabel || 'Replay');
+    }
+    function showCaption(i) {
+      if (!caption) return;
+      var p = places[i];
+      caption.querySelector('.rc-when').textContent = p.date || '';
+      caption.querySelector('.rc-where').textContent = p.name + (p.region ? ', ' + p.region : '');
+      caption.classList.remove('is-shown'); void caption.offsetWidth; caption.classList.add('is-shown');
+    }
+    function stopReplay() {
+      clearTimeout(replayTimer);
+      replaying = false;
+      clearFlights();
+      replayArcs = [];
+      world.arcsData(arcs);
+      arcMotion(!reduceMotion && !isLite());
+      paintArcs();
+      rings(!reduceMotion && !isLite());
+      if (caption) caption.classList.remove('is-shown');
+      setReplayBtn(false);
+      world.pointOfView({ altitude: REST_ALT }, reduceMotion ? 0 : 1200);
+      resumeSoon(2500);
+      if (!flightLoop) flightLoop = requestAnimationFrame(flyFrame);
+    }
+    function startReplay() {
+      var order = valid.slice().sort(function (a, b) { return (yearOf(places[a]) - yearOf(places[b])) || (a - b); });
+      if (!order.length) return;
+      replaying = true;
+      hold();
+      hideTip();
+      clearFlights();
+      rings(false);
+      replayArcs = [];
+      world.arcsData(replayArcs);
+      arcMotion(false);
+      world.arcColor(function () { return ['rgba(255, 190, 160, 0.95)', 'rgba(255, 122, 80, 1)']; }).arcStroke(0.7);
+      setReplayBtn(true);
+      var k = 0;
+      var first = places[order[0]];
+      world.pointOfView({ lat: first.lat, lng: first.lng, altitude: REST_ALT }, reduceMotion ? 0 : 1200);
+      showCaption(order[0]);
+      var next = function () {
+        if (!replaying) return;
+        k++;
+        if (k >= order.length) { replayTimer = setTimeout(stopReplay, 2200); return; }
+        var from = order[k - 1], to = order[k];
+        var a = places[from], b = places[to];
+        var w = makeRoute(a, b).angle;
+        var dur = reduceMotion ? 600 : Math.min(3800, 1300 + w * 1500);
+        world.pointOfView({ lat: (a.lat + b.lat) / 2, lng: b.lng, altitude: REST_ALT + Math.min(0.9, w * 0.4) }, dur * 0.9);
+        var done = function () {
+          if (!replaying) return;
+          replayArcs = replayArcs.concat([{ startLat: a.lat, startLng: a.lng, endLat: b.lat, endLng: b.lng }]);
+          world.arcsData(replayArcs);
+          showCaption(to);
+          replayTimer = setTimeout(next, reduceMotion ? 700 : 650);
+        };
+        if (reduceMotion) { replayTimer = setTimeout(done, dur); }
+        else { launch(from, to, { lead: true, dur: dur, done: done }); }
+      };
+      replayTimer = setTimeout(next, reduceMotion ? 900 : 1500);
+    }
+    if (replayBtn) {
+      replayBtn.addEventListener('click', function () { if (replaying) stopReplay(); else startReplay(); });
+    }
+
+    // "Reduce animations": no spin, no flowing dashes, no ripples, no planes.
+    window.addEventListener('litechange', function () {
+      var calm = isLite();
+      if (calm) { hold(); clearFlights(); }
+      if (!replaying) { arcMotion(!calm && !reduceMotion); rings(!calm && !reduceMotion); }
+      if (!calm) { resumeSoon(800); if (!flightLoop) { nextFlight = performance.now() + 1200; flightLoop = requestAnimationFrame(flyFrame); } }
+    });
 
     // Start a little farther out and glide in when the globe scrolls into view.
     var startView = home ? { lat: home.lat, lng: home.lng } : { lat: 20, lng: 0 };
@@ -393,6 +606,7 @@
       var introDone = false;
       new IntersectionObserver(function (entries) {
         var visible = entries[0].isIntersecting;
+        globeVisible = visible;
         // Save the laptop battery: stop drawing while the globe is off screen.
         if (visible) world.resumeAnimation(); else world.pauseAnimation();
         if (visible && !introDone) {
@@ -413,7 +627,7 @@
 
     return {
       world: world,
-      refresh: paintArcs,
+      refresh: function () { if (!replaying) paintArcs(); },
       focus: function (i) {
         var p = places[i];
         if (!p || typeof p.lat !== 'number') return;
@@ -428,11 +642,11 @@
       // Turn to a place without zooming in (used when hovering its card).
       peek: function (i) {
         var p = places[i];
-        if (!p || typeof p.lat !== 'number') return;
+        if (!p || typeof p.lat !== 'number' || replaying) return;
         hold();
         world.pointOfView({ lat: p.lat, lng: p.lng, altitude: REST_ALT }, reduceMotion ? 0 : 1000);
       },
-      unpeek: function () { resumeSoon(2500); }
+      unpeek: function () { if (!replaying) resumeSoon(2500); }
     };
   }
 
@@ -561,14 +775,29 @@
     var html = p.summary ? '<p>' + esc(p.summary) + '</p>' : '';
     var media = '';
 
-    photos.forEach(function (ph, k) {
-      // A single photo (or the odd one out at the end) spans the full width.
-      var wide = photos.length % 2 === 1 && k === photos.length - 1;
-      media += '<figure' + (wide ? ' class="wide"' : '') + '>' +
-        '<a href="' + esc(ph.src) + '" data-photo="' + k + '" target="_blank" rel="noopener" aria-label="View photo full screen">' +
-        '<img src="' + esc(ph.src) + '" alt="' + esc(ph.caption || p.name) + '" loading="lazy"></a>' +
-        (ph.caption ? '<figcaption>' + esc(ph.caption) + '</figcaption>' : '') + '</figure>';
-    });
+    if (fxOn('polaroids') && photos.length) {
+      // A stack of polaroids (up to 7) that fans out on hover; click one to see it full screen.
+      var shown = photos.slice(0, 7);
+      var stack = '';
+      shown.forEach(function (ph, k) {
+        var angle = ((k * 37) % 13) - 6;                  // a fixed "random" tilt per photo
+        stack += '<a class="polaroid" href="' + esc(ph.src) + '" data-photo="' + k + '" target="_blank" rel="noopener" ' +
+          'aria-label="View photo ' + (k + 1) + ' full screen" style="--k:' + k + ';--n:' + shown.length + ';--a:' + angle + 'deg">' +
+          '<img src="' + esc(ph.src) + '" alt="' + esc(ph.caption || p.name) + '" loading="lazy">' +
+          '<span class="polaroid-cap">' + esc(ph.caption || p.name) + '</span></a>';
+      });
+      html += '<div class="polaroid-stack">' + stack + '</div>';
+      if (photos.length > shown.length) html += '<p class="polaroid-more">+' + (photos.length - shown.length) + '</p>';
+    } else {
+      photos.forEach(function (ph, k) {
+        // A single photo (or the odd one out at the end) spans the full width.
+        var wide = photos.length % 2 === 1 && k === photos.length - 1;
+        media += '<figure' + (wide ? ' class="wide"' : '') + '>' +
+          '<a href="' + esc(ph.src) + '" data-photo="' + k + '" target="_blank" rel="noopener" aria-label="View photo full screen">' +
+          '<img src="' + esc(ph.src) + '" alt="' + esc(ph.caption || p.name) + '" loading="lazy"></a>' +
+          (ph.caption ? '<figcaption>' + esc(ph.caption) + '</figcaption>' : '') + '</figure>';
+      });
+    }
 
     (p.videos || []).forEach(function (v) {
       var src = embedUrl(v);

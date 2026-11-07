@@ -11,7 +11,7 @@
 #  目录：
 #    一、网站设置        二、个人信息与导航     三、首页
 #    四、Travel 页面     五、CV 页面            六、404 页面
-#    七、特效开关与彩蛋
+#    七、特效开关与彩蛋  八、节日主题
 # =====================================================================
 
 
@@ -52,6 +52,8 @@ social_labels:
 
 # 右上角日夜切换按钮的提示文字
 theme_toggle_label: Switch light / dark mode
+# 右上角"减少动画"按钮的提示文字（打开后只关掉最耗性能的几个动画）
+motion_toggle_label: Turn heavy animations on / off
 
 # 用键盘 Tab 键浏览时，左上角最先出现的"跳到正文"按钮
 skip_link: Skip to content
@@ -152,6 +154,26 @@ home:
     - Pydantic
     - PyTorch
 
+  # "Ask about Yu" 对话框（在 News 下面）：访客点一个问题，答案会像 AI 一样一个词一个词打出来。
+  #   这不是真的 AI，答案就是你在这里写好的。a 是答案 (Markdown)，可以放链接。
+  ask:
+    title: Ask about Yu
+    greeting: "Hi! I'm a tiny pre-written bot. Pick a question below and I'll tell you about Yu."
+    bot_name: Yu-bot
+    questions:
+      - q: What are you working on right now?
+        a: "I lead clinical LLM evaluation for UF's Quality & Patient Safety group: comparing models like Gemma 4 and MedGemma against clinician review, and building LLM-as-a-Judge workflows that send flagged cases to clinicians."
+      - q: What is your research focus?
+        a: "Making large language models reliable enough for real clinical work: reading EHR notes, surfacing risks, and supporting the clinicians who review them. Lately that includes GraphRAG knowledge graphs for heart failure readmission."
+      - q: What does your tech stack look like?
+        a: "Python, vLLM and SLURM on UF's HiPerGator supercomputer, config-driven pipelines with JSON Schema and Pydantic, plus PyTorch, OMOP and FHIR on the clinical data side."
+      - q: Where have you worked?
+        a: "The University of Florida (Data Scientist III, and before that Application Programmer and Research Assistant) and the Regenstrief Institute in Indianapolis. The full story is on my [CV](/cv/)."
+      - q: Can we collaborate?
+        a: "I'd love to hear from you. Email me at [huyuaaaray@gmail.com](mailto:huyuaaaray@gmail.com) or find me on LinkedIn."
+      - q: Tell me a secret.
+        a: "Try clicking my name at the very top of this page. Go Gators!"
+
   # News 部分
   news_title: News
   # 每条新闻：date 是显示的日期，datetime 是 年-月（给搜索引擎看），text 是内容 (Markdown)
@@ -189,6 +211,19 @@ travel:
   map_hint: Click the map to zoom with your mouse wheel. Lines show trips from home; shaded countries are ones I've visited.
   preview_cta: Click for photos and videos      # 地图预览卡片底部那行字
   no_media: Photos and stories from this trip are coming soon.   # 地点还没有介绍和照片时，详情里显示的一句话
+  replay_label: Replay my travels      # 地球下面"旅程回放"按钮的文字
+  replay_stop: Stop                    # 回放进行中按钮变成的文字
+
+  # ★ 照片接口（最简单的放照片方法）：
+  #   每个地点都有一个照片文件夹 images/travel/地名/ ，地名是小写、空格换成横线，例如
+  #     images/travel/miami/   images/travel/cedar-key/   images/travel/new-york-city/
+  #     images/travel/yellowstone-national-park/   images/travel/guangzhou/
+  #   把照片（jpg、png、webp）直接丢进对应文件夹就行，不用在这里写任何东西：
+  #     - 网站会按文件名顺序显示，详情里是一叠可以展开的拍立得
+  #     - 没写 cover 时，文件夹里的第一张自动当封面
+  #   想给某张照片加说明文字，就在下面那个地点的 photos 里写 src 和 caption。
+  #   iPhone 的 HEIC 格式浏览器显示不了，请先转成 JPG；每张最好压到 1 MB 以内（约 1600 像素宽）。
+  #   不想用默认文件夹，可以给地点加一行 photo_folder: /images/travel/别的文件夹/
   # 浏览器不支持 3D 地球时，地球位置显示的一句话
   globe_fallback: Your browser can't show the 3D globe, but you can still browse every place below.
 
@@ -644,6 +679,17 @@ effects:
   copy_citation: true        # 论文一键复制引用
   # 404 页面
   game_404: true             # 404 小游戏：鳄鱼跳障碍
+  # 新增
+  motion_toggle: true        # 右上角"减少动画"按钮：访客可以一键关掉最耗性能的动画（背景网络、星空、鼠标拖尾、地球自转和小飞机、节日粒子）
+  name_repel: true           # 首页大标题：鼠标靠近时字母被推开，移开后弹回
+  sky_tint: true             # 背景跟着 Gainesville 时间变色：清晨暖粉、白天明亮、黄昏橙紫、夜里深蓝
+  news_magnet: true          # News 每一条像图标一样被鼠标轻轻吸过去
+  ask_box: true              # 首页 "Ask about Yu" 对话框（问题和答案在第三部分 home → ask）
+  skill_links: true          # CV 技能联动：鼠标放到某个技能上，用到它的经历和项目亮起，其他变淡
+  flap_titles: true          # 航班显示屏：CV 和 Travel 页的大标题像机场翻牌屏一样翻出来
+  travel_replay: true        # 旅程回放：地球下面的按钮，按时间顺序回放足迹（按每个地点的 date 排序）
+  globe_planes: true         # 小飞机：沿着航线从家飞往各地，到达时目的地闪一下
+  polaroids: true            # 照片拍立得：地点详情里的照片是一叠拍立得，鼠标放上去散开成扇形
 
 # 彩蛋：在首页点击大标题 "Yu Hu"，或者在任意页面用键盘输入 secret 这个词，
 #       两边喷出彩带，同时屏幕中央淡入 image 这张图，下面一行 message 文字，停几秒后淡出。
@@ -653,3 +699,28 @@ easter_egg:
   secret: gogators           # 只用小写字母
   message: "Go Gators!"
   image: /images/go-gators.webp   # 彩蛋图片，放在 images 文件夹
+
+
+# =====================================================================
+# 八、节日主题（按 Gainesville 的日期自动出现；enabled 写 false 全部关闭）
+#    想提前看效果：在网址后面加 ?holiday=snow / newyear / lunar / gameday
+# =====================================================================
+holidays:
+  enabled: true
+  snow: true                 # 12 月 1 日到 26 日：飘雪
+  new_year: true             # 12 月 31 日到 1 月 2 日：放烟花
+  lunar_new_year: true       # 春节：除夕到元宵节，顶部两盏灯笼 + 一行祝福
+  lunar_text: 新年快乐 · Happy Lunar New Year
+  # 每年除夕的日期（灯笼从除夕挂到元宵节）。请核对，往后的年份照格式加。
+  lunar_dates: ["2027-02-05", "2028-01-25", "2029-02-12", "2030-02-02"]
+  game_day: true             # 橄榄球比赛日：页面顶部一条横幅
+  # 比赛日期（年-月-日）和横幅文字。新赛季的赛程出来后，照这个格式加上即可。
+  game_days:
+    - date: 2026-11-07
+      text: "Game day: Gators vs. Oklahoma in The Swamp. Go Gators!"
+    - date: 2026-11-14
+      text: "Game day: Gators at Kentucky. Go Gators!"
+    - date: 2026-11-21
+      text: "Game day: Gators vs. Vanderbilt in The Swamp. Go Gators!"
+    - date: 2026-11-28
+      text: "Game day: Gators at Florida State. Go Gators!"

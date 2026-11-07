@@ -117,4 +117,28 @@ scripts:
     </ol>
   </section>
   {%- endif %}
+
+  {%- if site.effects.ask_box and h.ask.questions and h.ask.questions.size > 0 %}
+  {%- assign ask = h.ask %}
+  <section class="ask" aria-labelledby="ask-title" data-reveal>
+    <h2 class="section-title" id="ask-title">{{ ask.title | escape }}</h2>
+    <div class="ask-box">
+      <div class="ask-log" aria-live="polite">
+        <div class="msg msg-bot">
+          <span class="msg-avatar" aria-hidden="true"><img src="/images/header-icon.png" alt="" width="28" height="27"></span>
+          <div class="msg-bubble"><span class="msg-name">{{ ask.bot_name | escape }}</span>{{ ask.greeting | escape }}</div>
+        </div>
+      </div>
+      <div class="ask-chips">
+        {%- for item in ask.questions %}
+        <button type="button" class="ask-chip" data-q="{{ forloop.index0 }}">{{ item.q | escape }}</button>
+        {%- endfor %}
+      </div>
+      {%- comment -%} Answers, already turned into HTML; the script types them out {%- endcomment -%}
+      {%- for item in ask.questions %}
+      <template data-answer="{{ forloop.index0 }}">{% include inline-md.html text=item.a %}</template>
+      {%- endfor %}
+    </div>
+  </section>
+  {%- endif %}
 </div>

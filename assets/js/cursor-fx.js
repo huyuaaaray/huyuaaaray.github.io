@@ -9,6 +9,7 @@
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var finePointer = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   if (reduceMotion) return;
+  var isLite = function () { return document.documentElement.classList.contains('lite'); };
 
   /* ---------- Cursor spotlight ---------- */
   if (has('spotlight') && finePointer) {
@@ -18,6 +19,7 @@
     document.body.insertBefore(spot, document.body.firstChild);
     window.addEventListener('pointermove', function (e) {
       if (e.pointerType && e.pointerType !== 'mouse') return;
+      if (isLite()) { spot.classList.remove('is-on'); return; }
       spot.style.setProperty('--cx', e.clientX + 'px');
       spot.style.setProperty('--cy', e.clientY + 'px');
       spot.classList.add('is-on');
@@ -78,6 +80,7 @@
 
     window.addEventListener('pointermove', function (e) {
       if (e.pointerType && e.pointerType !== 'mouse') return;
+      if (isLite()) return;
       // Browsers merge fast mouse moves into one event per frame; use every merged position for a smooth tail.
       var list = (e.getCoalescedEvents && e.getCoalescedEvents()) || [];
       if (!list.length) list = [e];

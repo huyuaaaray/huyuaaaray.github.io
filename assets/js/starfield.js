@@ -198,8 +198,10 @@
     raf = requestAnimationFrame(frame);
   }
 
+  var isLite = function () { return document.documentElement.classList.contains('lite'); };
+
   function start() {
-    if (raf || reduce || document.hidden) return;
+    if (raf || reduce || document.hidden || isLite()) return;
     raf = requestAnimationFrame(frame);
   }
 
@@ -226,4 +228,5 @@
   }, { passive: true });
   if (reduce) window.addEventListener('scroll', function () { draw(performance.now(), false); }, { passive: true });
   document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else start(); });
+  window.addEventListener('litechange', function () { if (isLite()) { stop(); draw(performance.now(), false); } else start(); });
 })();

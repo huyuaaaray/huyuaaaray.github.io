@@ -13,6 +13,11 @@
       </nav>
       <span class="header-divider" aria-hidden="true"></span>
       <div class="social">{% include social-links.html %}</div>
+      {%- if site.effects.motion_toggle %}
+      <button type="button" class="icon-btn motion-toggle" data-brand="theme" aria-pressed="false" aria-label="{{ site.motion_toggle_label | escape }}" title="{{ site.motion_toggle_label | escape }}">
+        {% include icon.html name="zap" %}{% include icon.html name="zap-off" %}
+      </button>
+      {%- endif %}
       {%- if site.effects.theme_toggle and page.theme != "night" %}
       <button type="button" class="icon-btn theme-toggle" data-brand="theme" aria-label="{{ site.theme_toggle_label | escape }}" title="{{ site.theme_toggle_label | escape }}">
         {% include icon.html name="moon" %}{% include icon.html name="sun" %}

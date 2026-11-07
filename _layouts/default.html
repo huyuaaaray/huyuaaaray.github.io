@@ -14,6 +14,14 @@
   {%- if site.effects.globe_card_link %} cardglobe{% endif -%}
   {%- if site.effects.cv_timeline %} timeline{% endif -%}
   {%- if site.effects.copy_citation %} cite{% endif -%}
+  {%- if site.effects.name_repel %} repel{% endif -%}
+  {%- if site.effects.sky_tint %} sky{% endif -%}
+  {%- if site.effects.news_magnet %} magnet{% endif -%}
+  {%- if site.effects.skill_links %} skills{% endif -%}
+  {%- if site.effects.flap_titles %} flap{% endif -%}
+  {%- if site.effects.travel_replay %} replay{% endif -%}
+  {%- if site.effects.globe_planes %} planes{% endif -%}
+  {%- if site.effects.polaroids %} polaroids{% endif -%}
 {%- endcapture -%}
 <html lang="en"{% if page.theme %} class="theme-{{ page.theme }}"{% endif %} data-fx="{{ fx | strip }}"{% if site.easter_egg.enabled %} data-egg="{{ site.easter_egg.secret | downcase | escape }}" data-egg-msg="{{ site.easter_egg.message | escape }}"{% if site.easter_egg.image and site.easter_egg.image != "" %} data-egg-img="{{ site.easter_egg.image | relative_url }}"{% endif %}{% endif %}>
 <head>
@@ -52,6 +60,11 @@
 <script src="/assets/js/site.js"></script>
 <script src="/assets/js/cursor-fx.js"></script>
 <script src="/assets/js/extras.js"></script>
+{%- if site.holidays.enabled %}
+{%- assign hd = site.holidays %}
+<script id="holiday-data" type="application/json">{"tz": {{ site.footer_clock.timezone | default: "America/New_York" | jsonify }}, "snow": {{ hd.snow | jsonify }}, "newYear": {{ hd.new_year | jsonify }}, "lunar": {{ hd.lunar_new_year | jsonify }}, "lunarText": {{ hd.lunar_text | jsonify }}, "lunarDates": {{ hd.lunar_dates | jsonify }}, "gameDay": {{ hd.game_day | jsonify }}, "games": [{% for g in hd.game_days %}{"date": {{ g.date | date: "%Y-%m-%d" | jsonify }}, "text": {{ g.text | jsonify }}}{% unless forloop.last %}, {% endunless %}{% endfor %}]}</script>
+<script src="/assets/js/holiday.js"></script>
+{%- endif %}
 {%- for s in page.scripts %}
 <script src="{{ s }}"></script>
 {%- endfor %}

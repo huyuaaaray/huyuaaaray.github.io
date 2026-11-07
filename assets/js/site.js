@@ -11,6 +11,25 @@
   var fx = (root.getAttribute('data-fx') || '').split(/\s+/);
   var has = function (name) { return fx.indexOf(name) !== -1; };
 
+  /* ---------- "Reduce animations" button ----------
+     Lite mode only switches off the heaviest effects (background network, starfield,
+     cursor tail and spotlight, globe spin and planes, holiday particles, floating orbs).
+     Each of those scripts listens for the "litechange" event. */
+  var motionBtn = document.querySelector('.motion-toggle');
+  function syncMotionBtn() {
+    if (motionBtn) motionBtn.setAttribute('aria-pressed', root.classList.contains('lite') ? 'true' : 'false');
+  }
+  syncMotionBtn();
+  if (motionBtn) {
+    motionBtn.addEventListener('click', function () {
+      var lite = !root.classList.contains('lite');
+      root.classList.toggle('lite', lite);
+      try { localStorage.setItem('lite', lite ? '1' : '0'); } catch (e) { /* storage blocked */ }
+      syncMotionBtn();
+      window.dispatchEvent(new CustomEvent('litechange', { detail: lite }));
+    });
+  }
+
   /* ---------- Light / dark: header button, browser bar color, following the system ---------- */
   var THEME_BG = { light: '#f6f5f8', dark: '#0e1320' };
   function syncThemeColor() {
@@ -194,6 +213,7 @@
 
   /* ---------- Name decode: the big "Yu Hu" resolves out of scrambled characters ---------- */
   var nameEl = document.querySelector('.display-name');
+  var repelOn = !!(nameEl && has('repel') && finePointer && !reduceMotion);
   var decodeName = function () {};
   if (nameEl && has('decode') && !reduceMotion) {
     var nameText = nameEl.textContent.trim();
@@ -235,8 +255,12 @@
           }
         });
         if (busy) { requestAnimationFrame(tick); return; }
-        // Done: put the plain text back so the letters kern normally again.
-        setTimeout(function () { nameEl.textContent = nameText; decoding = false; }, 700);
+        // Done: put the plain text back so the letters kern normally again
+        // (unless the letters need to stay separate for the "repel" effect).
+        setTimeout(function () {
+          if (!repelOn) nameEl.textContent = nameText;
+          decoding = false;
+        }, 700);
       };
       requestAnimationFrame(tick);
     };
@@ -246,7 +270,7 @@
       setTimeout(decodeName, 350);
     }
     var lastHover = 0;
-    nameEl.addEventListener('mouseenter', function () {
+    if (!repelOn) nameEl.addEventListener('mouseenter', function () {
       if (performance.now() - lastHover > 2500) { lastHover = performance.now(); decodeName(); }
     });
   }
@@ -313,22 +337,83 @@
     });
   }
 
-  /* ---------- Magnetic icons ---------- */
+  /* ---------- Magnetic icons (and News items, which are big, so they move less) ---------- */
   if (finePointer && !reduceMotion) {
-    Array.prototype.forEach.call(document.querySelectorAll('.icon-btn'), function (btn) {
+    var magnets = Array.prototype.slice.call(document.querySelectorAll('.icon-btn'));
+    if (has('magnet')) magnets = magnets.concat(Array.prototype.slice.call(document.querySelectorAll('.news li')));
+    magnets.forEach(function (btn) {
+      var big = btn.tagName === 'LI';
+      var pull = big ? 0.06 : 0.35, cap = big ? 10 : 99;
       btn.addEventListener('pointermove', function (e) {
         var b = btn.getBoundingClientRect();
         var dx = e.clientX - (b.left + b.width / 2);
         var dy = e.clientY - (b.top + b.height / 2);
         btn.classList.add('is-magnet');
-        btn.style.setProperty('--mx', (dx * 0.35).toFixed(1) + 'px');
-        btn.style.setProperty('--my', (dy * 0.35).toFixed(1) + 'px');
+        btn.style.setProperty('--mx', Math.max(-cap, Math.min(cap, dx * pull)).toFixed(1) + 'px');
+        btn.style.setProperty('--my', Math.max(-cap, Math.min(cap, dy * pull * (big ? 2 : 1))).toFixed(1) + 'px');
       });
       btn.addEventListener('pointerleave', function () {
         btn.classList.remove('is-magnet');
         btn.style.setProperty('--mx', '0px');
         btn.style.setProperty('--my', '0px');
       });
+    });
+  }
+
+  /* ---------- Big name: letters are pushed away by the mouse, then spring back ---------- */
+  if (repelOn) {
+    var nameLetters = function () {
+      var spans = nameEl.querySelectorAll('.dc');
+      if (spans.length) return spans;
+      // not decoded yet (or decode is off): wrap the letters now
+      var txt = nameEl.textContent.trim();
+      nameEl.setAttribute('aria-label', txt);
+      nameEl.textContent = '';
+      txt.split('').forEach(function (ch) {
+        var sp = document.createElement('span');
+        sp.className = 'dc';
+        sp.setAttribute('aria-hidden', 'true');
+        sp.textContent = ch;
+        nameEl.appendChild(sp);
+      });
+      return nameEl.querySelectorAll('.dc');
+    };
+    var mouse = { x: -9999, y: -9999 };
+    var offsets = [];
+    var running = false;
+    var RADIUS = 170, PUSH = 34;
+    var step = function () {
+      var spans = nameLetters();
+      var moving = false;
+      Array.prototype.forEach.call(spans, function (sp, i) {
+        var o = offsets[i] || (offsets[i] = { x: 0, y: 0, r: 0 });
+        var b = sp.getBoundingClientRect();
+        // measure from the letter's resting place, not where it has been pushed to
+        var cx = b.left + b.width / 2 - o.x, cy = b.top + b.height / 2 - o.y;
+        var dx = cx - mouse.x, dy = cy - mouse.y;
+        var d = Math.sqrt(dx * dx + dy * dy) || 1;
+        var f = d < RADIUS ? Math.pow(1 - d / RADIUS, 2) : 0;
+        var tx = (dx / d) * PUSH * f, ty = (dy / d) * PUSH * f, tr = (dx / d) * 14 * f;
+        o.x += (tx - o.x) * 0.18;
+        o.y += (ty - o.y) * 0.18;
+        o.r += (tr - o.r) * 0.18;
+        if (Math.abs(o.x - tx) > 0.1 || Math.abs(o.y - ty) > 0.1 || Math.abs(o.x) > 0.1 || Math.abs(o.y) > 0.1) moving = true;
+        sp.style.setProperty('--rx', o.x.toFixed(2) + 'px');
+        sp.style.setProperty('--ry', o.y.toFixed(2) + 'px');
+        sp.style.setProperty('--rr', o.r.toFixed(2) + 'deg');
+      });
+      if (moving) requestAnimationFrame(step); else running = false;
+    };
+    window.addEventListener('pointermove', function (e) {
+      if (e.pointerType && e.pointerType !== 'mouse') return;
+      mouse.x = e.clientX; mouse.y = e.clientY;
+      var b = nameEl.getBoundingClientRect();
+      var near = mouse.x > b.left - RADIUS && mouse.x < b.right + RADIUS && mouse.y > b.top - RADIUS && mouse.y < b.bottom + RADIUS;
+      if ((near || offsets.length) && !running) { running = true; requestAnimationFrame(step); }
+    }, { passive: true });
+    document.documentElement.addEventListener('mouseleave', function () {
+      mouse.x = mouse.y = -9999;
+      if (!running) { running = true; requestAnimationFrame(step); }
     });
   }
 

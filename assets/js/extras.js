@@ -1,5 +1,6 @@
 /* More effects, each switched on/off in _config.yml (effects):
-   intro, title_letters, local_weather, cv_timeline, copy_citation. */
+   intro, title_letters, local_weather, cv_timeline, copy_citation,
+   flap_titles, sky_tint, skill_links, and the "Ask about Yu" box. */
 (function () {
   'use strict';
 
@@ -31,9 +32,77 @@
     window.addEventListener('wheel', skipIntro, { once: true, passive: true });
   }
 
+  /* ---------- Departure-board titles (CV and Travel) ----------
+     Each letter sits on a tile that flips through the alphabet before landing. */
+  if (has('flap')) {
+    var FLAP_CHARS = ' ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&-';
+    Array.prototype.forEach.call(document.querySelectorAll('.page-head h1'), function (h) {
+      var text = h.textContent.replace(/\s+/g, ' ').trim();
+      if (!text) return;
+      var target = text.toUpperCase();
+      h.textContent = '';
+      h.classList.add('flap-title');
+      var sr = document.createElement('span');
+      sr.className = 'visually-hidden';
+      sr.textContent = text;
+      h.appendChild(sr);
+      var board = document.createElement('span');
+      board.className = 'flap-board';
+      board.setAttribute('aria-hidden', 'true');
+      var tiles = [];
+      target.split(' ').forEach(function (word) {
+        var w = document.createElement('span');
+        w.className = 'flap-word';
+        Array.prototype.forEach.call(word, function (ch) {
+          var tile = document.createElement('span');
+          tile.className = 'flap-tile';
+          var face = document.createElement('span');
+          face.className = 'flap-face';
+          face.textContent = reduceMotion ? ch : ' ';
+          tile.appendChild(face);
+          w.appendChild(tile);
+          tiles.push({ face: face, tile: tile, target: ch });
+        });
+        board.appendChild(w);
+      });
+      h.appendChild(board);
+      if (reduceMotion) return;
+
+      var flipping = false;
+      var run = function () {
+        if (flipping) return;
+        flipping = true;
+        var left = tiles.length;
+        tiles.forEach(function (t, i) {
+          var at = FLAP_CHARS.indexOf(t.target);
+          if (at < 0) { t.face.textContent = t.target; left--; return; }
+          var pos = (Math.random() * FLAP_CHARS.length) | 0;
+          var steps = 8 + ((Math.random() * 14) | 0) + i;       // later tiles land a little later
+          var tick = function () {
+            pos = (pos + 1) % FLAP_CHARS.length;
+            steps--;
+            if (steps <= 0) pos = at;
+            t.face.textContent = FLAP_CHARS.charAt(pos);
+            t.tile.classList.remove('is-flip');
+            void t.tile.offsetWidth;                          // restart the flip animation
+            t.tile.classList.add('is-flip');
+            if (pos !== at || steps > 0) setTimeout(tick, 45 + Math.random() * 25);
+            else if (--left === 0) flipping = false;
+          };
+          setTimeout(tick, 80 + i * 20);
+        });
+      };
+      // flip in when the page opens, and again when the mouse comes back to the title
+      setTimeout(run, root.classList.contains('intro') ? 3000 : 250);
+      h.addEventListener('mouseenter', run);
+    });
+  }
+
   /* ---------- Section titles appear letter by letter ---------- */
   if (has('letters') && !reduceMotion && 'IntersectionObserver' in window) {
-    var titles = document.querySelectorAll('.section-title, .cv-section > h2, .page-head h1');
+    var titles = Array.prototype.filter.call(
+      document.querySelectorAll('.section-title, .cv-section > h2, .page-head h1'),
+      function (h) { return !h.classList.contains('flap-title'); });
     var titleIO = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (!e.isIntersecting) return;
@@ -69,6 +138,197 @@
       h.appendChild(shown);
       h.classList.add('split-title');
       titleIO.observe(h);
+    });
+  }
+
+  /* ---------- Background tint that follows the time of day in Gainesville ----------
+     dawn (5–8): warm pink · day (8–17): clear · dusk (17–20): orange and purple · night: deep blue */
+  if (has('sky') && !root.classList.contains('theme-night')) {
+    var skyTz = (document.querySelector('.local-now') || {}).getAttribute ? document.querySelector('.local-now').getAttribute('data-tz') : null;
+    var sky = document.createElement('div');
+    sky.className = 'sky-tint';
+    sky.setAttribute('aria-hidden', 'true');
+    document.body.insertBefore(sky, document.body.firstChild);
+    var hourFmt = null;
+    try { hourFmt = new Intl.DateTimeFormat('en-US', { hour: 'numeric', hourCycle: 'h23', timeZone: skyTz || 'America/New_York' }); } catch (e) { hourFmt = null; }
+    var paintSky = function () {
+      var h = hourFmt ? parseInt(hourFmt.format(new Date()), 10) : new Date().getHours();
+      var period = h >= 5 && h < 8 ? 'dawn' : h >= 8 && h < 17 ? 'day' : h >= 17 && h < 20 ? 'dusk' : 'night';
+      if (/[?&]sky=(dawn|day|dusk|night)\b/.test(location.search)) period = RegExp.$1;   // preview: ?sky=dusk
+      sky.setAttribute('data-period', period);
+      root.setAttribute('data-sky', period);
+    };
+    paintSky();
+    setInterval(paintSky, 5 * 60000);
+  }
+
+  /* ---------- CV: hover a skill to see where it was used ---------- */
+  if (has('skills')) {
+    var skillDds = document.querySelectorAll('.skills dd');
+    var entries = Array.prototype.slice.call(document.querySelectorAll('#experience .entry, #projects .entry'));
+    if (skillDds.length && entries.length) {
+      var cvBody = document.querySelector('.cv-body');
+      var entryText = entries.map(function (e) { return e.textContent; });
+      var escapeRe = function (t) { return t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); };
+      // "RAG/GraphRAG" -> RAG, GraphRAG; "Structured Output (JSON Schema/Pydantic)" -> Structured Output, JSON Schema, Pydantic
+      var termsOf = function (skill) {
+        return skill.split(/[\/()]/).map(function (t) { return t.trim(); }).filter(function (t) { return t.length > 1; });
+      };
+      var matchesFor = function (skill) {
+        var res = termsOf(skill).map(function (t) { return new RegExp('(^|[^A-Za-z0-9])' + escapeRe(t) + '(?![A-Za-z0-9])', 'i'); });
+        var out = [];
+        entryText.forEach(function (txt, i) { if (res.some(function (re) { return re.test(txt); })) out.push(i); });
+        return out;
+      };
+      var pinned = null;
+      var clear = function () {
+        cvBody.classList.remove('skill-focus');
+        entries.forEach(function (e) { e.classList.remove('is-match'); });
+      };
+      var focus = function (idx) {
+        clear();
+        if (!idx.length) return;
+        cvBody.classList.add('skill-focus');
+        idx.forEach(function (i) { entries[i].classList.add('is-match'); });
+      };
+      // A small list under the chip: where this skill shows up (click to jump there)
+      var pop = document.createElement('div');
+      pop.className = 'skill-pop';
+      pop.hidden = true;
+      document.body.appendChild(pop);
+      var hideTimer = null;
+      var showPop = function (chip, idx) {
+        clearTimeout(hideTimer);
+        pop.innerHTML = '';
+        idx.forEach(function (i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          var h3 = entries[i].querySelector('h3');
+          b.textContent = h3 ? h3.textContent : 'Entry';
+          b.addEventListener('click', function () {
+            entries[i].scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+            entries[i].classList.remove('is-flash');
+            void entries[i].offsetWidth;
+            entries[i].classList.add('is-flash');
+          });
+          pop.appendChild(b);
+        });
+        var r = chip.getBoundingClientRect();
+        pop.hidden = false;
+        var left = Math.min(window.innerWidth - pop.offsetWidth - 12, Math.max(12, r.left));
+        pop.style.left = (left + window.scrollX) + 'px';
+        pop.style.top = (r.bottom + window.scrollY + 8) + 'px';
+      };
+      var hidePop = function () { hideTimer = setTimeout(function () { pop.hidden = true; }, 220); };
+      pop.addEventListener('mouseenter', function () { clearTimeout(hideTimer); });
+      pop.addEventListener('mouseleave', function () { if (!pinned) { hidePop(); clear(); } });
+
+      Array.prototype.forEach.call(skillDds, function (dd) {
+        var skills = dd.textContent.split(',').map(function (t) { return t.trim(); }).filter(Boolean);
+        dd.textContent = '';
+        skills.forEach(function (skill, k) {
+          var idx = matchesFor(skill);
+          var chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = 'skill-chip' + (idx.length ? '' : ' is-quiet');
+          chip.setAttribute('aria-pressed', 'false');
+          chip.textContent = skill;
+          if (idx.length) {
+            var n = document.createElement('span');
+            n.className = 'skill-n';
+            n.textContent = idx.length;
+            chip.appendChild(n);
+          }
+          chip.addEventListener('mouseenter', function () { if (!pinned) { focus(idx); if (idx.length) showPop(chip, idx); } });
+          chip.addEventListener('mouseleave', function () { if (!pinned) { hidePop(); clear(); } });
+          chip.addEventListener('click', function () {
+            if (!idx.length) return;
+            var on = pinned !== chip;
+            if (pinned) pinned.setAttribute('aria-pressed', 'false');
+            pinned = on ? chip : null;
+            chip.setAttribute('aria-pressed', on ? 'true' : 'false');
+            if (on) { focus(idx); if (idx.length) showPop(chip, idx); else pop.hidden = true; }
+            else { clear(); pop.hidden = true; }
+          });
+          dd.appendChild(chip);
+          if (k < skills.length - 1) dd.appendChild(document.createTextNode(' '));
+        });
+      });
+      document.addEventListener('click', function (e) {
+        if (!pinned || e.target.closest('.skill-chip, .skill-pop')) return;
+        pinned.setAttribute('aria-pressed', 'false');
+        pinned = null;
+        clear();
+        pop.hidden = true;
+      });
+    }
+  }
+
+  /* ---------- "Ask about Yu": pre-written answers, streamed like an LLM ---------- */
+  var askBox = document.querySelector('.ask-box');
+  if (askBox) {
+    var log = askBox.querySelector('.ask-log');
+    var botAvatar = log.querySelector('.msg-avatar');
+    var botName = (log.querySelector('.msg-name') || {}).textContent || '';
+    var busy = false;
+    var scrollLog = function () { log.scrollTop = log.scrollHeight; };
+    var addMsg = function (who) {
+      var m = document.createElement('div');
+      m.className = 'msg msg-' + who;
+      if (who === 'bot' && botAvatar) m.appendChild(botAvatar.cloneNode(true));
+      var bubble = document.createElement('div');
+      bubble.className = 'msg-bubble';
+      m.appendChild(bubble);
+      log.appendChild(m);
+      return bubble;
+    };
+    Array.prototype.forEach.call(askBox.querySelectorAll('.ask-chip'), function (chip) {
+      chip.addEventListener('click', function () {
+        if (busy) return;
+        busy = true;
+        chip.classList.add('is-asked');
+        log.setAttribute('aria-busy', 'true');
+        addMsg('user').textContent = chip.textContent;
+        var tpl = askBox.querySelector('template[data-answer="' + chip.getAttribute('data-q') + '"]');
+        var html = tpl ? tpl.innerHTML.trim() : '';
+        var tmp = document.createElement('div');
+        tmp.innerHTML = html;
+        var plain = tmp.textContent;
+        var bubble = addMsg('bot');
+        if (botName) { var nm = document.createElement('span'); nm.className = 'msg-name'; nm.textContent = botName; bubble.appendChild(nm); }
+        var body = document.createElement('span');
+        body.className = 'msg-text';
+        body.innerHTML = '<span class="thinking"><i></i><i></i><i></i></span>';
+        bubble.appendChild(body);
+        scrollLog();
+        var finish = function () {
+          body.innerHTML = html;                 // the real answer, with working links
+          log.removeAttribute('aria-busy');
+          scrollLog();
+          busy = false;
+        };
+        if (reduceMotion) { setTimeout(finish, 300); return; }
+        setTimeout(function () {
+          // stream word by word, with a blinking cursor at the end
+          var words = plain.split(/(\s+)/);
+          var i = 0;
+          body.textContent = '';
+          var out = document.createElement('span');
+          var cursor = document.createElement('span');
+          cursor.className = 'stream-caret';
+          body.appendChild(out);
+          body.appendChild(cursor);
+          var tick = function () {
+            var chunk = words.slice(i, i + 2).join('');
+            out.textContent += chunk;
+            i += 2;
+            scrollLog();
+            if (i < words.length) setTimeout(tick, 28 + Math.random() * 55);
+            else setTimeout(finish, 250);
+          };
+          tick();
+        }, 700 + Math.random() * 500);
+      });
     });
   }
 

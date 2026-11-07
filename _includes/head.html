@@ -22,6 +22,9 @@
     }
     d.setAttribute('data-theme', t);
 
+    // "Reduce animations" button: the visitor's choice is remembered.
+    try { if (localStorage.getItem('lite') === '1') d.classList.add('lite'); } catch (e) { /* ignore */ }
+
     // First-visit intro: only once per browser (add ?intro to the address to see it again).
     var fx = ' ' + (d.getAttribute('data-fx') || '') + ' ';
     if (fx.indexOf(' intro ') !== -1) {

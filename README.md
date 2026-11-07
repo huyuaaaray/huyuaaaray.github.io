@@ -47,6 +47,10 @@ updating after an edit, the Actions tab shows the YAML error.
 | Cursor tail, cursor spotlight, click ripple | `assets/js/cursor-fx.js` (switch each on/off in `_config.yml` → `effects`) |
 | First-visit intro, letter-by-letter titles, footer time and weather, CV timeline, copy citation | `assets/js/extras.js` (the intro's drawing is in `_includes/intro.html`; add `?intro` to any address to replay it) |
 | 404 game | `assets/js/gator-run.js` |
+| Ask about Yu, skill highlighting, departure-board titles, time-of-day tint | `assets/js/extras.js` |
+| Name repel, magnetic News, "reduce animations" button | `assets/js/site.js` |
+| Planes, travel replay, polaroids | `assets/js/travel.js` |
+| Holiday themes (game day, snow, fireworks, lanterns) | `assets/js/holiday.js` (dates in `_config.yml` → `holidays`; preview with `?holiday=gameday`, `snow`, `newyear` or `lunar`) |
 | Hover glow | `assets/css/site.css` (search for "Hover glow"; switch in `_config.yml` → `effects`) |
 | 3D globe (or the flat map when `globe: false`), routes, visited countries, photo viewer | `assets/js/travel.js` |
 | Old links (e.g. `/CV.pdf`) | the `moved` list at the top of `404.html` |
@@ -54,6 +58,15 @@ updating after an edit, the Actions tab shows the YAML error.
 Easter egg: click the big "Yu Hu" on the home page, or type `gogators` on
 any page. The word, the message, and an on/off switch are in
 `_config.yml` (section 7, `easter_egg`).
+
+## Travel photos
+
+Every place has a folder: `images/travel/<place-name>/` (lowercase, spaces become
+dashes: `images/travel/new-york-city/`, `images/travel/cedar-key/`). Drop JPG, PNG
+or WebP photos in and push; they show up automatically, in file-name order, as a
+stack of polaroids in the place's detail panel. The first one becomes the card's
+cover unless the place has a `cover` set. To add a caption, list the photo under
+that place's `photos` in `_config.yml` with `src` and `caption`.
 
 ## Travel notes
 

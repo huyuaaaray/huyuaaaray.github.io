@@ -213,7 +213,10 @@
     raf = requestAnimationFrame(frame);
   }
 
+  var isLite = function () { return document.documentElement.classList.contains('lite'); };
+
   function start() {
+    if (isLite()) { draw(); return; }
     if (raf || document.hidden || (reduceQuery && reduceQuery.matches)) return;
     raf = requestAnimationFrame(frame);
   }
@@ -253,6 +256,8 @@
   document.addEventListener('pointerleave', function () { mouse.active = false; });
   window.addEventListener('blur', function () { mouse.active = false; });
   document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else start(); });
+  // "Reduce animations": hold one still frame
+  window.addEventListener('litechange', function () { if (isLite()) { stop(); draw(); } else start(); });
 
   // Re-read the colors when the light/dark theme changes (toggle button or system setting).
   window.addEventListener('themechange', function () { readColor(); draw(); });
