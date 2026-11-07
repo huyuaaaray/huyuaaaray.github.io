@@ -1,4 +1,4 @@
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">{{ site.skip_link | default: "Skip to content" | escape }}</a>
 <header class="site-header">
   <div class="container header-inner">
     <a class="brand" href="/" aria-label="{{ site.author.name }}, home">
@@ -13,6 +13,11 @@
       </nav>
       <span class="header-divider" aria-hidden="true"></span>
       <div class="social">{% include social-links.html %}</div>
+      {%- if site.effects.theme_toggle and page.theme != "night" %}
+      <button type="button" class="icon-btn theme-toggle" data-brand="theme" aria-label="{{ site.theme_toggle_label | escape }}" title="{{ site.theme_toggle_label | escape }}">
+        {% include icon.html name="moon" %}{% include icon.html name="sun" %}
+      </button>
+      {%- endif %}
     </div>
   </div>
 </header>

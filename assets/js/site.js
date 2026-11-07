@@ -7,6 +7,59 @@
 
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var finePointer = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var root = document.documentElement;
+  var fx = (root.getAttribute('data-fx') || '').split(/\s+/);
+  var has = function (name) { return fx.indexOf(name) !== -1; };
+
+  /* ---------- Light / dark: header button, browser bar color, following the system ---------- */
+  var THEME_BG = { light: '#f6f5f8', dark: '#0e1320' };
+  function syncThemeColor() {
+    if (root.classList.contains('theme-night')) return;
+    var c = THEME_BG[root.getAttribute('data-theme')] || THEME_BG.light;
+    Array.prototype.forEach.call(document.querySelectorAll('meta[name="theme-color"]'), function (m) {
+      m.removeAttribute('media');
+      m.setAttribute('content', c);
+    });
+  }
+  function applyTheme(t, remember) {
+    root.setAttribute('data-theme', t);
+    if (remember) { try { localStorage.setItem('theme', t); } catch (e) { /* storage blocked */ } }
+    syncThemeColor();
+    window.dispatchEvent(new CustomEvent('themechange', { detail: t }));
+  }
+  syncThemeColor();
+
+  // Follow the system setting live, unless the visitor picked a theme themselves.
+  var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  if (systemDark && systemDark.addEventListener) {
+    systemDark.addEventListener('change', function (e) {
+      var saved = null;
+      try { saved = localStorage.getItem('theme'); } catch (err) { /* ignore */ }
+      if (saved !== 'light' && saved !== 'dark') applyTheme(e.matches ? 'dark' : 'light', false);
+    });
+  }
+
+  var themeBtn = document.querySelector('.theme-toggle');
+  if (themeBtn) {
+    themeBtn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      if (!document.startViewTransition || reduceMotion) { applyTheme(next, true); return; }
+      // The new colors spread out in a circle from the button.
+      var b = themeBtn.getBoundingClientRect();
+      var x = b.left + b.width / 2, y = b.top + b.height / 2;
+      var radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+      root.classList.add('theme-switching');
+      var vt = document.startViewTransition(function () { applyTheme(next, true); });
+      vt.ready.then(function () {
+        root.animate(
+          { clipPath: ['circle(0px at ' + x + 'px ' + y + 'px)', 'circle(' + radius + 'px at ' + x + 'px ' + y + 'px)'] },
+          { duration: 700, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)', pseudoElement: '::view-transition-new(root)' }
+        );
+      }).catch(function () { /* skipped */ });
+      vt.finished.then(done, done);
+      function done() { root.classList.remove('theme-switching'); }
+    });
+  }
 
   /* ---------- Scroll reveal ---------- */
   var revealEls = Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));
@@ -139,6 +192,123 @@
     io2.observe(el);
   });
 
+  /* ---------- Name decode: the big "Yu Hu" resolves out of scrambled characters ---------- */
+  var nameEl = document.querySelector('.display-name');
+  var decodeName = function () {};
+  if (nameEl && has('decode') && !reduceMotion) {
+    var nameText = nameEl.textContent.trim();
+    var GLYPHS = 'ABCDEFGHIJKLNOPQRSTUVXYZabcdefghijklnopqrstuvxyz0123456789#$+=<>/';
+    var decoding = false;
+    nameEl.setAttribute('aria-label', nameText);
+    decodeName = function () {
+      if (decoding) return;
+      decoding = true;
+      // Wrap each letter and lock its width so scrambling never shifts the layout.
+      nameEl.textContent = '';
+      var spans = nameText.split('').map(function (ch) {
+        var sp = document.createElement('span');
+        sp.className = 'dc';
+        sp.setAttribute('aria-hidden', 'true');
+        sp.textContent = ch;
+        nameEl.appendChild(sp);
+        return sp;
+      });
+      spans.forEach(function (sp) { sp.style.width = sp.getBoundingClientRect().width + 'px'; });
+      var start = performance.now();
+      var settle = spans.map(function (sp, i) { return 250 + i * 130 + Math.random() * 160; });
+      var lastSwap = 0;
+      var tick = function (now) {
+        var t = now - start, busy = false, swap = now - lastSwap > 55;
+        if (swap) lastSwap = now;
+        spans.forEach(function (sp, i) {
+          var ch = nameText.charAt(i);
+          if (ch === ' ') return;
+          if (t < settle[i]) {
+            busy = true;
+            sp.classList.add('is-scrambling');
+            if (swap) sp.textContent = GLYPHS.charAt((Math.random() * GLYPHS.length) | 0);
+          } else if (sp.classList.contains('is-scrambling')) {
+            sp.classList.remove('is-scrambling');
+            sp.classList.add('is-fresh');
+            sp.textContent = ch;
+            setTimeout(function () { sp.classList.remove('is-fresh'); }, 260);
+          }
+        });
+        if (busy) { requestAnimationFrame(tick); return; }
+        // Done: put the plain text back so the letters kern normally again.
+        setTimeout(function () { nameEl.textContent = nameText; decoding = false; }, 700);
+      };
+      requestAnimationFrame(tick);
+    };
+    setTimeout(decodeName, 350);
+    var lastHover = 0;
+    nameEl.addEventListener('mouseenter', function () {
+      if (performance.now() - lastHover > 2500) { lastHover = performance.now(); decodeName(); }
+    });
+  }
+
+  /* ---------- About: words light up one by one as you scroll ---------- */
+  var aboutProse = document.querySelector('.intro-about .prose');
+  if (aboutProse && has('highlight') && !reduceMotion) {
+    var words = [];
+    var walker = document.createTreeWalker(aboutProse, NodeFilter.SHOW_TEXT, null);
+    var textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+    textNodes.forEach(function (node) {
+      if (!node.nodeValue.trim()) return;
+      var frag = document.createDocumentFragment();
+      node.nodeValue.split(/(\s+)/).forEach(function (part) {
+        if (!part) return;
+        if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+        var w = document.createElement('span');
+        w.className = 'w';
+        w.textContent = part;
+        frag.appendChild(w);
+        words.push(w);
+      });
+      node.parentNode.replaceChild(frag, node);
+    });
+    aboutProse.classList.add('is-highlighting');
+    var litCount = -1;
+    var updateWords = function () {
+      var r = aboutProse.getBoundingClientRect();
+      var line = window.innerHeight * 0.66;                       // the "reading line"
+      var p = (line - r.top) / Math.max(r.height, 1);
+      var atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+      var n = atBottom ? words.length : Math.round(Math.max(0, Math.min(1, p)) * words.length);
+      if (n === litCount) return;
+      for (var k = 0; k < words.length; k++) words[k].classList.toggle('is-lit', k < n);
+      litCount = n;
+    };
+    var wordTick = false;
+    window.addEventListener('scroll', function () {
+      if (!wordTick) { wordTick = true; requestAnimationFrame(function () { wordTick = false; updateWords(); }); }
+    }, { passive: true });
+    window.addEventListener('resize', updateWords);
+    updateWords();
+  }
+
+  /* ---------- Photo: click to flip it over ---------- */
+  var flipPhoto = document.querySelector('.photo-flippable');
+  if (flipPhoto) {
+    var front = flipPhoto.querySelector('.photo-front');
+    var back = flipPhoto.querySelector('.photo-back');
+    var setFlipped = function (on) {
+      flipPhoto.classList.toggle('is-flipped', on);
+      if (on) { front.setAttribute('inert', ''); back.removeAttribute('inert'); }
+      else { back.setAttribute('inert', ''); front.removeAttribute('inert'); }
+      var target = on ? back.querySelector('.pb-flip') : front;
+      if (target && document.activeElement && flipPhoto.contains(document.activeElement)) {
+        setTimeout(function () { target.focus({ preventScroll: true }); }, 60);
+      }
+    };
+    front.addEventListener('click', function () { setFlipped(true); });
+    back.addEventListener('click', function (e) {
+      if (e.target.closest('a')) return;      // the email button works normally
+      setFlipped(false);
+    });
+  }
+
   /* ---------- Magnetic icons ---------- */
   if (finePointer && !reduceMotion) {
     Array.prototype.forEach.call(document.querySelectorAll('.icon-btn'), function (btn) {
@@ -203,32 +373,33 @@
     });
   }
 
-  /* ---------- Easter egg: type "gogators", or tap the header gator 5 times ---------- */
-  var secret = 'gogators';
+  /* ---------- Easter egg: click the big "Yu Hu" on the home page, or type the secret word ----------
+     The word, the message and the on/off switch are in _config.yml (easter_egg). */
+  var eggOn = root.hasAttribute('data-egg');
+  var secret = document.documentElement.getAttribute('data-egg') || '';
+  var eggMessage = document.documentElement.getAttribute('data-egg-msg') || '';
   var typed = '';
   document.addEventListener('keydown', function (e) {
     var t = e.target;
     if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
-    if (!e.key || e.key.length !== 1) return;
+    if (!secret || !e.key || e.key.length !== 1) return;
     typed = (typed + e.key.toLowerCase()).slice(-secret.length);
     if (typed === secret) { typed = ''; goGators(); }
   });
 
-  // On the home page the header gator doesn't need to navigate, so taps count instead.
-  var brandImg = document.querySelector('.brand img');
-  if (brandImg && location.pathname === '/') {
-    var taps = 0, tapTimer = null;
-    brandImg.addEventListener('click', function (e) {
+  if (nameEl && eggOn) {
+    nameEl.addEventListener('click', function () {
+      goGators();
+      decodeName();
+    });
+  }
+
+  // On the home page the header gator just glides back to the top.
+  var brandLink = document.querySelector('.brand');
+  if (brandLink && location.pathname === '/') {
+    brandLink.addEventListener('click', function (e) {
       e.preventDefault();
-      taps++;
-      clearTimeout(tapTimer);
-      tapTimer = setTimeout(function () { taps = 0; }, 1500);
-      if (taps >= 5) {
-        taps = 0;
-        goGators();
-      } else if (taps === 1) {
-        window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
-      }
+      window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
     });
   }
 
@@ -240,7 +411,10 @@
     var toast = document.createElement('div');
     toast.className = 'gator-toast';
     toast.setAttribute('role', 'status');
-    toast.innerHTML = 'Go Gators<span>!</span>';
+    // A trailing "!" gets its own little bounce.
+    var bang = /!$/.test(eggMessage);
+    toast.appendChild(document.createTextNode(bang ? eggMessage.slice(0, -1) : eggMessage));
+    if (bang) { var mark = document.createElement('span'); mark.textContent = '!'; toast.appendChild(mark); }
     document.body.appendChild(toast);
     requestAnimationFrame(function () { toast.classList.add('is-shown'); });
 

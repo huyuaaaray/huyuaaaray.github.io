@@ -11,7 +11,7 @@
 #  目录：
 #    一、网站设置        二、个人信息与导航     三、首页
 #    四、Travel 页面     五、CV 页面            六、404 页面
-#    七、特效开关
+#    七、特效开关与彩蛋
 # =====================================================================
 
 
@@ -42,6 +42,19 @@ author:
   github: huyuaaaray                 # GitHub 用户名
   linkedin: yu-hu-769b02261          # LinkedIn 地址 linkedin.com/in/ 后面那段
   scholar: SL4Guq4AAAAJ              # Google Scholar 地址里 user= 后面那段
+
+# 社交图标的名称：鼠标悬停时显示的提示文字（读屏软件也读这个）
+social_labels:
+  email: Email
+  github: GitHub
+  linkedin: LinkedIn
+  scholar: Google Scholar
+
+# 右上角日夜切换按钮的提示文字
+theme_toggle_label: Switch light / dark mode
+
+# 用键盘 Tab 键浏览时，左上角最先出现的"跳到正文"按钮
+skip_link: Skip to content
 
 # 右上角的菜单。label 是显示的文字，url 是链接。
 nav:
@@ -81,9 +94,26 @@ home:
   bio: |
     I'm a data scientist at the University of Florida College of Medicine, where I work with the Quality & Patient Safety group to build clinical AI systems. My work focuses on applying large language models to electronic health records and clinical notes, turning unstructured documentation into information that clinicians and quality teams can act on, from readmission analyses to care-coordination programs.
 
-    Along the way, I've built a shared, configuration-driven LLM platform that now supports several clinical programs, developed an LLM-as-a-Judge framework to evaluate model outputs before they reach clinician review, and scaled inference on UF's HiPerGator supercomputer. Over the past three years, this work has led to six peer-reviewed publications in clinical informatics.
+    Along the way, I've built a shared, configuration-driven LLM platform that now supports several clinical programs, developed an LLM-as-a-Judge framework to evaluate model outputs before they reach clinician review, and scaled inference on UF's HiPerGator supercomputer. This work has led to six peer-reviewed publications in clinical informatics, and I enjoy doing it alongside clinicians, researchers, and engineers.
 
-    What keeps me in this field is the gap between what AI can do on a benchmark and what it takes to make it reliable in real clinical workflows, and I enjoy closing that gap alongside clinicians, researchers, and engineers.
+  # 数字统计条（在 Research interest 横幅下面），滚动到时数字从 0 往上跳。
+  #   number 只写数字；suffix 是数字后面的符号，比如 "+"（可不写）；label 是下面的说明
+  #   不想要这一栏就写 stats: []
+  stats:
+    - number: 6
+      label: peer-reviewed publications
+    - number: 3
+      suffix: "+"
+      label: years in clinical AI
+    - number: 3
+      label: clinical programs on my LLM platform
+
+  # 点击首页照片会翻到背面，背面显示下面这些
+  photo_back:
+    title: Hi, I'm Yu.
+    text: I build clinical AI at the University of Florida in Gainesville. Always happy to talk about LLM evaluation, clinical NLP, or a collaboration.
+    cta: Say hello                   # 背面按钮文字，点击会给你发邮件
+  photo_flip_label: Click to flip    # 鼠标放在照片上时的提示
 
   # News 部分
   news_title: News
@@ -117,8 +147,20 @@ travel:
   title: Travel                       # 页面大标题，也是浏览器标签页名
   description: Places Yu Hu has lived, worked, and visited, on a map with photos and videos.
   intro: Places I've lived, worked, and visited. Hover over a marker for a quick preview, and click a marker or a card for photos and videos.
+  # 地图下方的提示。globe 打开时用 globe_hint（3D 地球），关闭时用 map_hint（平面地图）
+  globe_hint: Drag to spin the globe. Click it first, then use your mouse wheel to zoom. Arcs show trips from home; orange dots mark countries I've visited.
   map_hint: Click the map to zoom with your mouse wheel. Lines show trips from home; shaded countries are ones I've visited.
   preview_cta: Click for photos and videos      # 地图预览卡片底部那行字
+  # 浏览器不支持 3D 地球时，地球位置显示的一句话
+  globe_fallback: Your browser can't show the 3D globe, but you can still browse every place below.
+
+  # 地图上方的统计行，例如 "3 places in 2 countries"。数字自动统计，这里只写单词（单数、复数分开）
+  stats:
+    place: place
+    places: places
+    in: in
+    country: country
+    countries: countries
 
   # 去过的地方。每个地方：
   #   name     地名（大标题）
@@ -357,12 +399,29 @@ not_found:
 
 
 # =====================================================================
-# 七、特效开关（true 打开，false 关闭）
+# 七、特效开关与彩蛋（true 打开，false 关闭）
 #    只在电脑上用鼠标时出现的：鼠标拖尾、鼠标聚光灯
 #    系统开启"减少动态效果"时，所有动画会自动关闭
 # =====================================================================
 effects:
+  # 全站
   cursor_tail: true          # 鼠标拖尾：鼠标移动时留下一条橙蓝渐变的光带
   cursor_spotlight: true     # 鼠标聚光灯：页面背景上跟着鼠标移动的一团柔光
   ripple: true               # 点击水波纹：点按钮、图标、卡片时从点击处扩散水波；点空白处出现一圈涟漪
   hover_glow: true           # 悬停发光：鼠标放到按钮、图标、卡片、照片上时发出柔和光晕
+  theme_toggle: true         # 右上角日夜切换按钮：点击后新配色从按钮处以圆形扩散铺满页面
+  # 首页
+  name_decode: true          # 名字解码：进入首页时 "Yu Hu" 从乱码一个个解码出来，鼠标移上去会再解码一次
+  network_pulse: true        # 神经网络背景：点击空白处发出信号沿网络传开，闲置时也会偶尔自己"放电"
+  about_highlight: true      # About 逐词点亮：文字随滚动一个词一个词变深
+  photo_flip: true           # 照片 3D 翻转：点击照片翻到背面
+  # Travel
+  globe: true                # 3D 地球：false 则换回可以缩放到街道的平面地图
+  constellation: true        # 星座彩蛋：星空里偶尔连出 "YH" 或一只鳄鱼
+
+# 彩蛋：在首页点击大标题 "Yu Hu"，或者在任意页面用键盘输入 secret 这个词，
+#       会撒彩带并弹出 message。enabled 写 false 关闭；secret 留空则只能点标题触发。
+easter_egg:
+  enabled: true
+  secret: gogators           # 只用小写字母
+  message: "Go Gators!"

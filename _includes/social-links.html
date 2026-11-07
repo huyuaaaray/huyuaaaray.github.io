@@ -4,8 +4,8 @@
 {%- endcomment -%}
 {%- assign a = site.author -%}
 {%- if include.email %}
-<a class="icon-btn" data-brand="email" href="mailto:{{ a.email }}" aria-label="Email" title="Email">{% include icon.html name="mail" %}</a>
+<a class="icon-btn" data-brand="email" href="mailto:{{ a.email }}" aria-label="{{ site.social_labels.email | escape }}" title="{{ site.social_labels.email | escape }}">{% include icon.html name="mail" %}</a>
 {%- endif %}
-<a class="icon-btn" data-brand="github" href="https://github.com/{{ a.github }}" aria-label="GitHub" title="GitHub">{% include icon.html name="github" %}</a>
-<a class="icon-btn" data-brand="linkedin" href="https://www.linkedin.com/in/{{ a.linkedin }}" aria-label="LinkedIn" title="LinkedIn">{% include icon.html name="linkedin" %}</a>
-<a class="icon-btn" data-brand="scholar" href="https://scholar.google.com/citations?user={{ a.scholar }}" aria-label="Google Scholar" title="Google Scholar">{% include icon.html name="scholar" %}</a>
+<a class="icon-btn" data-brand="github" href="https://github.com/{{ a.github }}" aria-label="{{ site.social_labels.github | escape }}" title="{{ site.social_labels.github | escape }}">{% include icon.html name="github" %}</a>
+<a class="icon-btn" data-brand="linkedin" href="https://www.linkedin.com/in/{{ a.linkedin }}" aria-label="{{ site.social_labels.linkedin | escape }}" title="{{ site.social_labels.linkedin | escape }}">{% include icon.html name="linkedin" %}</a>
+<a class="icon-btn" data-brand="scholar" href="https://scholar.google.com/citations?user={{ a.scholar }}" aria-label="{{ site.social_labels.scholar | escape }}" title="{{ site.social_labels.scholar | escape }}">{% include icon.html name="scholar" %}</a>

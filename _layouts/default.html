@@ -4,8 +4,12 @@
   {%- if site.effects.cursor_spotlight %} spotlight{% endif -%}
   {%- if site.effects.ripple %} ripple{% endif -%}
   {%- if site.effects.hover_glow %} glow{% endif -%}
+  {%- if site.effects.name_decode %} decode{% endif -%}
+  {%- if site.effects.network_pulse %} pulse{% endif -%}
+  {%- if site.effects.about_highlight %} highlight{% endif -%}
+  {%- if site.effects.constellation %} constellation{% endif -%}
 {%- endcapture -%}
-<html lang="en"{% if page.theme %} class="theme-{{ page.theme }}"{% endif %} data-fx="{{ fx | strip }}">
+<html lang="en"{% if page.theme %} class="theme-{{ page.theme }}"{% endif %} data-fx="{{ fx | strip }}"{% if site.easter_egg.enabled %} data-egg="{{ site.easter_egg.secret | downcase | escape }}" data-egg-msg="{{ site.easter_egg.message | escape }}"{% endif %}>
 <head>
 {% include head.html %}
 </head>
@@ -27,7 +31,10 @@
 {%- if page.progress %}
 <button type="button" class="to-top" aria-label="Back to top">{% include icon.html name="arrow-up" %}</button>
 {%- endif %}
-{%- if page.map %}
+{%- if page.map and site.effects.globe %}
+<script src="https://cdn.jsdelivr.net/npm/globe.gl@2.46.2/dist/globe.gl.min.js" integrity="sha384-1uolMBZ25k3zJcNwCLEv49+L+m2dZudqAzsoSAJfQTzDCSBxJzrMuZ2dkp/5JKiT" crossorigin></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js" integrity="sha384-Ukv1p/xTma6P4/2bY5KzWBw+ydSpXmhCMtyciIQVDJ1RmOxtCYNMF1uXT9T63H67" crossorigin></script>
+{%- elsif page.map %}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin></script>
 <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js" integrity="sha384-5+cfbwT0iiub6VsQAdn6yz16nr6sDiQoHx6tm4O8OVYXHYOxcffFmCJBL0dgdvGp" crossorigin></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.1.4/leaflet-maplibre-gl.js" integrity="sha384-tXYNKOHx4T02jMP7YYCtBxPIv1B5gaA5mcVPBzqMp6d7VzWzxJgI2aWF/nJLrQdS" crossorigin></script>

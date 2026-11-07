@@ -1,5 +1,8 @@
 /* Home page background: a slow, faint "neural network" of drifting points.
    Points near each other are linked; the mouse gently attracts nearby points.
+   With the "network_pulse" effect on, clicking the background fires a signal
+   that travels outward along the links, node to node, and the network also
+   fires on its own now and then while idle.
    Pauses when the tab is hidden; draws one still frame for reduced motion. */
 (function () {
   'use strict';
@@ -9,7 +12,7 @@
   var ctx = canvas.getContext('2d');
 
   var reduceQuery = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
-  var schemeQuery = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  var pulsesOn = (document.documentElement.getAttribute('data-fx') || '').split(/\s+/).indexOf('pulse') !== -1;
 
   var LINK = 140;         // max distance for a link between points (px)
   var MOUSE = 180;        // mouse influence radius (px)
@@ -19,9 +22,19 @@
   var mouse = { x: 0, y: 0, active: false };
   var raf = null;
 
+  // Signal pulses
+  var PULSE_RGB = '250, 70, 22';
+  var MAX_HOPS = 5;
+  var pulses = [];        // { a, b, t, hop, wave }
+  var lastInput = 0;
+  var nextIdle = 0;
+  var waveId = 0;
+
   function readColor() {
-    var v = getComputedStyle(document.documentElement).getPropertyValue('--net-rgb').trim();
+    var cs = getComputedStyle(document.documentElement);
+    var v = cs.getPropertyValue('--net-rgb').trim();
     if (v) rgb = v;
+    PULSE_RGB = document.documentElement.getAttribute('data-theme') === 'dark' ? '255, 138, 92' : '250, 70, 22';
   }
 
   function makeNode() {
@@ -30,7 +43,9 @@
       y: Math.random() * H,
       vx: (Math.random() - 0.5) * 0.3,
       vy: (Math.random() - 0.5) * 0.3,
-      r: Math.random() * 1.3 + 1
+      r: Math.random() * 1.3 + 1,
+      flash: 0,
+      wave: -1
     };
   }
 
@@ -67,6 +82,78 @@
       n.y += n.vy;
       if (n.x < -20) n.x = W + 20; else if (n.x > W + 20) n.x = -20;
       if (n.y < -20) n.y = H + 20; else if (n.y > H + 20) n.y = -20;
+    }
+  }
+
+  // Send the signal from node i to its nearest linked neighbours.
+  function fanOut(i, hop, wave) {
+    var a = nodes[i];
+    a.flash = 1;
+    a.wave = wave;
+    if (hop >= MAX_HOPS) return;
+    var near = [];
+    for (var j = 0; j < nodes.length; j++) {
+      if (j === i || nodes[j].wave === wave) continue;
+      var dx = nodes[j].x - a.x, dy = nodes[j].y - a.y, d2 = dx * dx + dy * dy;
+      if (d2 < LINK * LINK) near.push({ j: j, d2: d2 });
+    }
+    near.sort(function (p, q) { return p.d2 - q.d2; });
+    near.slice(0, hop === 0 ? 4 : 2).forEach(function (n) {
+      if (pulses.length > 140) return;
+      nodes[n.j].wave = wave;   // claim it so two signals don't race to the same node
+      pulses.push({ a: i, b: n.j, t: 0, hop: hop + 1, wave: wave });
+    });
+  }
+
+  function fireAt(x, y) {
+    if (!nodes.length) return;
+    var best = 0, bestD = Infinity;
+    for (var i = 0; i < nodes.length; i++) {
+      var dx = nodes[i].x - x, dy = nodes[i].y - y, d2 = dx * dx + dy * dy;
+      if (d2 < bestD) { bestD = d2; best = i; }
+    }
+    fanOut(best, 0, ++waveId);
+  }
+
+  function updatePulses(now) {
+    for (var k = pulses.length - 1; k >= 0; k--) {
+      var p = pulses[k];
+      p.t += 0.05;
+      if (p.t >= 1) {
+        pulses.splice(k, 1);
+        fanOut(p.b, p.hop, p.wave);
+      }
+    }
+    for (var i = 0; i < nodes.length; i++) if (nodes[i].flash > 0) nodes[i].flash = Math.max(0, nodes[i].flash - 0.025);
+    // Fire on its own every so often when nobody is interacting.
+    if (now > nextIdle && now - lastInput > 4000) {
+      var n = nodes[(Math.random() * nodes.length) | 0];
+      if (n && n.x > 0 && n.x < W && n.y > 0 && n.y < H) fireAt(n.x, n.y);
+      nextIdle = now + 6000 + Math.random() * 6000;
+    }
+  }
+
+  function drawPulses() {
+    var i, p, a, b, x, y;
+    ctx.lineWidth = 1.6;
+    for (i = 0; i < pulses.length; i++) {
+      p = pulses[i]; a = nodes[p.a]; b = nodes[p.b];
+      x = a.x + (b.x - a.x) * p.t; y = a.y + (b.y - a.y) * p.t;
+      var fade = 1 - (p.hop - 1) / (MAX_HOPS + 1);
+      ctx.strokeStyle = 'rgba(' + PULSE_RGB + ',' + (0.45 * fade).toFixed(3) + ')';
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(x, y); ctx.stroke();
+      ctx.fillStyle = 'rgba(' + PULSE_RGB + ',' + (0.18 * fade).toFixed(3) + ')';
+      ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = 'rgba(' + PULSE_RGB + ',' + (0.95 * fade).toFixed(3) + ')';
+      ctx.beginPath(); ctx.arc(x, y, 2.4, 0, Math.PI * 2); ctx.fill();
+    }
+    for (i = 0; i < nodes.length; i++) {
+      a = nodes[i];
+      if (!a.flash) continue;
+      ctx.fillStyle = 'rgba(' + PULSE_RGB + ',' + (0.22 * a.flash).toFixed(3) + ')';
+      ctx.beginPath(); ctx.arc(a.x, a.y, a.r + 9 * a.flash, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = 'rgba(' + PULSE_RGB + ',' + (0.9 * a.flash).toFixed(3) + ')';
+      ctx.beginPath(); ctx.arc(a.x, a.y, a.r + 1.4, 0, Math.PI * 2); ctx.fill();
     }
   }
 
@@ -115,10 +202,13 @@
       ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
       ctx.fill();
     }
+
+    if (pulsesOn) drawPulses();
   }
 
-  function frame() {
+  function frame(now) {
     update();
+    if (pulsesOn) updatePulses(now || performance.now());
     draw();
     raf = requestAnimationFrame(frame);
   }
@@ -144,18 +234,28 @@
     resizeTimer = setTimeout(function () { resize(); draw(); }, 150);
   });
   window.addEventListener('pointermove', function (e) {
+    lastInput = performance.now();
     if (e.pointerType && e.pointerType !== 'mouse') return;
     mouse.x = e.clientX; mouse.y = e.clientY; mouse.active = true;
   }, { passive: true });
+
+  // Click on the background (not on a link, button, photo, map, ...) to fire a signal.
+  var NOT_BACKGROUND = 'a, button, input, textarea, select, label, summary, [role="button"], .photo, .display-name, .research-banner, .site-header';
+  if (pulsesOn) {
+    document.addEventListener('pointerdown', function (e) {
+      lastInput = performance.now();
+      if (e.button !== 0 || !raf) return;
+      if (e.target.closest && e.target.closest(NOT_BACKGROUND)) return;
+      fireAt(e.clientX, e.clientY);
+    });
+    nextIdle = performance.now() + 3500;
+  }
   document.addEventListener('pointerleave', function () { mouse.active = false; });
   window.addEventListener('blur', function () { mouse.active = false; });
   document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else start(); });
 
-  function onScheme() { readColor(); draw(); }
-  if (schemeQuery) {
-    if (schemeQuery.addEventListener) schemeQuery.addEventListener('change', onScheme);
-    else if (schemeQuery.addListener) schemeQuery.addListener(onScheme);
-  }
+  // Re-read the colors when the light/dark theme changes (toggle button or system setting).
+  window.addEventListener('themechange', function () { readColor(); draw(); });
   if (reduceQuery) {
     var onReduce = function () { if (reduceQuery.matches) { stop(); draw(); } else { start(); } };
     if (reduceQuery.addEventListener) reduceQuery.addEventListener('change', onReduce);

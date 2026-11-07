@@ -24,11 +24,29 @@ scripts:
     </div>
 
     <div class="portrait reveal-delay-1" data-reveal>
-      <div class="photo" data-tilt>
+      <div class="photo{% if site.effects.photo_flip %} photo-flippable{% endif %}" data-tilt>
+        {%- if site.effects.photo_flip %}
+        <div class="photo-inner">
+          <button type="button" class="photo-face photo-front" aria-label="Portrait of {{ a.name }}. {{ h.photo_flip_label | escape }}">
+            <span class="photo-initials" aria-hidden="true">YH</span>
+            <!-- Your photo: images/profile.jpg -->
+            <img src="/images/profile.jpg" alt="" width="340" height="425" onerror="this.remove()">
+            <span class="glare" aria-hidden="true"></span>
+            <span class="flip-badge" aria-hidden="true">{% include icon.html name="flip" %}{{ h.photo_flip_label | escape }}</span>
+          </button>
+          <div class="photo-face photo-back" inert>
+            <p class="pb-title">{{ h.photo_back.title | escape }}</p>
+            <p class="pb-text">{% include inline-md.html text=h.photo_back.text %}</p>
+            <a class="btn btn-primary pb-cta" href="mailto:{{ a.email }}">{% include icon.html name="mail" %}{{ h.photo_back.cta | escape }}</a>
+            <button type="button" class="pb-flip" aria-label="{{ h.photo_flip_label | escape }}">{% include icon.html name="flip" %}</button>
+          </div>
+        </div>
+        {%- else %}
         <span class="photo-initials" aria-hidden="true">YH</span>
         <!-- Your photo: images/profile.jpg -->
         <img src="/images/profile.jpg" alt="Portrait of {{ a.name }}" width="340" height="425" onerror="this.remove()">
         <span class="glare" aria-hidden="true"></span>
+        {%- endif %}
       </div>
       <div class="photo-links" id="contact">{% include social-links.html email=true %}</div>
     </div>
@@ -53,6 +71,17 @@ scripts:
         </p>
       </div>
     </div>
+    {%- endif %}
+
+    {%- if h.stats and h.stats.size > 0 %}
+    <ul class="stat-strip" data-reveal-stagger>
+      {%- for st in h.stats %}
+      <li data-reveal>
+        <span class="stat-num"><span class="count" data-count="{{ st.number }}">{{ st.number }}</span>{{ st.suffix | escape }}</span>
+        <span class="stat-label">{{ st.label | escape }}</span>
+      </li>
+      {%- endfor %}
+    </ul>
     {%- endif %}
   </section>
 

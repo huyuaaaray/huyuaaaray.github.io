@@ -24,8 +24,9 @@
   --c-scholar: #4a9ff5;
   --c-email: #f4511e;
 
-  /* Background network (home page), as "r, g, b" */
+  /* Background network (home page), as "r, g, b"; pulse = the signal that travels along it */
   --net-rgb: 0, 33, 165;
+  --pulse-rgb: 250, 70, 22;
 
   --serif: "Newsreader", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
@@ -36,28 +37,33 @@
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-/* Automatic dark mode: follows the visitor's system setting */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0e1320;
-    --surface: #151c2b;
-    --surface-2: #1c2436;
-    --text: #e7eaf1;
-    --muted: #9aa4b8;
-    --line: #273049;
-    --accent: #8ea2ff;
-    --accent-strong: #b3c0ff;
-    --accent-soft: rgba(142, 162, 255, 0.12);
-    --mark: #ff7a50;
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 2px 6px rgba(0, 0, 0, 0.35), 0 24px 60px rgba(0, 0, 0, 0.5);
-    --c-github: #a371f7;
-    --c-linkedin: #4c9be8;
-    --c-scholar: #7ab8ff;
-    --c-email: #ff7a50;
-    --net-rgb: 142, 162, 255;
-  }
+/* Dark mode. The script at the top of every page sets data-theme to "light" or "dark":
+   it follows the visitor's system setting unless they picked one with the header button. */
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1320;
+  --surface: #151c2b;
+  --surface-2: #1c2436;
+  --text: #e7eaf1;
+  --muted: #9aa4b8;
+  --line: #273049;
+  --accent: #8ea2ff;
+  --accent-strong: #b3c0ff;
+  --accent-soft: rgba(142, 162, 255, 0.12);
+  --mark: #ff7a50;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 2px 6px rgba(0, 0, 0, 0.35), 0 24px 60px rgba(0, 0, 0, 0.5);
+  --c-github: #a371f7;
+  --c-linkedin: #4c9be8;
+  --c-scholar: #7ab8ff;
+  --c-email: #ff7a50;
+  --net-rgb: 142, 162, 255;
+  --pulse-rgb: 255, 122, 80;
 }
 
 /* =========================================================
@@ -374,7 +380,8 @@ h3 {
   grid-template-areas:
     "head   head"
     "about  photo"
-    "banner banner";
+    "banner banner"
+    "stats  stats";
   column-gap: 80px;
   align-items: start;
   padding-top: 64px;
@@ -478,16 +485,14 @@ h3 {
   box-shadow: 0 10px 40px rgba(52, 46, 43, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-@media (prefers-color-scheme: dark) {
-  .research-banner {
-    border-color: rgba(255, 255, 255, 0.14);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03));
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  }
+:root[data-theme="dark"] .research-banner {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03));
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
 
-  .orb {
-    opacity: 0.7;
-  }
+:root[data-theme="dark"] .orb {
+  opacity: 0.7;
 }
 
 .research-label {
@@ -1919,7 +1924,8 @@ html[data-fx~="glow"] .entry:hover {
   box-shadow: 0 0 28px color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
-html[data-fx~="glow"] .pin-wrap:hover .pin {
+html[data-fx~="glow"] .pin-wrap:hover .pin,
+html[data-fx~="glow"] .globe-pin:hover .pin {
   box-shadow: 0 0 0 4px rgba(250, 70, 22, 0.25), 0 0 22px rgba(250, 70, 22, 0.7);
 }
 
@@ -1929,6 +1935,372 @@ html[data-fx~="glow"] .to-top:hover {
 
 .theme-night[data-fx~="glow"] .place-card:hover {
   box-shadow: var(--shadow), 0 0 44px rgba(159, 176, 255, 0.35);
+}
+
+/* =========================================================
+   Effects added in round 3 (each one has a switch in _config.yml → effects)
+   ========================================================= */
+
+/* ---- Theme toggle: moon in light mode, sun in dark mode ---- */
+.theme-toggle {
+  border: 0;
+  padding: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.icon-btn[data-brand="theme"] { --brand: var(--mark); }
+
+.theme-toggle .icon {
+  position: absolute;
+  transition: transform 500ms var(--ease), opacity 300ms var(--ease);
+}
+
+.theme-toggle .icon-sun,
+:root[data-theme="dark"] .theme-toggle .icon-moon {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.4);
+}
+
+:root[data-theme="dark"] .theme-toggle .icon-sun {
+  opacity: 1;
+  transform: none;
+}
+
+/* The new colors spread out in a circle from the button (Chrome, Edge, Safari 18+) */
+html.theme-switching::view-transition-old(root),
+html.theme-switching::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+html.theme-switching .site-header {
+  view-transition-name: none;
+}
+
+/* ---- Name decode ---- */
+.display-name .dc {
+  display: inline-block;
+  text-align: center;
+  white-space: pre;
+  transition: color 450ms var(--ease);
+}
+
+.display-name .dc.is-scrambling {
+  color: var(--accent);
+  opacity: 0.8;
+}
+
+.display-name .dc.is-fresh {
+  color: var(--mark);
+}
+
+/* ---- About: words light up as you scroll ---- */
+.prose.is-highlighting .w {
+  opacity: 0.18;
+  transition: opacity 380ms var(--ease);
+}
+
+.prose.is-highlighting .w.is-lit {
+  opacity: 1;
+}
+
+/* ---- Stats strip ---- */
+.stat-strip {
+  grid-area: stats;
+  list-style: none;
+  margin: 44px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.stat-strip li {
+  padding: 4px 28px;
+  border-left: 1px solid var(--line);
+}
+
+.stat-strip li:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.stat-num {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(44px, 5vw, 64px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  background: linear-gradient(120deg, var(--accent) 10%, var(--mark) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.stat-label {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* ---- Photo: click to flip to the back ---- */
+.photo.photo-flippable {
+  overflow: visible;
+  background: none;
+  perspective: 1400px;
+}
+
+.photo-inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 850ms cubic-bezier(0.3, 0.8, 0.25, 1);
+}
+
+.photo.is-flipped .photo-inner {
+  transform: rotateY(180deg);
+}
+
+.photo-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  overflow: hidden;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.photo-front {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: #0021a5;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.photo-front:focus-visible {
+  outline: 3px solid var(--mark);
+  outline-offset: 3px;
+}
+
+.flip-badge {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: rgba(10, 14, 30, 0.5);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 260ms var(--ease), transform 260ms var(--ease);
+}
+
+.flip-badge .icon {
+  width: 15px;
+  height: 15px;
+}
+
+.photo-front:hover .flip-badge,
+.photo-front:focus-visible .flip-badge {
+  opacity: 1;
+  transform: none;
+}
+
+@media (hover: none) {
+  .flip-badge {
+    opacity: 0.9;
+    transform: none;
+  }
+}
+
+.photo-back {
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  padding: 34px 30px;
+  color: #fff;
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgba(250, 70, 22, 0.55), transparent 60%),
+    radial-gradient(90% 70% at 0% 100%, rgba(74, 108, 247, 0.6), transparent 65%),
+    linear-gradient(160deg, #0021a5, #0b1036);
+  cursor: pointer;
+}
+
+.pb-title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.pb-text {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.55;
+  opacity: 0.92;
+}
+
+.pb-text a {
+  color: #fff;
+}
+
+.pb-cta.btn {
+  align-self: flex-start;
+  margin-top: 6px;
+  border-color: transparent;
+  background: #fff;
+  color: #0021a5;
+}
+
+.pb-cta.btn:hover {
+  background: #fff;
+  color: #fa4616;
+}
+
+.pb-cta .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.pb-flip {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  cursor: pointer;
+  transition: background 200ms var(--ease), transform 300ms var(--ease);
+}
+
+.pb-flip:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: rotate(-30deg);
+}
+
+.pb-flip .icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* ---- Travel: 3D globe ---- */
+.map-wrap.is-globe {
+  position: relative;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.is-globe #map {
+  height: clamp(380px, 60vw, 640px);
+  background: none;
+  cursor: grab;
+}
+
+.is-globe #map:active {
+  cursor: grabbing;
+}
+
+.globe-pin {
+  display: block;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: opacity 300ms var(--ease);
+}
+
+.globe-pin.is-home .pin {
+  background: #fa4616;
+}
+
+.globe-pin.is-behind {
+  opacity: 0;
+  pointer-events: none !important;
+}
+
+.globe-pin:hover .pin,
+.globe-pin:focus-visible .pin,
+.globe-pin.is-active .pin {
+  background: #fa4616;
+  transform: scale(1.3);
+  animation: pin-bounce 520ms var(--ease);
+}
+
+.globe-pin:hover .pin::after,
+.globe-pin:focus-visible .pin::after,
+.globe-pin.is-active .pin::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.globe-pin:focus-visible {
+  outline: none;
+}
+
+.globe-fallback {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  margin: 0;
+  padding: 24px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* Hover preview card on the globe */
+.globe-tip {
+  position: absolute;
+  z-index: 5;
+  width: 260px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #121933;
+  color: var(--text);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  font-size: 15px;
+  line-height: 1.5;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(6px) scale(0.98);
+  transition: opacity 180ms var(--ease), transform 220ms var(--ease);
+}
+
+.globe-tip.is-shown {
+  opacity: 1;
+  transform: none;
 }
 
 /* =========================================================
@@ -1970,12 +2342,33 @@ html[data-fx~="glow"] .to-top:hover {
       "head"
       "photo"
       "about"
-      "banner";
+      "banner"
+      "stats";
     padding-top: 40px;
   }
 
   .research-wrap {
     margin-top: 36px;
+  }
+
+  .stat-strip {
+    margin-top: 32px;
+  }
+
+  .stat-strip li {
+    padding: 2px 12px;
+  }
+
+  .stat-num {
+    font-size: 38px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+  }
+
+  .pb-title {
+    font-size: 28px;
   }
 
   .research-banner {
@@ -2188,6 +2581,10 @@ html[data-fx~="glow"] .to-top:hover {
 
   .news-dot.is-latest::after {
     display: none;
+  }
+
+  .photo-inner {
+    transition: none;
   }
 
   @view-transition {

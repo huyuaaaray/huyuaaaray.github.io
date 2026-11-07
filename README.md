@@ -15,7 +15,8 @@ annotated (in Chinese) line by line:
 4. Travel: title, intro, map hint, and all the places
 5. CV: headings, summary, and every section (experience, education, publications, projects, skills, honors)
 6. 404 page
-7. Effect switches: cursor tail, cursor spotlight, click ripple, hover glow (`true` / `false`)
+7. Effect switches (cursor tail, spotlight, ripple, hover glow, theme toggle, name decode,
+   network pulses, About highlight, photo flip, 3D globe, constellation) and the easter egg
 
 Text marked "(Markdown)" accepts `*italics*`, `**bold**` and
 `[links](https://...)`. Indent with spaces, never tabs. If the site stops
@@ -38,16 +39,17 @@ updating after an edit, the Actions tab shows the YAML error.
 | --- | --- |
 | Colors, fonts, layout, hover effects, dark mode, night-sky theme | `assets/css/site.css` |
 | Icon hover colors | `--c-github`, `--c-linkedin`, `--c-scholar`, `--c-email` near the top of `assets/css/site.css` |
-| Home background network | `assets/js/network.js` (delete `network: true` in `index.html` to turn it off) |
-| Travel starfield | `assets/js/starfield.js` (delete `theme: night` in `travel/index.html` to go back to the normal colors) |
+| Home background network and its click pulses | `assets/js/network.js` (delete `network: true` in `index.html` to turn it off) |
+| Travel starfield and constellation | `assets/js/starfield.js` (delete `theme: night` in `travel/index.html` to go back to the normal colors) |
 | Typewriter text, scroll reveal, tilt, parallax, magnetic icons, card spotlight, progress bar, easter egg | `assets/js/site.js` |
 | Cursor tail, cursor spotlight, click ripple | `assets/js/cursor-fx.js` (switch each on/off in `_config.yml` → `effects`) |
 | Hover glow | `assets/css/site.css` (search for "Hover glow"; switch in `_config.yml` → `effects`) |
-| Map, flight routes, country shading, photo viewer | `assets/js/travel.js` |
+| 3D globe (or the flat map when `globe: false`), routes, visited countries, photo viewer | `assets/js/travel.js` |
 | Old links (e.g. `/CV.pdf`) | the `moved` list at the top of `404.html` |
 
-Easter egg: type `gogators` on any page, or tap the header gator five times
-on the home page.
+Easter egg: click the big "Yu Hu" on the home page, or type `gogators` on
+any page. The word, the message, and an on/off switch are in
+`_config.yml` (section 7, `easter_egg`).
 
 ## Travel notes
 
