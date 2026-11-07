@@ -443,6 +443,59 @@
     };
     // Wait for the picture so it fades in together with the text (but never wait long).
     if (img && img.decode) { img.decode().then(show, show); setTimeout(show, 1200); } else { show(); }
+
+    if (!reduceMotion) confetti();
+  }
+
+  // Orange and blue confetti bursting up from both bottom corners.
+  function confetti() {
+    var canvas = document.createElement('canvas');
+    canvas.className = 'confetti';
+    canvas.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(canvas);
+    var ctx = canvas.getContext('2d');
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W = canvas.width = Math.round(window.innerWidth * dpr);
+    var H = canvas.height = Math.round(window.innerHeight * dpr);
+    var colors = ['#fa4616', '#ff8a5c', '#0021a5', '#4a6cf7'];
+    var bits = [];
+    for (var i = 0; i < 170; i++) {
+      var fromLeft = i % 2 === 0;
+      bits.push({
+        x: (fromLeft ? 0.02 : 0.98) * W,
+        y: H * 0.75,
+        vx: (fromLeft ? 1 : -1) * (Math.random() * 9 + 5) * dpr,
+        vy: -(Math.random() * 15 + 11) * dpr,
+        w: (Math.random() * 6 + 5) * dpr,
+        h: (Math.random() * 10 + 6) * dpr,
+        rot: Math.random() * Math.PI,
+        vr: (Math.random() - 0.5) * 0.3,
+        color: colors[i % colors.length]
+      });
+    }
+    var start = null;
+    var draw = function (now) {
+      if (start === null) start = now;
+      var t = now - start;
+      ctx.clearRect(0, 0, W, H);
+      bits.forEach(function (b) {
+        b.vy += 0.38 * dpr;
+        b.vx *= 0.99;
+        b.x += b.vx;
+        b.y += b.vy;
+        b.rot += b.vr;
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, 1 - Math.max(0, t - 2200) / 900);
+        ctx.translate(b.x, b.y);
+        ctx.rotate(b.rot);
+        ctx.fillStyle = b.color;
+        ctx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h * Math.abs(Math.cos(b.rot * 2)));
+        ctx.restore();
+      });
+      if (t < 3100) requestAnimationFrame(draw);
+      else canvas.remove();
+    };
+    requestAnimationFrame(draw);
   }
 
   // Fetch the picture ahead of time once the page is idle, so the first click shows it instantly.

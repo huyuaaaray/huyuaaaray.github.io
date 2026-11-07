@@ -579,6 +579,7 @@
     });
 
     if (media) html += '<div class="media-grid">' + media + '</div>';
+    if (!html && text.noMedia) html = '<p class="no-media">' + esc(text.noMedia) + '</p>';
     bodyEl.innerHTML = html;
 
     Array.prototype.forEach.call(bodyEl.querySelectorAll('[data-photo]'), function (a) {

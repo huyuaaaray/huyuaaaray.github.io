@@ -29,10 +29,13 @@ scripts:
     {%- for p in places %}
     <button type="button" class="place-card" data-reveal data-glow data-index="{{ forloop.index0 }}" aria-haspopup="dialog">
       <span class="place-media">
-        {%- if p.cover %}
+        {%- if p.cover and p.cover != "" %}
         <img src="{{ p.cover }}" alt="" loading="lazy">
+        {%- else %}
+        {%- comment -%} No cover yet: a colorful card with the place name {%- endcomment -%}
+        <span class="place-art art-{{ forloop.index0 | modulo: 8 }}" aria-hidden="true"><span>{{ p.name }}</span></span>
         {%- endif %}
-        {%- if p.date %}
+        {%- if p.date and p.date != "" %}
         <span class="place-badge">{{ p.date }}</span>
         {%- endif %}
       </span>
@@ -70,4 +73,4 @@ scripts:
 </dialog>
 
 <script id="travel-data" type="application/json">{{ places | jsonify }}</script>
-<script id="travel-text" type="application/json">{"previewCta": {{ t.preview_cta | jsonify }}, "globeFallback": {{ t.globe_fallback | jsonify }}}</script>
+<script id="travel-text" type="application/json">{"previewCta": {{ t.preview_cta | jsonify }}, "globeFallback": {{ t.globe_fallback | jsonify }}, "noMedia": {{ t.no_media | jsonify }}}</script>

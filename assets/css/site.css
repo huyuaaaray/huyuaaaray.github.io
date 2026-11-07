@@ -1255,6 +1255,43 @@ h3 {
   transition: transform 500ms var(--ease);
 }
 
+/* Places without a cover photo get a colorful card with the name */
+.place-art {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 14px 16px;
+  background:
+    repeating-radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.08) 0 2px, transparent 2px 22px),
+    linear-gradient(135deg, hsl(var(--h) 62% 38%), hsl(calc(var(--h) + 45) 72% 56%));
+  color: #fff;
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.15;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  transition: transform 500ms var(--ease);
+}
+
+/* eight color pairs, used in turn */
+.art-0 { --h: 222; }
+.art-1 { --h: 14; }
+.art-2 { --h: 170; }
+.art-3 { --h: 268; }
+.art-4 { --h: 38; }
+.art-5 { --h: 195; }
+.art-6 { --h: 330; }
+.art-7 { --h: 120; }
+
+.place-card:hover .place-art {
+  transform: scale(1.05);
+}
+
+.no-media {
+  color: var(--muted);
+}
+
 .place-badge {
   position: absolute;
   left: 12px;
@@ -1734,6 +1771,16 @@ main,
   stroke: var(--accent);
   stroke-opacity: 0.35;
   stroke-width: 1;
+}
+
+/* Confetti for the easter egg (behind the picture) */
+.confetti {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
 /* Gators easter egg: click the big "Yu Hu" (home page) or type the secret word.
@@ -2330,14 +2377,20 @@ html.theme-switching .site-header {
 
 .globe-pin {
   display: block;
-  width: 22px;
-  height: 22px;
+  width: 16px;
+  height: 16px;
   padding: 0;
   border: 0;
   background: none;
   cursor: pointer;
   pointer-events: auto;
   transition: opacity 300ms var(--ease);
+}
+
+.globe-pin .pin {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
 }
 
 .globe-pin.is-home .pin {
