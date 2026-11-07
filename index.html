@@ -23,17 +23,6 @@ scripts:
       {%- endif %}
     </div>
 
-    {%- if h.research.text %}
-    <div class="research-banner reveal-delay-1" data-reveal data-glow>
-      <p class="research-label">{% include icon.html name="spark" %}{{ h.research.label | escape }}</p>
-      <p class="research-text">
-        <span class="visually-hidden">{{ h.research.text | escape }}</span>
-        <span class="research-ghost" aria-hidden="true">{{ h.research.text | escape }}</span>
-        <span class="research-live" aria-hidden="true"><span class="research-typed" data-type-once="{{ h.research.text | escape }}">{{ h.research.text | escape }}</span><span class="caret"></span></span>
-      </p>
-    </div>
-    {%- endif %}
-
     <div class="portrait reveal-delay-1" data-reveal>
       <div class="photo" data-tilt>
         <span class="photo-initials" aria-hidden="true">YH</span>
@@ -50,6 +39,21 @@ scripts:
         {{ h.bio | markdownify }}
       </div>
     </div>
+
+    {%- if h.research.text %}
+    <div class="research-wrap" data-reveal>
+      <span class="orb orb-a" aria-hidden="true"></span>
+      <span class="orb orb-b" aria-hidden="true"></span>
+      <div class="research-banner" data-glow>
+        <p class="research-label">{% include icon.html name="spark" %}{{ h.research.label | escape }}</p>
+        <p class="research-text">
+          <span class="visually-hidden">{{ h.research.text | escape }}</span>
+          <span class="research-ghost" aria-hidden="true">{{ h.research.text | escape }}</span>
+          <span class="research-live" aria-hidden="true"><span class="research-typed" data-type-once="{{ h.research.text | escape }}">{{ h.research.text | escape }}</span><span class="caret"></span></span>
+        </p>
+      </div>
+    </div>
+    {%- endif %}
   </section>
 
   {%- if h.news and h.news.size > 0 %}
@@ -57,8 +61,10 @@ scripts:
     <h2 class="section-title" id="news-title" data-reveal>{{ h.news_title | escape }}</h2>
     <ol class="news" data-reveal-stagger>
       {%- for item in h.news %}
-      <li data-reveal>
+      <li data-reveal data-glow>
         <time datetime="{{ item.datetime }}">{{ item.date }}</time>
+        <span class="news-rail" aria-hidden="true"></span>
+        <span class="news-dot{% if forloop.first %} is-latest{% endif %}" aria-hidden="true"></span>
         <p>{% include inline-md.html text=item.text %}</p>
       </li>
       {%- endfor %}

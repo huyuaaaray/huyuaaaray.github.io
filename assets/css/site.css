@@ -373,8 +373,8 @@ h3 {
   grid-template-columns: minmax(0, 1fr) 340px;
   grid-template-areas:
     "head   head"
-    "banner banner"
-    "about  photo";
+    "about  photo"
+    "banner banner";
   column-gap: 80px;
   align-items: start;
   padding-top: 64px;
@@ -426,19 +426,68 @@ h3 {
   padding-top: 44px;
 }
 
-/* Research-interest banner above About */
-.research-banner {
+/* Research-interest banner below About: frosted glass over two slowly floating color orbs */
+.research-wrap {
   grid-area: banner;
-  margin-top: 36px;
-  padding: 26px 32px 28px;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  background:
-    radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 55%),
-    radial-gradient(120% 140% at 100% 100%, color-mix(in srgb, var(--mark) 8%, transparent), transparent 55%),
-    var(--surface);
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
+  position: relative;
+  margin-top: 48px;
+  isolation: isolate;
+}
+
+.orb {
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(34px);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.orb-a {
+  width: 260px;
+  height: 260px;
+  left: 6%;
+  top: -40px;
+  background: radial-gradient(circle, rgba(0, 33, 165, 0.55), transparent 70%);
+  animation: orb-float 14s ease-in-out infinite alternate;
+}
+
+.orb-b {
+  width: 300px;
+  height: 300px;
+  right: 4%;
+  bottom: -70px;
+  background: radial-gradient(circle, rgba(250, 70, 22, 0.5), transparent 70%);
+  animation: orb-float 17s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes orb-float {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, 18px) scale(1.08); }
+  100% { transform: translate(-30px, -14px) scale(0.95); }
+}
+
+.research-banner {
+  position: relative;
+  padding: 28px 34px 30px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.26));
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(170%);
+  box-shadow: 0 10px 40px rgba(52, 46, 43, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+@media (prefers-color-scheme: dark) {
+  .research-banner {
+    border-color: rgba(255, 255, 255, 0.14);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03));
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+
+  .orb {
+    opacity: 0.7;
+  }
 }
 
 .research-label {
@@ -581,60 +630,138 @@ h3 {
 }
 
 
-/* News list */
+/* News list: a timeline with a dot per item.
+   Hover: the dot pulses orange, the date turns into a pill, the row lifts and glows. */
 .news {
   list-style: none;
   margin: 0;
   padding: 0;
-  max-width: 72ch;
+  max-width: 78ch;
 }
 
 .news li {
   position: relative;
   display: grid;
-  grid-template-columns: 100px 1fr;
-  gap: 16px;
+  grid-template-columns: 104px 28px minmax(0, 1fr);
+  grid-template-areas: "date dot text";
+  align-items: start;
   padding: 14px 16px;
   margin: 0 -16px;
-  border-radius: 12px;
-  transition: background 200ms var(--ease), transform 220ms var(--ease);
+  border-radius: 14px;
+  transition: background 220ms var(--ease), transform 260ms var(--ease), box-shadow 260ms var(--ease);
 }
 
-.news li::before {
-  content: "";
+/* the timeline rail runs through the dot column */
+.news-rail {
   position: absolute;
-  left: 0;
-  top: 14px;
-  bottom: 14px;
-  width: 3px;
-  border-radius: 3px;
-  background: var(--mark);
-  transform: scaleY(0);
-  transition: transform 240ms var(--ease);
+  left: calc(16px + 104px + 13px);
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--line);
+  transition: background 220ms var(--ease);
 }
 
-.news li + li {
-  border-top: 1px solid var(--line);
+.news li:first-child > .news-rail { top: 22px; }
+.news li:last-child > .news-rail { bottom: auto; height: 22px; }
+.news li:only-child > .news-rail { display: none; }
+
+.news li:hover > .news-rail {
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--mark) 60%, transparent) 50%, transparent);
+}
+
+.news time {
+  grid-area: date;
+  justify-self: start;
+  padding: 1px 10px;
+  margin-left: -10px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+  transition: background 220ms var(--ease), color 220ms var(--ease);
+}
+
+.news-dot {
+  grid-area: dot;
+  justify-self: center;
+  position: relative;
+  z-index: 1;
+  width: 10px;
+  height: 10px;
+  margin-top: 8px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid color-mix(in srgb, var(--accent) 55%, var(--line));
+  transition: transform 260ms var(--ease), background 220ms var(--ease), border-color 220ms var(--ease), box-shadow 260ms var(--ease);
+}
+
+.news p {
+  grid-area: text;
+  margin: 0;
+  transition: transform 260ms var(--ease);
 }
 
 .news li:hover {
   background: var(--surface);
+  transform: translateY(-2px);
+}
+
+.news li:hover time {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.news li:hover .news-dot {
+  background: var(--mark);
+  border-color: var(--mark);
+  transform: scale(1.35);
+  animation: dot-pulse 1.4s var(--ease) infinite;
+}
+
+.news li:hover p {
   transform: translateX(4px);
 }
 
-.news li:hover::before {
-  transform: scaleY(1);
+/* The newest item's dot keeps sending out a soft ring */
+.news-dot.is-latest {
+  background: var(--mark);
+  border-color: var(--mark);
 }
 
-.news time {
-  color: var(--muted);
-  font-size: 15px;
-  font-variant-numeric: tabular-nums;
-  padding-top: 1px;
+.news-dot.is-latest::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid var(--mark);
+  opacity: 0;
+  animation: news-ping 2.4s var(--ease) infinite;
 }
 
-.news p {
-  margin: 0;
+@keyframes news-ping {
+  0% { transform: scale(0.45); opacity: 0.85; }
+  75%, 100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* News items slide in from the left and come into focus, one after another */
+.js .news li[data-reveal] {
+  translate: -28px 0;
+  filter: blur(6px);
+  transition: opacity 700ms var(--ease), translate 700ms var(--ease), filter 700ms var(--ease),
+    background 220ms var(--ease), transform 260ms var(--ease), box-shadow 260ms var(--ease);
+  transition-delay: var(--reveal-delay, 0ms), var(--reveal-delay, 0ms), var(--reveal-delay, 0ms), 0ms, 0ms, 0ms;
+}
+
+.js .news li[data-reveal].is-visible {
+  translate: none;
+  filter: none;
+}
+
+@keyframes dot-pulse {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--mark) 55%, transparent); }
+  70% { box-shadow: 0 0 0 9px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
 }
 
 /* =========================================================
@@ -1674,6 +1801,137 @@ main,
 }
 
 /* =========================================================
+   Cursor and click effects (switched on/off in _config.yml → effects)
+   ========================================================= */
+
+/* Cursor spotlight: a soft light behind the content that follows the mouse */
+.cursor-spot {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(520px circle at var(--cx, 50%) var(--cy, 50%),
+    color-mix(in srgb, var(--accent) 11%, transparent), transparent 62%);
+  transition: opacity 400ms var(--ease);
+}
+
+.cursor-spot.is-on {
+  opacity: 1;
+}
+
+.theme-night .cursor-spot {
+  background: radial-gradient(560px circle at var(--cx, 50%) var(--cy, 50%),
+    rgba(160, 180, 255, 0.12), transparent 62%);
+}
+
+/* Cursor tail: drawn on this canvas by cursor-fx.js */
+.cursor-tail {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Ripple: a wave from the click point inside buttons, icons, tabs and cards */
+html[data-fx~="ripple"] :is(.btn, .icon-btn, .tab, .to-top, .lb-btn, .dialog-close) {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.22;
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  animation: ripple 620ms var(--ease) forwards;
+}
+
+@keyframes ripple {
+  to { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+
+/* Click anywhere else: a ring spreads out from the pointer */
+.click-ring {
+  position: fixed;
+  z-index: 2400;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border-radius: 50%;
+  border: 2px solid var(--mark);
+  pointer-events: none;
+  transform: scale(0.1);
+  opacity: 0.8;
+  animation: click-ring 560ms var(--ease) forwards;
+}
+
+@keyframes click-ring {
+  to { transform: scale(1); opacity: 0; }
+}
+
+/* Hover glow */
+html[data-fx~="glow"] .btn:hover {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent),
+    0 8px 28px color-mix(in srgb, var(--accent) 32%, transparent);
+}
+
+html[data-fx~="glow"] .icon-btn:hover {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand, var(--accent)) 28%, transparent),
+    0 0 20px color-mix(in srgb, var(--brand, var(--accent)) 42%, transparent);
+}
+
+html[data-fx~="glow"] .tab:hover {
+  text-shadow: 0 0 14px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+html[data-fx~="glow"] .brand:hover img {
+  filter: drop-shadow(0 0 6px rgba(250, 70, 22, 0.55));
+}
+
+html[data-fx~="glow"] .photo:hover {
+  box-shadow: var(--shadow-lg), 0 0 46px color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+html[data-fx~="glow"] .research-banner:hover {
+  box-shadow: 0 10px 40px rgba(52, 46, 43, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 0 44px color-mix(in srgb, var(--mark) 22%, transparent);
+}
+
+html[data-fx~="glow"] .place-card:hover {
+  box-shadow: var(--shadow), 0 0 36px color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+html[data-fx~="glow"] .news li:hover {
+  box-shadow: 0 6px 24px color-mix(in srgb, var(--accent) 14%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+html[data-fx~="glow"] .news li:hover time {
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+html[data-fx~="glow"] .entry:hover {
+  box-shadow: 0 0 28px color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+html[data-fx~="glow"] .pin-wrap:hover .pin {
+  box-shadow: 0 0 0 4px rgba(250, 70, 22, 0.25), 0 0 22px rgba(250, 70, 22, 0.7);
+}
+
+html[data-fx~="glow"] .to-top:hover {
+  box-shadow: var(--shadow), 0 0 22px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.theme-night[data-fx~="glow"] .place-card:hover {
+  box-shadow: var(--shadow), 0 0 44px rgba(159, 176, 255, 0.35);
+}
+
+/* =========================================================
    Footer and 404
    ========================================================= */
 .site-footer {
@@ -1710,16 +1968,22 @@ main,
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       "head"
-      "banner"
       "photo"
-      "about";
+      "about"
+      "banner";
     padding-top: 40px;
   }
 
+  .research-wrap {
+    margin-top: 36px;
+  }
+
   .research-banner {
-    margin-top: 28px;
     padding: 20px 22px 22px;
   }
+
+  .orb-a { width: 180px; height: 180px; }
+  .orb-b { width: 200px; height: 200px; }
 
   .portrait {
     width: min(280px, 100%);
@@ -1816,8 +2080,20 @@ main,
   }
 
   .news li {
-    grid-template-columns: 1fr;
-    gap: 2px;
+    grid-template-columns: 22px minmax(0, 1fr);
+    grid-template-areas:
+      "dot date"
+      ".   text";
+    row-gap: 2px;
+  }
+
+  .news-rail {
+    left: calc(16px + 10px);
+  }
+
+  .news time {
+    margin-left: -6px;
+    padding: 1px 6px;
   }
 
   .skills div {
@@ -1886,6 +2162,10 @@ main,
     padding-left: 12px;
     padding-right: 12px;
   }
+
+  .news-rail {
+    left: calc(12px + 10px);
+  }
 }
 
 /* Respect "reduce motion" system setting */
@@ -1899,9 +2179,15 @@ main,
     scroll-behavior: auto !important;
   }
 
-  .js [data-reveal] {
+  .js [data-reveal],
+  .js .news li[data-reveal] {
     opacity: 1;
     translate: none;
+    filter: none;
+  }
+
+  .news-dot.is-latest::after {
+    display: none;
   }
 
   @view-transition {

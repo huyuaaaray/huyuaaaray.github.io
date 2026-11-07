@@ -11,6 +11,7 @@
 #  目录：
 #    一、网站设置        二、个人信息与导航     三、首页
 #    四、Travel 页面     五、CV 页面            六、404 页面
+#    七、特效开关
 # =====================================================================
 
 
@@ -69,7 +70,7 @@ home:
   # 身份下面那一行（部门和单位）
   tagline: "Quality & Patient Safety, University of Florida College of Medicine"
 
-  # About 上方的横幅：label 是小标题，text 是用打字机效果打出来的那句话
+  # About 下方的玻璃横幅：label 是小标题，text 是用打字机效果打出来的那句话
   research:
     label: Research interest
     text: "I study how to make large language models reliable enough for real clinical work: reading EHR notes, surfacing risks, and supporting the clinicians who review them."
@@ -353,3 +354,15 @@ cv:
 not_found:
   title: Page not found
   text: "This page doesn't exist or has moved. Go back to the [home page](/), see my [CV](/cv/), or browse my [travels](/travel/)."
+
+
+# =====================================================================
+# 七、特效开关（true 打开，false 关闭）
+#    只在电脑上用鼠标时出现的：鼠标拖尾、鼠标聚光灯
+#    系统开启"减少动态效果"时，所有动画会自动关闭
+# =====================================================================
+effects:
+  cursor_tail: true          # 鼠标拖尾：鼠标移动时留下一条橙蓝渐变的光带
+  cursor_spotlight: true     # 鼠标聚光灯：页面背景上跟着鼠标移动的一团柔光
+  ripple: true               # 点击水波纹：点按钮、图标、卡片时从点击处扩散水波；点空白处出现一圈涟漪
+  hover_glow: true           # 悬停发光：鼠标放到按钮、图标、卡片、照片上时发出柔和光晕

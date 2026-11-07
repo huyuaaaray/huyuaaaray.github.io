@@ -1,5 +1,11 @@
 <!DOCTYPE html>
-<html lang="en"{% if page.theme %} class="theme-{{ page.theme }}"{% endif %}>
+{%- capture fx -%}
+  {%- if site.effects.cursor_tail %} tail{% endif -%}
+  {%- if site.effects.cursor_spotlight %} spotlight{% endif -%}
+  {%- if site.effects.ripple %} ripple{% endif -%}
+  {%- if site.effects.hover_glow %} glow{% endif -%}
+{%- endcapture -%}
+<html lang="en"{% if page.theme %} class="theme-{{ page.theme }}"{% endif %} data-fx="{{ fx | strip }}">
 <head>
 {% include head.html %}
 </head>
@@ -28,6 +34,7 @@
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js" integrity="sha384-Ukv1p/xTma6P4/2bY5KzWBw+ydSpXmhCMtyciIQVDJ1RmOxtCYNMF1uXT9T63H67" crossorigin></script>
 {%- endif %}
 <script src="/assets/js/site.js"></script>
+<script src="/assets/js/cursor-fx.js"></script>
 {%- for s in page.scripts %}
 <script src="{{ s }}"></script>
 {%- endfor %}
