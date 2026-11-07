@@ -56,6 +56,25 @@ theme_toggle_label: Switch light / dark mode
 # 用键盘 Tab 键浏览时，左上角最先出现的"跳到正文"按钮
 skip_link: Skip to content
 
+# 页脚的本地时间和天气，例如 "Gainesville · 3:04 PM · Clear 72°F"
+#   lat/lng 是坐标；timezone 是时区；unit 写 F（华氏度）或 C（摄氏度）
+#   weather_labels 是天气的说明文字；天气数据来自免费的 Open-Meteo，不需要账号
+footer_clock:
+  city: Gainesville
+  lat: 29.65
+  lng: -82.32
+  timezone: America/New_York
+  unit: F
+  weather_labels:
+    clear: Clear
+    partly: Partly cloudy
+    cloudy: Cloudy
+    fog: Fog
+    drizzle: Drizzle
+    rain: Rain
+    snow: Snow
+    storm: Thunderstorm
+
 # 右上角的菜单。label 是显示的文字，url 是链接。
 nav:
   - label: Travel
@@ -100,7 +119,7 @@ home:
   #   number 只写数字；suffix 是数字后面的符号，比如 "+"（可不写）；label 是下面的说明
   #   不想要这一栏就写 stats: []
   stats:
-    - number: 6
+    - number: 7
       label: peer-reviewed publications
     - number: 3
       suffix: "+"
@@ -114,6 +133,24 @@ home:
     text: I build clinical AI at the University of Florida in Gainesville. Always happy to talk about LLM evaluation, clinical NLP, or a collaboration.
     cta: Say hello                   # 背面按钮文字，点击会给你发邮件
   photo_flip_label: Click to flip    # 鼠标放在照片上时的提示
+
+  # 关键词跑马灯（在统计条下面）：这些词会一直横向循环滚动，鼠标放上去暂停。
+  #   不想要就写 marquee: []
+  marquee:
+    - LLM evaluation
+    - LLM-as-a-Judge
+    - Clinical NLP
+    - vLLM
+    - Gemma 4
+    - GraphRAG
+    - LLMOps
+    - EHR
+    - FHIR
+    - OMOP
+    - HiPerGator
+    - SLURM
+    - Pydantic
+    - PyTorch
 
   # News 部分
   news_title: News
@@ -224,8 +261,10 @@ cv:
   title: CV                           # 浏览器标签页名
   heading: Curriculum Vitae           # 页面大标题
   description: Curriculum vitae of Yu Hu, covering clinical LLM evaluation, LLMOps, and machine learning on EHR data at the University of Florida College of Medicine.
-  summary: Data scientist with 3+ years of experience in clinical LLM evaluation and safety on EHR and clinical notes, building evaluation workflows and end-to-end MLOps/LLMOps pipelines.
+  summary: Data scientist with 3+ years of experience in clinical LLM evaluation and safety on EHR and clinical notes data. Built LLM-as-a-Judge and clinician-validated evaluation workflows, and end-to-end MLOps/LLMOps pipelines, including a config-driven LLM platform adopted by three clinical programs with self-hosted inference on HPC (vLLM).
   download_label: Download PDF        # 下载按钮文字（文件是网站根目录的 resume.pdf）
+  copy_label: Copy citation           # 每篇论文下面"复制引用"按钮的文字
+  copied_label: Copied!               # 点击复制后按钮上短暂显示的文字
 
   # 各部分的标题。想隐藏某一部分，把它下面的列表清空成 []
   experience_title: Experience
@@ -251,32 +290,34 @@ cv:
       dates: Jun 2025 – Aug 2025
       where: Regenstrief Institute, Indianapolis, IN
       bullets:
-        - Standardized U.S. EHR data by architecting pipelines for the OMOP and PCORnet common data models, improving data quality and harmonization.
+        - Standardized U.S. EHR data by architecting pipelines for OMOP and PCORnet models, improving data quality and harmonization.
         - Engineered automated, scalable ETL pipelines and extracted longitudinal clinical features from raw EHR data using distributed cluster computing.
-        - Created web-based analytics dashboards that help clinicians interpret complex data.
+        - Created web-based analytics dashboards to support clinicians in interpreting complex data and improving decision-making.
     - title: Application Programmer
       dates: Mar 2024 – May 2025
       where: University of Florida, Gainesville, FL
       bullets:
         - Implemented MLOps workflows with CI/CD and monitoring, enabling scalable deployment on Linux systems.
-        - Developed scalable ETL pipelines and engineered clinical features using cluster computing for large-scale healthcare data.
-        - Built and deployed secure, interactive healthcare web applications with FHIR integration on AWS.
+        - Developed scalable ETL pipelines and engineered clinical features using cluster computing, boosting ML model performance on large-scale healthcare data.
+        - Built and deployed secure, interactive healthcare web applications with FHIR integration on AWS, enhancing scalability, reliability, and clinical interoperability.
     - title: Research Assistant
       dates: Dec 2022 – Feb 2024
       where: University of Florida, Gainesville, FL
       bullets:
-        - Cleaned and preprocessed large healthcare datasets and built visualizations to support data-driven research.
-        - Developed a computer vision object detection system with automated data acquisition pipelines.
-        - Built and deployed an interactive web platform for 3D modeling and predictive analytics.
+        - Cleaned and preprocessed extensive healthcare datasets, generating insightful visualizations to support data-driven research.
+        - Developed a computer vision-based object detection system integrated with automated data acquisition pipelines, enabling efficient data collection and analysis.
+        - Built and deployed an interactive web platform for 3D modeling and predictive analytics, enhancing visualization of object detection outcomes and improving user experience.
 
-  # 教育：title 学位，dates 时间，where 学校和城市
+  # 教育：title 学位，dates 时间，where 学校和城市，summary 学位下面的一行字（这里写 GPA，可不写）
   education:
     - title: M.S. in Electrical and Computer Engineering
       dates: Aug 2021 – May 2023
       where: University of Florida, Gainesville, FL
+      summary: 'GPA: 3.56/4.0'
     - title: B.S. in Electrical Engineering
       dates: Sep 2016 – Jun 2020
       where: Hubei University of Technology, Wuhan, China
+      summary: 'GPA: 3.3/4.0'
 
   # 论文：authors 作者（你的名字会自动加粗；* 表示共同一作），title 题目，
   #       venue 期刊名（斜体显示），details 卷期页码年份，links 链接（可不写）
@@ -327,26 +368,32 @@ cv:
     - title: Clinical LLM Evaluation and Model Selection for Readmission Review
       dates: Apr 2026 – Present
       bullets:
-        - Led a head-to-head evaluation of Gemma 4 31B and MedGemma for patient-level readmission review across 30K–80K-token contexts, validating outputs against clinician review.
-        - Identified a key safety failure mode, where the domain-tuned model inferred answers unsupported by the record while Gemma 4 abstained with evidence-specific rationales.
-        - Built an LLM-as-a-Judge framework (Llama 3.3-70B) with rubric-based JSON verdicts and an HTML report that routes flagged patients to clinician review.
-        - Benchmarked long-context inference on NVIDIA B200 GPUs (FP16 vs. FP8, tensor parallelism) and traced a throughput ceiling to vLLM's KV-cache handling of sliding-window attention.
+        - Led a head-to-head evaluation of Gemma 4 31B and MedGemma for patient-level readmission review across 30K–80K-token context windows, generating structured answers to clinical review questions with supporting rationales.
+        - 'Identified a key clinical safety failure mode: the domain-tuned model inferred unsupported answers from general medical knowledge (e.g., asserting prescriptions were sent to a pharmacy with no documentation), while Gemma 4 abstained with evidence-specific rationales, providing evidence for model selection.'
+        - 'Validated outputs against clinician review: Gemma 4 corrected 7 of 10 answers the clinical team flagged as incorrect; analyzed the remaining disagreements to separate model errors from reviewer inference, and identified note-type confusion (outpatient vs. discharge instructions) as the next improvement target.'
+        - Built an LLM-as-a-Judge framework using Llama 3.3-70B to grade Gemma 4 outputs across four rubric dimensions with structured JSON verdicts, section-level scoring, and an interactive HTML report routing flagged patients to clinician review.
+        - Benchmarked long-context inference on NVIDIA B200 GPUs (FP16 vs. FP8, tensor parallelism, memory settings); traced a throughput ceiling to vLLM's KV-cache handling of Gemma 4 sliding-window attention and reached 30–50 tokens/s at 60K context with FP8.
     - title: Clinical LLMOps Platform for EHR Note Processing
       dates: Feb 2026 – Present
       bullets:
-        - Generalized project-specific clinical NLP scripts into a reusable, config-driven LLM platform shared by three clinical programs, so new cohorts onboard through configuration rather than code changes.
-        - Designed a modular pipeline (data loading, prompt assembly, batched inference, post-processing, reporting) with checkpoint/resume and asynchronous concurrency control on HiPerGator via SLURM and vLLM.
-        - Re-engineered the clinical note summarizer into an OpenAI-compatible service with JSON Schema output contracts, Pydantic validation, and automatic retry on malformed generations.
+        - Generalized hard-coded, project-specific clinical NLP scripts into a reusable, config-driven LLM platform now shared by three clinical programs (RN Health Coach, Bridge Clinic readmission, Transitional Care); migrated all runtime settings into YAML with a `ConfigWrapper` supporting dotted-attribute and mapping access, so new cohorts onboard through configuration rather than code changes.
+        - Designed a modular workflow architecture (schema-driven data loading → prompt assembly → batched inference → post-processing → reporting) with a manager/processor per stage, checkpoint/resume, structured logging, and asynchronous concurrency control; deployed on the HiPerGator HPC cluster via SLURM and vLLM.
+        - Re-engineered the clinical note LLM summarizer into an OpenAI-compatible API service that runs on both self-hosted vLLM and the UF NaviGator API, with enforced JSON Schema output contracts, Pydantic validation, token-aware dynamic prompt budgeting, and automatic retry/fallback on malformed generations.
+        - Built a reusable base HTML report generator and pluggable LLM analysis sections, so programs extend shared components instead of maintaining separate reporting code.
+        - Established MLOps practices across projects (versioned shared libraries on internal GitLab, automated daily scheduling and logging, reproducible run artifacts), reducing new-pipeline setup from weeks to days.
     - title: GraphRAG Knowledge Graph for Heart Failure Readmission
       dates: May 2026 – Present
       bullets:
-        - Built an end-to-end GraphRAG pipeline over a heart failure cohort's clinical notes, with LLM-based entity and relation extraction using MedGemma-27B served via vLLM.
-        - Constructed the patient knowledge graph with hierarchical Leiden community detection and map-reduce LLM community reports on readmission themes.
-    - title: Neonatal Lactation and Milk Intake Modeling
+        - Built an end-to-end GraphRAG pipeline over a heart failure cohort of 637K clinical notes from 3,946 patients, including de-duplication of daily EHR snapshots, a three-layer note filter (note type / authoring provider type / length), and quota-based cohort sampling for documentation completeness.
+        - Performed LLM-based entity and relation extraction with MedGemma-27B served via vLLM, using a clinical prompt with a controlled entity-type and assertion (present/negated/historical) vocabulary; extracted 143K entities, 71K relations, and 243K attributes from 5.5K text units.
+        - Constructed the patient knowledge graph with hierarchical Leiden community detection (2,040 communities across 7 levels) and map-reduce LLM community reports on readmission themes; hardened the pipeline against API rate-limit saturation, silent chunk drops, and PHI leakage into summaries.
+    - title: Neonatal Lactation and Milk Intake Data Processing Project
       dates: Sep 2025 – Present
       bullets:
-        - Partnered with neonatologists and lactation specialists to define clinically validated features from EHR feeding and lactation data.
-        - Developed models for early identification of infants at risk for inadequate milk intake or feeding complications, deployed on-premise with Power BI dashboards for clinical teams.
+        - Standardized raw EHR lactation and neonatal milk intake data (pumping records, feeding documentation, inconsistent entries) and built automated feature engineering pipelines.
+        - Partnered with neonatologists and lactation specialists to define and validate clinically meaningful features, such as NPO patterns, respiratory support status, maternal milk availability, feeding intolerance, and early nutrition indicators.
+        - Developed machine learning models for early identification of infants at risk for inadequate milk intake or feeding complications; revalidated data and feature definitions after source updates, retrained the models, and authored a model brief.
+        - Deployed model and data pipelines on on-premise servers for reproducible, continuously updated analytics, and connected Power BI dashboards to model outputs for clinicians and lactation teams.
     - title: Graph-Based Modeling for Alzheimer's Disease Progression
       dates: Dec 2023 – Nov 2025
       summary: Built patient similarity graphs from EHR data and graph neural networks (PyTorch, NetworkX) to identify progression subphenotypes and support early detection.
@@ -395,6 +442,11 @@ cv:
 # =====================================================================
 not_found:
   title: Page not found
+  # 404 小游戏的文字
+  game_hint: Press space or tap the game to play
+  game_over: Game over! Press space or tap to try again
+  game_score: Score
+  game_best: Best
   text: "This page doesn't exist or has moved. Go back to the [home page](/), see my [CV](/cv/), or browse my [travels](/travel/)."
 
 
@@ -410,18 +462,30 @@ effects:
   ripple: true               # 点击水波纹：点按钮、图标、卡片时从点击处扩散水波；点空白处出现一圈涟漪
   hover_glow: true           # 悬停发光：鼠标放到按钮、图标、卡片、照片上时发出柔和光晕
   theme_toggle: true         # 右上角日夜切换按钮：点击后新配色从按钮处以圆形扩散铺满页面
+  intro: true                # 开场动画：第一次打开网站时描出鳄鱼标志，然后像幕布一样拉开（每个浏览器只放一次；网址后加 ?intro 可以重看）
+  title_letters: true        # 章节标题逐字浮现：About、News、CV 各部分标题滚动到时一个字母一个字母弹出来
+  local_weather: true        # 页脚显示 Gainesville 的当前时间和天气（设置在上面第二部分的 footer_clock）
   # 首页
   name_decode: true          # 名字解码：进入首页时 "Yu Hu" 从乱码一个个解码出来，鼠标移上去会再解码一次
   network_pulse: true        # 神经网络背景：点击空白处发出信号沿网络传开，闲置时也会偶尔自己"放电"
   about_highlight: true      # About 逐词点亮：文字随滚动一个词一个词变深
   photo_flip: true           # 照片 3D 翻转：点击照片翻到背面
+  marquee: true              # 关键词跑马灯（关键词在第三部分 home → marquee）
   # Travel
   globe: true                # 3D 地球：false 则换回可以缩放到街道的平面地图
+  globe_card_link: true      # 卡片联动地球：鼠标放到地点卡片上，地球自动转到那个地方
   constellation: true        # 星座彩蛋：星空里偶尔连出 "YH" 或一只鳄鱼
+  # CV
+  cv_timeline: true          # CV 时间线：经历和项目左边的竖线随滚动往下生长，经过的圆点亮起
+  copy_citation: true        # 论文一键复制引用
+  # 404 页面
+  game_404: true             # 404 小游戏：鳄鱼跳障碍
 
 # 彩蛋：在首页点击大标题 "Yu Hu"，或者在任意页面用键盘输入 secret 这个词，
-#       会撒彩带并弹出 message。enabled 写 false 关闭；secret 留空则只能点标题触发。
+#       屏幕中央会淡入 image 这张图，下面一行 message 文字，停几秒后淡出。
+#       enabled 写 false 关闭；secret 留空则只能点标题触发；image 留空 "" 则只显示文字。
 easter_egg:
   enabled: true
   secret: gogators           # 只用小写字母
   message: "Go Gators!"
+  image: /images/go-gators.webp   # 彩蛋图片，放在 images 文件夹

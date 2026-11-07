@@ -90,7 +90,7 @@
 
   /* ---------- Ripple ---------- */
   if (has('ripple')) {
-    var HOSTS = '.btn, .icon-btn, .tab, .place-card, .to-top, .lb-btn, .dialog-close';
+    var HOSTS = '.btn, .icon-btn, .tab, .place-card, .to-top, .lb-btn, .dialog-close, .cite-btn';
     var INTERACTIVE = 'a, button, input, textarea, select, label, summary, [role="button"], .leaflet-container, .research-banner';
     document.addEventListener('pointerdown', function (e) {
       if (e.button !== 0) return;

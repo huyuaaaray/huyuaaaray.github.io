@@ -21,6 +21,16 @@
       t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
     d.setAttribute('data-theme', t);
+
+    // First-visit intro: only once per browser (add ?intro to the address to see it again).
+    var fx = ' ' + (d.getAttribute('data-fx') || '') + ' ';
+    if (fx.indexOf(' intro ') !== -1) {
+      var seen = null;
+      try { seen = localStorage.getItem('introSeen'); } catch (e) { seen = '1'; }
+      var force = /[?&]intro\b/.test(location.search);
+      var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if ((force || !seen) && !calm) d.classList.add('intro');
+    }
   })();
 </script>
 <title>{{ full_title }}</title>

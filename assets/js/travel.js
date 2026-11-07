@@ -424,7 +424,15 @@
       release: function () {
         world.pointOfView({ altitude: REST_ALT }, reduceMotion ? 0 : 1100);
         resumeSoon(2500);
-      }
+      },
+      // Turn to a place without zooming in (used when hovering its card).
+      peek: function (i) {
+        var p = places[i];
+        if (!p || typeof p.lat !== 'number') return;
+        hold();
+        world.pointOfView({ lat: p.lat, lng: p.lng, altitude: REST_ALT }, reduceMotion ? 0 : 1000);
+      },
+      unpeek: function () { resumeSoon(2500); }
     };
   }
 
@@ -602,11 +610,24 @@
     });
   }
 
+  // Hovering (or tabbing to) a card turns the globe to that place, if "globe_card_link" is on.
+  var cardLink = (document.documentElement.getAttribute('data-fx') || '').split(/\s+/).indexOf('cardglobe') !== -1;
+  function peek(i) {
+    if (!cardLink) return;
+    if (globeApi) globeApi.peek(i);
+    else if (map && markers[i] && markers[i].getLatLng) map.panTo(markers[i].getLatLng(), { animate: !reduceMotion, duration: 0.8 });
+  }
+  function unpeek() {
+    if (cardLink && globeApi && (!dialog || !dialog.open)) globeApi.unpeek();
+  }
+
   cards.forEach(function (card) {
     var i = Number(card.getAttribute('data-index'));
     card.addEventListener('click', function () { openPlace(i); });
-    card.addEventListener('mouseenter', function () { setActive(i); });
-    card.addEventListener('mouseleave', function () { if (!dialog || !dialog.open) setActive(-1); });
+    card.addEventListener('mouseenter', function () { setActive(i); peek(i); });
+    card.addEventListener('mouseleave', function () { if (!dialog || !dialog.open) setActive(-1); unpeek(); });
+    card.addEventListener('focus', function () { peek(i); });
+    card.addEventListener('blur', unpeek);
   });
 
   /* ---------- Full-screen photo viewer ---------- */

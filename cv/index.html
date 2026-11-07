@@ -31,7 +31,9 @@ progress: true
       {%- if cv.experience.size > 0 %}
       <section class="cv-section" id="experience">
         <h2 data-reveal>{{ cv.experience_title | escape }}</h2>
+        <div class="timeline"{% if site.effects.cv_timeline %} data-timeline{% endif %}>
         {%- include cv-entries.html items=cv.experience %}
+        </div>
       </section>
       {%- endif %}
 
@@ -59,8 +61,14 @@ progress: true
             {%- endfor %}
             <span class="pub-title">{{ p.title | escape }}</span>
             <span class="pub-meta">{% if p.venue %}<em>{{ p.venue | escape }}</em> {% endif %}{{ p.details | escape }}</span>
-            {%- if p.links and p.links.size > 0 %}
-            <span class="pub-links">{% for l in p.links %}<a href="{{ l.url }}">{{ l.label | escape }}</a>{% endfor %}</span>
+            {%- if site.effects.copy_citation or p.links.size > 0 %}
+            <span class="pub-links">
+              {%- for l in p.links %}<a href="{{ l.url }}">{{ l.label | escape }}</a>{% endfor %}
+              {%- if site.effects.copy_citation %}
+              {%- capture cite %}{{ p.authors }} {{ p.title }} {% if p.venue %}{{ p.venue }}, {% endif %}{{ p.details }}{% endcapture %}
+              <button type="button" class="cite-btn" data-cite="{{ cite | strip | escape }}" data-copied="{{ cv.copied_label | escape }}"><span class="cite-icons">{% include icon.html name="copy" %}{% include icon.html name="check" %}</span><span class="cite-label">{{ cv.copy_label | escape }}</span></button>
+              {%- endif %}
+            </span>
             {%- endif %}
           </li>
           {%- endfor %}
@@ -71,7 +79,9 @@ progress: true
       {%- if cv.projects.size > 0 %}
       <section class="cv-section" id="projects">
         <h2 data-reveal>{{ cv.projects_title | escape }}</h2>
+        <div class="timeline"{% if site.effects.cv_timeline %} data-timeline{% endif %}>
         {%- include cv-entries.html items=cv.projects %}
+        </div>
       </section>
       {%- endif %}
 

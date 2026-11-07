@@ -15,8 +15,10 @@ annotated (in Chinese) line by line:
 4. Travel: title, intro, map hint, and all the places
 5. CV: headings, summary, and every section (experience, education, publications, projects, skills, honors)
 6. 404 page
-7. Effect switches (cursor tail, spotlight, ripple, hover glow, theme toggle, name decode,
-   network pulses, About highlight, photo flip, 3D globe, constellation) and the easter egg
+7. Effect switches (cursor tail, spotlight, ripple, hover glow, theme toggle, intro,
+   letter-by-letter titles, local time and weather, name decode, network pulses, About
+   highlight, photo flip, marquee, 3D globe, card-to-globe link, constellation, CV
+   timeline, copy citation, 404 game) and the easter egg
 
 Text marked "(Markdown)" accepts `*italics*`, `**bold**` and
 `[links](https://...)`. Indent with spaces, never tabs. If the site stops
@@ -43,6 +45,8 @@ updating after an edit, the Actions tab shows the YAML error.
 | Travel starfield and constellation | `assets/js/starfield.js` (delete `theme: night` in `travel/index.html` to go back to the normal colors) |
 | Typewriter text, scroll reveal, tilt, parallax, magnetic icons, card spotlight, progress bar, easter egg | `assets/js/site.js` |
 | Cursor tail, cursor spotlight, click ripple | `assets/js/cursor-fx.js` (switch each on/off in `_config.yml` → `effects`) |
+| First-visit intro, letter-by-letter titles, footer time and weather, CV timeline, copy citation | `assets/js/extras.js` (the intro's drawing is in `_includes/intro.html`; add `?intro` to any address to replay it) |
+| 404 game | `assets/js/gator-run.js` |
 | Hover glow | `assets/css/site.css` (search for "Hover glow"; switch in `_config.yml` → `effects`) |
 | 3D globe (or the flat map when `globe: false`), routes, visited countries, photo viewer | `assets/js/travel.js` |
 | Old links (e.g. `/CV.pdf`) | the `moved` list at the top of `404.html` |

@@ -8,12 +8,21 @@
   {%- if site.effects.network_pulse %} pulse{% endif -%}
   {%- if site.effects.about_highlight %} highlight{% endif -%}
   {%- if site.effects.constellation %} constellation{% endif -%}
+  {%- if site.effects.intro %} intro{% endif -%}
+  {%- if site.effects.title_letters %} letters{% endif -%}
+  {%- if site.effects.local_weather %} weather{% endif -%}
+  {%- if site.effects.globe_card_link %} cardglobe{% endif -%}
+  {%- if site.effects.cv_timeline %} timeline{% endif -%}
+  {%- if site.effects.copy_citation %} cite{% endif -%}
 {%- endcapture -%}
-<html lang="en"{% if page.theme %} class="theme-{{ page.theme }}"{% endif %} data-fx="{{ fx | strip }}"{% if site.easter_egg.enabled %} data-egg="{{ site.easter_egg.secret | downcase | escape }}" data-egg-msg="{{ site.easter_egg.message | escape }}"{% endif %}>
+<html lang="en"{% if page.theme %} class="theme-{{ page.theme }}"{% endif %} data-fx="{{ fx | strip }}"{% if site.easter_egg.enabled %} data-egg="{{ site.easter_egg.secret | downcase | escape }}" data-egg-msg="{{ site.easter_egg.message | escape }}"{% if site.easter_egg.image and site.easter_egg.image != "" %} data-egg-img="{{ site.easter_egg.image | relative_url }}"{% endif %}{% endif %}>
 <head>
 {% include head.html %}
 </head>
 <body>
+{%- if site.effects.intro %}
+{% include intro.html %}
+{%- endif %}
 {%- if page.network %}
 <canvas class="bg-network" aria-hidden="true"></canvas>
 {%- endif %}
@@ -42,6 +51,7 @@
 {%- endif %}
 <script src="/assets/js/site.js"></script>
 <script src="/assets/js/cursor-fx.js"></script>
+<script src="/assets/js/extras.js"></script>
 {%- for s in page.scripts %}
 <script src="{{ s }}"></script>
 {%- endfor %}

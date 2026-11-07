@@ -1,6 +1,16 @@
 <footer class="site-footer">
   <div class="container footer-inner">
-    <span>© {{ site.time | date: "%Y" }} {{ site.author.name }}</span>
+    <span class="footer-left">
+      <span>© {{ site.time | date: "%Y" }} {{ site.author.name }}</span>
+      {%- if site.effects.local_weather and site.footer_clock %}
+      {%- assign fc = site.footer_clock %}
+      <span class="local-now" hidden data-tz="{{ fc.timezone }}" data-lat="{{ fc.lat }}" data-lng="{{ fc.lng }}" data-unit="{{ fc.unit | default: 'F' }}" data-labels="{{ fc.weather_labels | jsonify | escape }}">
+        <span class="ln-city">{{ fc.city | escape }}</span>
+        <span class="ln-time"></span>
+        <span class="ln-weather"></span>
+      </span>
+      {%- endif %}
+    </span>
     <span class="footer-social">{% include social-links.html email=true %}</span>
   </div>
 </footer>

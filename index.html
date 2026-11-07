@@ -83,6 +83,23 @@ scripts:
       {%- endfor %}
     </ul>
     {%- endif %}
+
+    {%- if site.effects.marquee and h.marquee and h.marquee.size > 0 %}
+    <div class="marquee" data-reveal>
+      <div class="marquee-track">
+        <ul class="marquee-list">
+          {%- for k in h.marquee %}
+          <li>{{ k | escape }}</li>
+          {%- endfor %}
+        </ul>
+        <ul class="marquee-list" aria-hidden="true">
+          {%- for k in h.marquee %}
+          <li>{{ k | escape }}</li>
+          {%- endfor %}
+        </ul>
+      </div>
+    </div>
+    {%- endif %}
   </section>
 
   {%- if h.news and h.news.size > 0 %}

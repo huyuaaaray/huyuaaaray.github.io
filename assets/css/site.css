@@ -381,7 +381,8 @@ h3 {
     "head   head"
     "about  photo"
     "banner banner"
-    "stats  stats";
+    "stats  stats"
+    "marquee marquee";
   column-gap: 80px;
   align-items: start;
   padding-top: 64px;
@@ -947,9 +948,75 @@ h3 {
   color: var(--muted);
 }
 
+.pub-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  margin-top: 6px;
+}
+
 .pub-links a {
   font-size: 15px;
-  margin-right: 12px;
+}
+
+/* Copy-citation button: the copy icon turns into a check mark after copying */
+.cite-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 11px 3px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 200ms var(--ease), border-color 200ms var(--ease), background 200ms var(--ease), box-shadow 200ms var(--ease);
+}
+
+.cite-btn:hover,
+.cite-btn:focus-visible {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  background: var(--accent-soft);
+}
+
+.cite-icons {
+  position: relative;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+}
+
+.cite-icons .icon {
+  position: absolute;
+  inset: 0;
+  width: 15px;
+  height: 15px;
+  transition: opacity 200ms var(--ease), transform 260ms var(--ease);
+}
+
+.cite-icons .icon + .icon {
+  opacity: 0;
+  transform: scale(0.4) rotate(-20deg);
+}
+
+.cite-btn.is-copied {
+  color: var(--mark);
+  border-color: color-mix(in srgb, var(--mark) 50%, transparent);
+  background: color-mix(in srgb, var(--mark) 10%, transparent);
+}
+
+.cite-btn.is-copied .cite-icons .icon:first-child {
+  opacity: 0;
+  transform: scale(0.4);
+}
+
+.cite-btn.is-copied .cite-icons .icon + .icon {
+  opacity: 1;
+  transform: none;
 }
 
 .note {
@@ -1669,42 +1736,74 @@ main,
   stroke-width: 1;
 }
 
-/* Gators easter egg: type "gogators" (or tap the header gator 5 times) */
-.confetti {
-  position: fixed;
-  inset: 0;
-  z-index: 3000;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.gator-toast {
+/* Gators easter egg: click the big "Yu Hu" (home page) or type the secret word.
+   The mascot picture and the message fade in, hold, and fade out. */
+.gator-egg {
   position: fixed;
   left: 50%;
-  top: 40%;
+  top: 50%;
   z-index: 3001;
-  padding: 14px 26px;
-  border-radius: 16px;
-  background: #0021a5;
-  color: #fff;
-  font-family: var(--serif);
-  font-size: 34px;
-  font-weight: 600;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-  transform: translate(-50%, -50%) scale(0.8);
-  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(320px, 76vw);
+  transform: translate(-50%, -50%);
   pointer-events: none;
-  transition: opacity 300ms var(--ease), transform 400ms var(--ease);
+  opacity: 0;
+  transition: opacity 700ms var(--ease);
 }
 
-.gator-toast.is-shown {
+/* A soft glow of the page color behind, so the picture and words stay readable over any content */
+.gator-egg::before {
+  content: "";
+  position: absolute;
+  inset: -28% -40%;
+  z-index: -1;
+  background: radial-gradient(closest-side, var(--bg) 35%, color-mix(in srgb, var(--bg) 75%, transparent) 62%, transparent 100%);
+}
+
+.gator-egg.is-shown {
   opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
 }
 
-.gator-toast span {
-  color: #fa4616;
+.gator-egg img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* the photo is cut off at the bottom; fade that edge out */
+  -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 72%, transparent 100%);
+}
+
+.gator-egg p {
+  margin: -6px 0 0;
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: clamp(32px, 5vw, 44px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.gator-egg p span {
+  color: inherit;
+}
+
+/* "Go Gators!" in glowing UF orange with a light sweeping across it */
+.gator-egg p {
+  background: linear-gradient(100deg, #fa4616 0%, #ff7a3d 22%, #ffd0b5 42%, #ff7a3d 62%, #fa4616 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 14px rgba(250, 70, 22, 0.5)) drop-shadow(0 2px 2px rgba(250, 70, 22, 0.25));
+  animation: egg-shine 2.2s linear infinite;
+}
+
+@keyframes egg-shine {
+  from { background-position: 100% 0; }
+  to { background-position: -150% 0; }
 }
 
 /* =========================================================
@@ -1841,7 +1940,7 @@ main,
 }
 
 /* Ripple: a wave from the click point inside buttons, icons, tabs and cards */
-html[data-fx~="ripple"] :is(.btn, .icon-btn, .tab, .to-top, .lb-btn, .dialog-close) {
+html[data-fx~="ripple"] :is(.btn, .icon-btn, .tab, .to-top, .lb-btn, .dialog-close, .cite-btn) {
   position: relative;
   overflow: hidden;
 }
@@ -2304,6 +2403,282 @@ html.theme-switching .site-header {
 }
 
 /* =========================================================
+   First-visit intro: draw the gator logo, fill it, open the curtains
+   ========================================================= */
+.intro-overlay {
+  display: none;
+}
+
+html.intro .intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: grid;
+  place-items: center;
+  transition: opacity 400ms var(--ease);
+}
+
+html.intro-skip .intro-overlay {
+  opacity: 0;
+}
+
+.intro-curtain {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50.5%;
+  background: var(--bg);
+}
+
+.intro-top {
+  top: 0;
+  animation: curtain-up 750ms cubic-bezier(0.7, 0, 0.2, 1) 1950ms forwards;
+}
+
+.intro-bottom {
+  bottom: 0;
+  animation: curtain-down 750ms cubic-bezier(0.7, 0, 0.2, 1) 1950ms forwards;
+}
+
+@keyframes curtain-up { to { transform: translateY(-101%); } }
+@keyframes curtain-down { to { transform: translateY(101%); } }
+
+.intro-stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  animation: intro-stage-out 450ms var(--ease) 1750ms forwards;
+}
+
+@keyframes intro-stage-out { to { opacity: 0; transform: scale(1.06); } }
+
+.intro-logo {
+  width: min(260px, 62vw);
+  height: auto;
+  overflow: visible;
+}
+
+.intro-line {
+  fill: none;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: intro-draw 900ms cubic-bezier(0.6, 0.1, 0.3, 1) forwards;
+  animation-delay: calc(var(--n) * 100ms);
+}
+
+.l-outer { stroke: #0021a5; }
+.l-orange { stroke: #fa4616; }
+.l-green { stroke: #0a7a3c; }
+
+:root[data-theme="dark"] .l-outer,
+:root.theme-night .l-outer { stroke: #7d96ff; }
+:root[data-theme="dark"] .l-green,
+:root.theme-night .l-green { stroke: #3fbf75; }
+
+@keyframes intro-draw { to { stroke-dashoffset: 0; } }
+
+.intro-fill {
+  opacity: 0;
+  animation: intro-fade 500ms var(--ease) 1000ms forwards;
+}
+
+.intro-name {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: intro-name-in 500ms var(--ease) 1050ms forwards;
+}
+
+@keyframes intro-fade { to { opacity: 1; } }
+@keyframes intro-name-in { to { opacity: 1; transform: none; } }
+
+/* =========================================================
+   Section titles appear letter by letter
+   ========================================================= */
+.split-title .tl-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.split-title .tl-ch {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.5em) rotate(8deg);
+  filter: blur(6px);
+  transition: opacity 500ms var(--ease), transform 650ms var(--ease), filter 500ms var(--ease);
+  transition-delay: calc(var(--i) * 38ms);
+}
+
+.split-title.is-in .tl-ch {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* the letters do the entrance, so the title itself doesn't also fade in */
+.js .split-title[data-reveal] {
+  opacity: 1;
+  translate: none;
+}
+
+/* =========================================================
+   Home: keyword marquee
+   ========================================================= */
+.marquee {
+  grid-area: marquee;
+  min-width: 0;
+  margin-top: 40px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 48s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-list {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+  padding: 6px 12px 6px 0;   /* the trailing 12px matches the gap, so the loop is seamless */
+  list-style: none;
+}
+
+.marquee-list li {
+  padding: 7px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 15px;
+  white-space: nowrap;
+  transition: color 200ms var(--ease), border-color 200ms var(--ease), box-shadow 200ms var(--ease);
+}
+
+.marquee-list li:hover {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* =========================================================
+   Footer: local time and weather
+   ========================================================= */
+.footer-left {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+}
+
+.local-now {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.local-now[hidden],
+.ln-weather:empty {
+  display: none;
+}
+
+.ln-time::before,
+.ln-weather::before {
+  content: "·";
+  margin-right: 8px;
+  color: var(--muted);
+}
+
+/* =========================================================
+   CV: timeline that grows as you scroll
+   ========================================================= */
+.has-timeline {
+  position: relative;
+  padding-left: 26px;
+}
+
+.tl-track {
+  position: absolute;
+  left: 6px;
+  top: 28px;
+  bottom: 28px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--line);
+}
+
+.tl-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, var(--accent), var(--mark));
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+.tl-dot {
+  position: absolute;
+  left: -8px;
+  top: 24px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid color-mix(in srgb, var(--muted) 55%, transparent);
+  transition: background 300ms var(--ease), border-color 300ms var(--ease), box-shadow 300ms var(--ease), transform 300ms var(--ease);
+}
+
+.tl-dot.is-on {
+  background: var(--mark);
+  border-color: var(--mark);
+  transform: scale(1.15);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--mark) 16%, transparent), 0 0 12px color-mix(in srgb, var(--mark) 55%, transparent);
+}
+
+/* =========================================================
+   404: gator runner game
+   ========================================================= */
+.runner {
+  margin-top: 32px;
+  max-width: 760px;
+}
+
+.runner-canvas {
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.runner-canvas:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* =========================================================
    Footer and 404
    ========================================================= */
 .site-footer {
@@ -2343,7 +2718,8 @@ html.theme-switching .site-header {
       "photo"
       "about"
       "banner"
-      "stats";
+      "stats"
+      "marquee";
     padding-top: 40px;
   }
 
@@ -2556,6 +2932,10 @@ html.theme-switching .site-header {
     padding-right: 12px;
   }
 
+  .tl-dot {
+    left: -12px;
+  }
+
   .news-rail {
     left: calc(12px + 10px);
   }
@@ -2563,6 +2943,28 @@ html.theme-switching .site-header {
 
 /* Respect "reduce motion" system setting */
 @media (prefers-reduced-motion: reduce) {
+  .marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .marquee-track {
+    animation: none;
+    width: auto;
+  }
+
+  .marquee-list {
+    flex-wrap: wrap;
+  }
+
+  .marquee-list[aria-hidden="true"] {
+    display: none;
+  }
+
+  .gator-egg p {
+    animation: none;
+  }
+
   *,
   *::before,
   *::after {
