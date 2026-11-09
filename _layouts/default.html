@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+{%- capture fx -%}
+  {%- if site.effects.cursor_tail %} tail{% endif -%}
+  {%- if site.effects.cursor_spotlight %} spotlight{% endif -%}
+  {%- if site.effects.ripple %} ripple{% endif -%}
+  {%- if site.effects.hover_glow %} glow{% endif -%}
+  {%- if site.effects.name_decode %} decode{% endif -%}
+  {%- if site.effects.network_pulse %} pulse{% endif -%}
+  {%- if site.effects.about_highlight %} highlight{% endif -%}
+  {%- if site.effects.constellation %} constellation{% endif -%}
+  {%- if site.effects.intro %} intro{% endif -%}
+  {%- if site.effects.title_letters %} letters{% endif -%}
+  {%- if site.effects.local_weather %} weather{% endif -%}
+  {%- if site.effects.footer_weather_art %} footersky{% endif -%}
+  {%- if site.effects.marker_highlight %} marker{% endif -%}
+  {%- if site.effects.aurora %} aurora{% endif -%}
+  {%- if site.effects.card_slideshow %} slideshow{% endif -%}
+  {%- if site.effects.card_expand %} expand{% endif -%}
+  {%- if site.effects.scroll_line %} scrollline{% endif -%}
+  {%- if site.effects.flip_clock %} flipclock{% endif -%}
+  {%- if site.effects.hand_underline %} underline{% endif -%}
+  {%- if site.effects.tilt_cards %} tilt{% endif -%}
+  {%- if site.effects.blur_load %} blurload{% endif -%}
+  {%- if site.effects.globe_card_link %} cardglobe{% endif -%}
+  {%- if site.effects.cv_timeline %} timeline{% endif -%}
+  {%- if site.effects.copy_citation %} cite{% endif -%}
+  {%- if site.effects.name_repel %} repel{% endif -%}
+  {%- if site.effects.sky_tint %} sky{% endif -%}
+  {%- if site.effects.news_magnet %} magnet{% endif -%}
+  {%- if site.effects.skill_links %} skills{% endif -%}
+  {%- if site.effects.flap_titles %} flap{% endif -%}
+  {%- if site.effects.travel_replay %} replay{% endif -%}
+  {%- if site.effects.globe_planes %} planes{% endif -%}
+  {%- if site.effects.polaroids %} polaroids{% endif -%}
+{%- endcapture -%}
+<html lang="en"{% if page.theme %} class="theme-{{ page.theme }}"{% endif %} data-fx="{{ fx | strip }}"{% if site.easter_egg.enabled %} data-egg="{{ site.easter_egg.secret | downcase | escape }}" data-egg-msg="{{ site.easter_egg.message | escape }}"{% if site.easter_egg.sound %} data-egg-sound{% endif %}{% if site.easter_egg.image and site.easter_egg.image != "" %} data-egg-img="{{ site.easter_egg.image | relative_url }}"{% endif %}{% endif %}>
+<head>
+{% include head.html %}
+</head>
+<body>
+{%- if site.effects.intro %}
+{% include intro.html %}
+{%- endif %}
+{%- if page.network %}
+<canvas class="bg-network" aria-hidden="true"></canvas>
+{%- endif %}
+{%- if page.theme == "night" %}
+<canvas class="bg-stars" aria-hidden="true"></canvas>
+{%- endif %}
+{%- if page.progress %}
+<div class="read-progress" aria-hidden="true"></div>
+{%- endif %}
+{% include header.html %}
+<main id="main">
+{{ content }}
+</main>
+{% include footer.html %}
+{%- if page.progress %}
+<button type="button" class="to-top" aria-label="Back to top">{% include icon.html name="arrow-up" %}</button>
+{%- endif %}
+{%- if page.map and site.effects.globe %}
+<script src="https://cdn.jsdelivr.net/npm/globe.gl@2.46.2/dist/globe.gl.min.js" integrity="sha384-1uolMBZ25k3zJcNwCLEv49+L+m2dZudqAzsoSAJfQTzDCSBxJzrMuZ2dkp/5JKiT" crossorigin></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js" integrity="sha384-Ukv1p/xTma6P4/2bY5KzWBw+ydSpXmhCMtyciIQVDJ1RmOxtCYNMF1uXT9T63H67" crossorigin></script>
+{%- elsif page.map %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin></script>
+<script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js" integrity="sha384-5+cfbwT0iiub6VsQAdn6yz16nr6sDiQoHx6tm4O8OVYXHYOxcffFmCJBL0dgdvGp" crossorigin></script>
+<script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.1.4/leaflet-maplibre-gl.js" integrity="sha384-tXYNKOHx4T02jMP7YYCtBxPIv1B5gaA5mcVPBzqMp6d7VzWzxJgI2aWF/nJLrQdS" crossorigin></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js" integrity="sha384-Ukv1p/xTma6P4/2bY5KzWBw+ydSpXmhCMtyciIQVDJ1RmOxtCYNMF1uXT9T63H67" crossorigin></script>
+{%- endif %}
+<script src="/assets/js/site.js"></script>
+<script src="/assets/js/cursor-fx.js"></script>
+<script src="/assets/js/extras.js"></script>
+<script id="egg-data" type="application/json">{"eggs": {{ site.eggs | jsonify }}, "tz": {{ site.footer_clock.timezone | default: "America/New_York" | jsonify }}, "highlights": {{ site.cv.highlights | jsonify }}}</script>
+<script src="/assets/js/eggs.js"></script>
+<script src="/assets/js/more-fx.js"></script>
+{%- if site.holidays.enabled %}
+{%- assign hd = site.holidays %}
+<script id="holiday-data" type="application/json">{"tz": {{ site.footer_clock.timezone | default: "America/New_York" | jsonify }}, "h": {{ site.holidays | jsonify }}, "bday": {{ site.eggs.birthday | jsonify }}}</script>
+<script src="/assets/js/holiday.js"></script>
+{%- endif %}
+{%- for s in page.scripts %}
+<script src="{{ s }}"></script>
+{%- endfor %}
+</body>
+</html>

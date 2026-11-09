@@ -1,0 +1,22 @@
+{%- comment -%} One CV section's entries (experience, education, projects, honors). {%- endcomment -%}
+{%- for e in include.items %}
+<article class="entry" data-reveal data-glow>
+  <div class="entry-head">
+    <h3>{{ e.title | escape }}</h3>
+    {%- if e.dates %}<span class="when">{{ e.dates | escape }}</span>{% endif %}
+  </div>
+  {%- if e.where %}
+  <p class="where">{{ e.where | escape }}</p>
+  {%- endif %}
+  {%- if e.bullets and e.bullets.size > 0 %}
+  <ul>
+    {%- for b in e.bullets %}
+    <li>{% include inline-md.html text=b %}</li>
+    {%- endfor %}
+  </ul>
+  {%- endif %}
+  {%- if e.summary %}
+  <p>{% include inline-md.html text=e.summary %}</p>
+  {%- endif %}
+</article>
+{%- endfor %}

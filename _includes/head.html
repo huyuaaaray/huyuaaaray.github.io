@@ -1,0 +1,73 @@
+{%- comment -%} Page text comes from the matching section of _config.yml (home, travel, cv, not_found) {%- endcomment -%}
+{%- assign sec = site[page.section] -%}
+{%- assign page_title = sec.title | default: page.title -%}
+{%- if page_title and page_title != site.title -%}
+  {%- assign full_title = page_title | append: " | " | append: site.title -%}
+{%- else -%}
+  {%- assign full_title = site.title -%}
+{%- endif -%}
+{%- assign desc = sec.description | default: page.description | default: site.home.description | strip_newlines | strip -%}
+{%- assign share_image = page.og_image | default: "/images/og-card.png" | absolute_url -%}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  // Runs before the page paints: mark JS as available and pick light/dark
+  // (the visitor's saved choice, otherwise their system setting).
+  (function () {
+    var d = document.documentElement, t = null;
+    d.classList.add('js');
+    try { t = localStorage.getItem('theme'); } catch (e) { /* storage blocked */ }
+    if (t !== 'light' && t !== 'dark') {
+      t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    d.setAttribute('data-theme', t);
+
+    // "Reduce animations" button: the visitor's choice is remembered.
+    try { if (localStorage.getItem('lite') === '1') d.classList.add('lite'); } catch (e) { /* ignore */ }
+
+    // First-visit intro: only once per browser (add ?intro to the address to see it again).
+    var fx = ' ' + (d.getAttribute('data-fx') || '') + ' ';
+    if (fx.indexOf(' intro ') !== -1) {
+      var seen = null;
+      try { seen = localStorage.getItem('introSeen'); } catch (e) { seen = '1'; }
+      var force = /[?&]intro\b/.test(location.search);
+      var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if ((force || !seen) && !calm) d.classList.add('intro');
+    }
+  })();
+</script>
+<title>{{ full_title }}</title>
+<meta name="description" content="{{ desc | escape }}">
+<link rel="canonical" href="{{ page.url | absolute_url }}">
+
+<!-- Share card (LinkedIn, Slack, X, iMessage, ...) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ site.title }}">
+<meta property="og:title" content="{{ page.og_title | default: full_title }}">
+<meta property="og:description" content="{{ desc | escape }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:image" content="{{ share_image }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{ page.og_title | default: full_title }}">
+<meta name="twitter:card" content="summary_large_image">
+
+{%- if page.theme == "night" %}
+<meta name="theme-color" content="#070b1f">
+{%- else %}
+<meta name="theme-color" content="#f6f5f8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1320" media="(prefers-color-scheme: dark)">
+{%- endif %}
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,600&display=swap">
+{%- if page.map and site.effects.globe != true %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css" integrity="sha384-uTttxo/aOKbdE5RlD/SPzSDoDmNvGlUYPjONi2MN/b7c9HPSvW07OIuyP7uL6jxK" crossorigin>
+{%- endif %}
+<link rel="stylesheet" href="/assets/css/site.css">
+{% include analytics.html %}

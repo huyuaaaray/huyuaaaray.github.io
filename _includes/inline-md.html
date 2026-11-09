@@ -1,0 +1,2 @@
+{%- comment -%} Renders short Markdown (italics, bold, links) without wrapping <p> tags. {%- endcomment -%}
+{{ include.text | markdownify | remove: "<p>" | remove: "</p>" | strip }}

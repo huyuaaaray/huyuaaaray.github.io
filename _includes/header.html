@@ -1,0 +1,28 @@
+<a class="skip-link" href="#main">{{ site.skip_link | default: "Skip to content" | escape }}</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="{{ site.author.name }}, home">
+      <img src="/images/header-icon.png" alt="" width="98" height="96">
+      <span class="brand-name">{{ site.author.name }}</span>
+    </a>
+    <div class="header-right">
+      <nav class="tabs" aria-label="Main">
+        {%- for item in site.nav %}
+        <a class="tab" href="{{ item.url }}" {% if page.url == item.url %}aria-current="page"{% endif %}>{{ item.label | escape }}</a>
+        {%- endfor %}
+      </nav>
+      <span class="header-divider" aria-hidden="true"></span>
+      <div class="social">{% include social-links.html %}</div>
+      {%- if site.effects.motion_toggle %}
+      <button type="button" class="icon-btn motion-toggle" data-brand="theme" aria-pressed="false" aria-label="{{ site.motion_toggle_label | escape }}" title="{{ site.motion_toggle_label | escape }}">
+        {% include icon.html name="zap" %}{% include icon.html name="zap-off" %}
+      </button>
+      {%- endif %}
+      {%- if site.effects.theme_toggle and page.theme != "night" %}
+      <button type="button" class="icon-btn theme-toggle" data-brand="theme" aria-label="{{ site.theme_toggle_label | escape }}" title="{{ site.theme_toggle_label | escape }}">
+        {% include icon.html name="moon" %}{% include icon.html name="sun" %}
+      </button>
+      {%- endif %}
+    </div>
+  </div>
+</header>

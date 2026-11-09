@@ -1,0 +1,107 @@
+---
+layout: default
+section: cv
+progress: true
+---
+{%- comment -%} All text on this page is in the "cv" section of _config.yml {%- endcomment -%}
+{%- assign cv = site.cv -%}
+<div class="container">
+  <div class="cv-layout">
+    <nav class="toc" aria-label="On this page">
+      <ol>
+        {%- if cv.experience.size > 0 %}<li><a href="#experience">{{ cv.experience_title | escape }}</a></li>{% endif %}
+        {%- if cv.education.size > 0 %}<li><a href="#education">{{ cv.education_title | escape }}</a></li>{% endif %}
+        {%- if cv.publications.size > 0 %}<li><a href="#publications">{{ cv.publications_title | escape }}</a></li>{% endif %}
+        {%- if cv.projects.size > 0 %}<li><a href="#projects">{{ cv.projects_title | escape }}</a></li>{% endif %}
+        {%- if cv.skills.size > 0 %}<li><a href="#skills">{{ cv.skills_title | escape }}</a></li>{% endif %}
+        {%- if cv.honors.size > 0 %}<li><a href="#honors">{{ cv.honors_title | escape }}</a></li>{% endif %}
+      </ol>
+    </nav>
+    <div class="cv-body">
+      <div class="page-head" data-reveal>
+        <h1>{{ cv.heading | escape }}</h1>
+        {%- if cv.summary %}
+        <p>{% include inline-md.html text=cv.summary %}</p>
+        {%- endif %}
+        <div class="actions">
+          <a class="btn btn-primary" href="/resume.pdf" download>{% include icon.html name="download" %}{{ cv.download_label | escape }}</a>
+        </div>
+      </div>
+
+      {%- if cv.experience.size > 0 %}
+      <section class="cv-section" id="experience">
+        <h2 data-reveal>{{ cv.experience_title | escape }}</h2>
+        <div class="timeline"{% if site.effects.cv_timeline %} data-timeline{% endif %}>
+        {%- include cv-entries.html items=cv.experience %}
+        </div>
+      </section>
+      {%- endif %}
+
+      {%- if cv.education.size > 0 %}
+      <section class="cv-section" id="education">
+        <h2 data-reveal>{{ cv.education_title | escape }}</h2>
+        {%- include cv-entries.html items=cv.education %}
+      </section>
+      {%- endif %}
+
+      {%- if cv.publications.size > 0 %}
+      <section class="cv-section" id="publications">
+        <h2 data-reveal>{{ cv.publications_title | escape }}</h2>
+        {%- if cv.publications_note %}
+        <p class="note">{% include inline-md.html text=cv.publications_note %}</p>
+        {%- endif %}
+        <ol class="pubs" data-reveal-stagger>
+          {%- for p in cv.publications %}
+          <li data-reveal>
+            {%- assign names = p.authors | split: ", " -%}
+            {%- for n in names -%}
+              {%- assign bare = n | remove: "*" | strip -%}
+              {%- if bare == site.author.name -%}<strong>{{ n | escape }}</strong>{%- else -%}{{ n | escape }}{%- endif -%}
+              {%- unless forloop.last %}, {% endunless -%}
+            {%- endfor %}
+            <span class="pub-title">{{ p.title | escape }}</span>
+            <span class="pub-meta">{% if p.venue %}<em>{{ p.venue | escape }}</em> {% endif %}{{ p.details | escape }}</span>
+            {%- if site.effects.copy_citation or p.links.size > 0 %}
+            <span class="pub-links">
+              {%- for l in p.links %}<a href="{{ l.url }}">{{ l.label | escape }}</a>{% endfor %}
+              {%- if site.effects.copy_citation %}
+              {%- capture cite %}{{ p.authors }} {{ p.title }} {% if p.venue %}{{ p.venue }}, {% endif %}{{ p.details }}{% endcapture %}
+              <button type="button" class="cite-btn" data-cite="{{ cite | strip | escape }}" data-copied="{{ cv.copied_label | escape }}"><span class="cite-icons">{% include icon.html name="copy" %}{% include icon.html name="check" %}</span><span class="cite-label">{{ cv.copy_label | escape }}</span></button>
+              {%- endif %}
+            </span>
+            {%- endif %}
+          </li>
+          {%- endfor %}
+        </ol>
+      </section>
+      {%- endif %}
+
+      {%- if cv.projects.size > 0 %}
+      <section class="cv-section" id="projects">
+        <h2 data-reveal>{{ cv.projects_title | escape }}</h2>
+        <div class="timeline"{% if site.effects.cv_timeline %} data-timeline{% endif %}>
+        {%- include cv-entries.html items=cv.projects %}
+        </div>
+      </section>
+      {%- endif %}
+
+      {%- if cv.skills.size > 0 %}
+      <section class="cv-section" id="skills">
+        <h2 data-reveal>{{ cv.skills_title | escape }}</h2>
+        <dl class="skills">
+          {%- for s in cv.skills %}
+          <div data-reveal><dt>{{ s.group | escape }}</dt><dd>{{ s.items | escape }}</dd></div>
+          {%- endfor %}
+        </dl>
+      </section>
+      {%- endif %}
+
+      {%- if cv.honors.size > 0 %}
+      <section class="cv-section" id="honors">
+        <h2 data-reveal>{{ cv.honors_title | escape }}</h2>
+        {%- include cv-entries.html items=cv.honors %}
+      </section>
+      {%- endif %}
+    </div>
+  </div>
+</div>

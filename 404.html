@@ -1,0 +1,31 @@
+---
+layout: default
+section: not_found
+permalink: /404.html
+scripts:
+  - /assets/js/gator-run.js
+---
+<script>
+  // Send old links to their new place (e.g. the previous /CV.pdf on this site).
+  (function () {
+    var p = location.pathname.toLowerCase().replace(/\/+$/, '');
+    var moved = {
+      '/cv.pdf': '/resume.pdf',
+      '/cv.html': '/cv/',
+      '/resume': '/cv/',
+      '/about': '/',
+      '/contact': '/#contact'
+    };
+    if (moved[p]) location.replace(moved[p]);
+  })();
+</script>
+<div class="container not-found">
+  <h1>{{ site.not_found.title | escape }}</h1>
+  <p>{% include inline-md.html text=site.not_found.text %}</p>
+  {%- if site.effects.game_404 %}
+  {%- assign nf = site.not_found %}
+  <div class="runner" data-runner data-hint="{{ nf.game_hint | escape }}" data-over="{{ nf.game_over | escape }}" data-score="{{ nf.game_score | escape }}" data-best="{{ nf.game_best | escape }}">
+    <canvas class="runner-canvas" tabindex="0" aria-label="{{ nf.game_hint | escape }}"></canvas>
+  </div>
+  {%- endif %}
+</div>

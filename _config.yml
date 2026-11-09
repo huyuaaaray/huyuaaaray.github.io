@@ -1,0 +1,710 @@
+title: Yu Hu
+url: "https://huyuaaaray.github.io"
+baseurl: ""
+
+google_analytics: "G-8Y3X786CMF"
+
+markdown: kramdown
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+
+author:
+  name: Yu Hu
+  email: huyuaaaray@gmail.com
+  github: huyuaaaray
+  linkedin: yu-hu-769b02261
+  scholar: SL4Guq4AAAAJ
+
+social_labels:
+  email: Email
+  github: GitHub
+  linkedin: LinkedIn
+  scholar: Google Scholar
+
+theme_toggle_label: Switch light / dark mode
+motion_toggle_label: Turn heavy animations on / off
+
+skip_link: Skip to content
+
+footer_clock:
+  city: Gainesville
+  lat: 29.65
+  lng: -82.32
+  timezone: America/New_York
+  unit: F
+  weather_labels:
+    clear: Clear
+    partly: Partly cloudy
+    cloudy: Cloudy
+    fog: Fog
+    drizzle: Drizzle
+    rain: Rain
+    snow: Snow
+    storm: Thunderstorm
+
+nav:
+  - label: Travel
+    url: /travel/
+  - label: CV
+    url: /cv/
+
+home:
+  description: >-
+    Yu Hu is a data scientist at the University of Florida College of Medicine
+    building clinical AI with large language models on EHR and clinical notes.
+
+  roles:
+    - Data Scientist
+    - Clinical NLP
+    - LLM Evaluation
+    - LLMOps
+  tagline: "Quality & Patient Safety, University of Florida College of Medicine"
+  research:
+    label: Research interest
+    text: "I study how to make large language models reliable enough for real clinical work: reading EHR notes, surfacing risks, and supporting the clinicians who review them."
+  about_title: About
+  bio: |
+    I'm a data scientist at the University of Florida College of Medicine, where I work with the Quality & Patient Safety group to build clinical AI systems. My work focuses on applying large language models to electronic health records and clinical notes, turning unstructured documentation into information that clinicians and quality teams can act on, from readmission analyses to care-coordination programs.
+
+    Along the way, I've built a shared, configuration-driven LLM platform that now supports several clinical programs, developed an LLM-as-a-Judge framework to evaluate model outputs before they reach clinician review, and scaled inference on UF's HiPerGator supercomputer. This work has led to six peer-reviewed publications in clinical informatics, and I enjoy doing it alongside clinicians, researchers, and engineers.
+
+  stats:
+    - number: 7
+      label: peer-reviewed publications
+    - number: 3
+      suffix: "+"
+      label: years in clinical AI
+    - number: 3
+      label: clinical programs on my LLM platform
+  photo_back:
+    title: Hi, I'm Yu.
+    text: I build clinical AI at the University of Florida in Gainesville. Always happy to talk about LLM evaluation, clinical NLP, or a collaboration.
+    cta: Say hello
+  photo_flip_label: Click to flip
+  marquee:
+    - LLM evaluation
+    - LLM-as-a-Judge
+    - Clinical NLP
+    - vLLM
+    - Gemma 4
+    - GraphRAG
+    - LLMOps
+    - EHR
+    - FHIR
+    - OMOP
+    - HiPerGator
+    - SLURM
+    - Pydantic
+    - PyTorch
+  ask:
+    title: Ask about Yu
+    greeting: "Hi! I'm a tiny pre-written bot. Pick a question below and I'll tell you about Yu."
+    bot_name: Yu-bot
+    questions:
+      - q: What are you working on right now?
+        a: "I lead clinical LLM evaluation for UF's Quality & Patient Safety group: comparing models like Gemma 4 and MedGemma against clinician review, and building LLM-as-a-Judge workflows that send flagged cases to clinicians."
+      - q: What is your research focus?
+        a: "Making large language models reliable enough for real clinical work: reading EHR notes, surfacing risks, and supporting the clinicians who review them. Lately that includes GraphRAG knowledge graphs for heart failure readmission."
+      - q: What does your tech stack look like?
+        a: "Python, vLLM and SLURM on UF's HiPerGator supercomputer, config-driven pipelines with JSON Schema and Pydantic, plus PyTorch, OMOP and FHIR on the clinical data side."
+      - q: Where have you worked?
+        a: "The University of Florida (Data Scientist III, and before that Application Programmer and Research Assistant) and the Regenstrief Institute in Indianapolis. The full story is on my [CV](/cv/)."
+      - q: Can we collaborate?
+        a: "I'd love to hear from you. Email me at [huyuaaaray@gmail.com](mailto:huyuaaaray@gmail.com) or find me on LinkedIn."
+      - q: Tell me a secret.
+        a: "Try clicking my name at the very top of this page. Go Gators!"
+  news_title: News
+  news_show: 6
+  news_more: More news
+  news_less: Show less
+  news:
+    - date: Aug 2026
+      datetime: 2026-08
+      text: Co-first-author paper on adapting a fair individualized polysocial risk score for hospitalization risk prediction published in *JAMIA Open*.
+    - date: '2026'
+      datetime: '2026'
+      text: Two papers on target trial emulation with decentralized real-world data published in *npj Health Systems* and *eBioMedicine*.
+    - date: May 2026
+      datetime: 2026-05
+      text: Started building a GraphRAG knowledge graph over clinical notes to study heart failure readmission.
+    - date: Apr 2026
+      datetime: 2026-04
+      text: Began leading a clinical LLM evaluation comparing Gemma 4 and MedGemma for patient-level readmission review.
+    - date: Feb 2026
+      datetime: 2026-02
+      text: Started building a shared, configuration-driven LLMOps platform, now used by three clinical programs at UF.
+    - date: Sep 2025
+      datetime: 2025-09
+      text: Joined the Quality & Patient Safety group at the UF College of Medicine as a Data Scientist III.
+
+travel:
+  title: Travel
+  description: Places Yu Hu has lived, worked, and visited, on a map with photos and videos.
+  intro: Places I've lived, worked, and visited. Hover over a marker for a quick preview, and click a marker or a card for photos and videos.
+  globe_hint: Drag to spin the globe. Click it first, then use your mouse wheel to zoom. Arcs show trips from home; orange dots mark countries I've visited.
+  map_hint: Click the map to zoom with your mouse wheel. Lines show trips from home; shaded countries are ones I've visited.
+  preview_cta: Click for photos and videos
+  no_media: Photos and stories from this trip are coming soon.
+  replay_label: Replay my travels
+  replay_stop: Stop
+  globe_fallback: Your browser can't show the 3D globe, but you can still browse every place below.
+  stats:
+    place: place
+    places: places
+    in: in
+    country: country
+    countries: countries
+  places:
+    - name: Wuhan
+      region: Hubei, China
+      country: China
+      lat: 30.5928
+      lng: 114.3055
+      date: 2016 – 2020
+      summary: Where I studied electrical engineering at Hubei University of Technology.
+      cover: /images/travel/sample-wuhan.jpg
+      photos:
+        - src: /images/travel/sample-wuhan.jpg
+          caption: Placeholder photo. Replace with your own.
+      videos: []
+    - name: Berlin
+      region: Germany
+      country: Germany
+      lat: 52.52
+      lng: 13.405
+      date: Aug 2017
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: Guangzhou
+      region: Guangdong, China
+      country: China
+      lat: 23.1291
+      lng: 113.2644
+      date: Aug 2021
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: Gainesville
+      home: true
+      region: Florida, USA
+      country: USA
+      lat: 29.6516
+      lng: -82.3248
+      date: Aug 2021 – present
+      summary: Home base since starting graduate school at the University of Florida. Go Gators!
+      cover: /images/travel/sample-gainesville.jpg
+      photos:
+        - src: /images/travel/sample-gainesville.jpg
+          caption: Placeholder photo. Replace with your own.
+      videos: []
+    - name: San Francisco
+      region: California, USA
+      country: USA
+      lat: 37.7749
+      lng: -122.4194
+      date: Jun 2022
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: Los Angeles
+      region: California, USA
+      country: USA
+      lat: 34.0522
+      lng: -118.2437
+      date: Jun 2022
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: Tampa
+      region: Florida, USA
+      country: USA
+      lat: 27.9506
+      lng: -82.4572
+      date: Apr 2023
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: Yellowstone National Park
+      region: Wyoming, USA
+      country: USA
+      lat: 44.428
+      lng: -110.5885
+      date: Apr 2023
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: Salt Lake City
+      region: Utah, USA
+      country: USA
+      lat: 40.7608
+      lng: -111.891
+      date: Apr 2023 · Nov 2023
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: Cedar Key
+      region: Florida, USA
+      country: USA
+      lat: 29.1386
+      lng: -83.0352
+      date: Aug 2023
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: New York City
+      region: New York, USA
+      country: USA
+      lat: 40.7128
+      lng: -74.006
+      date: Nov 2023
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: Boston
+      region: Massachusetts, USA
+      country: USA
+      lat: 42.3601
+      lng: -71.0589
+      date: Nov 2024
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: Phoenix
+      region: Arizona, USA
+      country: USA
+      lat: 33.4484
+      lng: -112.074
+      date: Dec 2024
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: Indianapolis
+      region: Indiana, USA
+      country: USA
+      lat: 39.7684
+      lng: -86.1581
+      date: Summer 2025
+      summary: Spent the summer at the Regenstrief Institute working on clinical data pipelines.
+      cover: /images/travel/sample-indianapolis.jpg
+      photos:
+        - src: /images/travel/sample-indianapolis.jpg
+          caption: Placeholder photo. Replace with your own.
+      videos: []
+    - name: Miami
+      region: Florida, USA
+      country: USA
+      lat: 25.7617
+      lng: -80.1918
+      date: ""
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: Orlando
+      region: Florida, USA
+      country: USA
+      lat: 28.5384
+      lng: -81.3789
+      date: ""
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: Destin
+      region: Florida, USA
+      country: USA
+      lat: 30.3935
+      lng: -86.4958
+      date: ""
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: Jacksonville
+      region: Florida, USA
+      country: USA
+      lat: 30.3322
+      lng: -81.6557
+      date: ""
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: Las Vegas
+      region: Nevada, USA
+      country: USA
+      lat: 36.1699
+      lng: -115.1398
+      date: ""
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+
+cv:
+  title: CV
+  heading: Curriculum Vitae
+  description: Curriculum vitae of Yu Hu, covering clinical LLM evaluation, LLMOps, and machine learning on EHR data at the University of Florida College of Medicine.
+  summary: Data scientist with 3+ years of experience in clinical LLM evaluation and safety on EHR and clinical notes data. Built LLM-as-a-Judge and clinician-validated evaluation workflows, and end-to-end MLOps/LLMOps pipelines, including a config-driven LLM platform adopted by three clinical programs with self-hosted inference on HPC (vLLM).
+  download_label: Download PDF
+  copy_label: Copy citation
+  copied_label: Copied!
+  highlights:
+    - 7 of 10
+    - 30–50 tokens/s
+    - three clinical programs
+    - 637K clinical notes
+    - 3,946 patients
+    - 143K entities
+    - 71K relations
+    - 243K attributes
+    - 2,040 communities
+    - from weeks to days
+  experience_title: Experience
+  education_title: Education
+  publications_title: Publications
+  projects_title: Selected Projects
+  skills_title: Skills
+  honors_title: Honors & Service
+  publications_note: "\\* Equal contribution. Full list on [Google Scholar](https://scholar.google.com/citations?user=SL4Guq4AAAAJ)."
+  experience:
+    - title: Data Scientist III
+      dates: Sep 2025 – Present
+      where: University of Florida College of Medicine, Gainesville, FL
+      bullets:
+        - Drive clinical LLM evaluation for the Quality & Patient Safety group, comparing models against clinician review and building LLM-as-a-Judge workflows that route flagged outputs to clinician review.
+        - Architected a shared, config-driven LLMOps platform adopted by three clinical programs, processing EHR clinical notes with self-hosted long-context inference (vLLM, SLURM) on the HiPerGator HPC cluster.
+        - Translate clinical review workflows (readmission, mortality, transitional care) into structured, evidence-grounded LLM pipelines in partnership with clinical teams.
+        - Develop machine learning models on EHR data, including neonatal feeding-risk prediction, from clinician-validated feature definition through on-premise deployment.
+    - title: Application Programmer
+      dates: Jun 2025 – Aug 2025
+      where: Regenstrief Institute, Indianapolis, IN
+      bullets:
+        - Standardized U.S. EHR data by architecting pipelines for OMOP and PCORnet models, improving data quality and harmonization.
+        - Engineered automated, scalable ETL pipelines and extracted longitudinal clinical features from raw EHR data using distributed cluster computing.
+        - Created web-based analytics dashboards to support clinicians in interpreting complex data and improving decision-making.
+    - title: Application Programmer
+      dates: Mar 2024 – May 2025
+      where: University of Florida, Gainesville, FL
+      bullets:
+        - Implemented MLOps workflows with CI/CD and monitoring, enabling scalable deployment on Linux systems.
+        - Developed scalable ETL pipelines and engineered clinical features using cluster computing, boosting ML model performance on large-scale healthcare data.
+        - Built and deployed secure, interactive healthcare web applications with FHIR integration on AWS, enhancing scalability, reliability, and clinical interoperability.
+    - title: Research Assistant
+      dates: Dec 2022 – Feb 2024
+      where: University of Florida, Gainesville, FL
+      bullets:
+        - Cleaned and preprocessed extensive healthcare datasets, generating insightful visualizations to support data-driven research.
+        - Developed a computer vision-based object detection system integrated with automated data acquisition pipelines, enabling efficient data collection and analysis.
+        - Built and deployed an interactive web platform for 3D modeling and predictive analytics, enhancing visualization of object detection outcomes and improving user experience.
+  education:
+    - title: M.S. in Electrical and Computer Engineering
+      dates: Aug 2021 – May 2023
+      where: University of Florida, Gainesville, FL
+      summary: 'GPA: 3.56/4.0'
+    - title: B.S. in Electrical Engineering
+      dates: Sep 2016 – Jun 2020
+      where: Hubei University of Technology, Wuhan, China
+      summary: 'GPA: 3.3/4.0'
+  publications:
+    - authors: Jiayi Tong, Lu Li, Dazheng Zhang, Kyra S. O'Brien, Yiwen Lu, Qiong Wu, Ting Zhou, Bingyu Zhang, Yu Huang, Yu Hu, et al.
+      title: 'FLAT-WHITE: from target trial emulation to federated high-throughput causal machine learning using decentralized real-world data.'
+      venue: npj Health Systems
+      details: 3, 102 (2026).
+    - authors: Qiong Wu, Lu Li, Yuqing Lei, Ting Zhou, Huiling Tang, Bingyu Zhang, Yu Hu, et al.
+      title: 'Discovering repurposable drugs for Alzheimer''s disease and related dementias: target trial emulation using decentralised real-world data.'
+      venue: eBioMedicine
+      details: 132, 106466 (2026).
+    - authors: Qinglin Gou*, Yu Hu*, et al.
+      title: Adaptation of a fair individualized polysocial risk score for hospitalization risk prediction.
+      venue: JAMIA Open
+      details: 9(4), ooag161 (2026).
+      links:
+        - label: DOI
+          url: https://doi.org/10.1093/jamiaopen/ooag161
+    - authors: Yu Huang, Jie Xu, Zhengkang Fan, Yu Hu, et al.
+      title: Identifying Alzheimer's disease progression subphenotypes via a graph-based framework using electronic health records.
+      venue: Journal of Healthcare Informatics Research
+      details: 10, 317–339 (2026).
+    - authors: X. He, Y. Huang, Yu Hu, et al.
+      title: Toward integrating machine learning-powered polysocial risk scores into electronic health record workflows.
+      venue: AMIA Annual Symposium Proceedings
+      details: 2024, 451–460 (2025).
+      links:
+        - label: PMC
+          url: https://pmc.ncbi.nlm.nih.gov/articles/PMC12919456/
+    - authors: T. Zhou, A. Chen, Yu Hu, et al.
+      title: Automating Lung-RADS categorization and follow-up recommendations using in-context learning with large language models.
+      venue: AMIA Annual Symposium Proceedings
+      details: 2024, 1567–1576 (2025).
+      links:
+        - label: PMC
+          url: https://pmc.ncbi.nlm.nih.gov/articles/PMC12919574/
+    - authors: Jin Wang*, Yu Hu*, et al.
+      title: 'Technical note: ShinyAnimalCV: open-source cloud-based web application for object detection, segmentation, and three-dimensional visualization of animals using computer vision.'
+      venue: Journal of Animal Science
+      details: 102, skad416 (2024).
+      links:
+        - label: DOI
+          url: https://doi.org/10.1093/jas/skad416
+  projects:
+    - title: Clinical LLM Evaluation and Model Selection for Readmission Review
+      dates: Apr 2026 – Present
+      bullets:
+        - Led a head-to-head evaluation of Gemma 4 31B and MedGemma for patient-level readmission review across 30K–80K-token context windows, generating structured answers to clinical review questions with supporting rationales.
+        - 'Identified a key clinical safety failure mode: the domain-tuned model inferred unsupported answers from general medical knowledge (e.g., asserting prescriptions were sent to a pharmacy with no documentation), while Gemma 4 abstained with evidence-specific rationales, providing evidence for model selection.'
+        - 'Validated outputs against clinician review: Gemma 4 corrected 7 of 10 answers the clinical team flagged as incorrect; analyzed the remaining disagreements to separate model errors from reviewer inference, and identified note-type confusion (outpatient vs. discharge instructions) as the next improvement target.'
+        - Built an LLM-as-a-Judge framework using Llama 3.3-70B to grade Gemma 4 outputs across four rubric dimensions with structured JSON verdicts, section-level scoring, and an interactive HTML report routing flagged patients to clinician review.
+        - Benchmarked long-context inference on NVIDIA B200 GPUs (FP16 vs. FP8, tensor parallelism, memory settings); traced a throughput ceiling to vLLM's KV-cache handling of Gemma 4 sliding-window attention and reached 30–50 tokens/s at 60K context with FP8.
+    - title: Clinical LLMOps Platform for EHR Note Processing
+      dates: Feb 2026 – Present
+      bullets:
+        - Generalized hard-coded, project-specific clinical NLP scripts into a reusable, config-driven LLM platform now shared by three clinical programs (RN Health Coach, Bridge Clinic readmission, Transitional Care); migrated all runtime settings into YAML with a `ConfigWrapper` supporting dotted-attribute and mapping access, so new cohorts onboard through configuration rather than code changes.
+        - Designed a modular workflow architecture (schema-driven data loading → prompt assembly → batched inference → post-processing → reporting) with a manager/processor per stage, checkpoint/resume, structured logging, and asynchronous concurrency control; deployed on the HiPerGator HPC cluster via SLURM and vLLM.
+        - Re-engineered the clinical note LLM summarizer into an OpenAI-compatible API service that runs on both self-hosted vLLM and the UF NaviGator API, with enforced JSON Schema output contracts, Pydantic validation, token-aware dynamic prompt budgeting, and automatic retry/fallback on malformed generations.
+        - Built a reusable base HTML report generator and pluggable LLM analysis sections, so programs extend shared components instead of maintaining separate reporting code.
+        - Established MLOps practices across projects (versioned shared libraries on internal GitLab, automated daily scheduling and logging, reproducible run artifacts), reducing new-pipeline setup from weeks to days.
+    - title: GraphRAG Knowledge Graph for Heart Failure Readmission
+      dates: May 2026 – Present
+      bullets:
+        - Built an end-to-end GraphRAG pipeline over a heart failure cohort of 637K clinical notes from 3,946 patients, including de-duplication of daily EHR snapshots, a three-layer note filter (note type / authoring provider type / length), and quota-based cohort sampling for documentation completeness.
+        - Performed LLM-based entity and relation extraction with MedGemma-27B served via vLLM, using a clinical prompt with a controlled entity-type and assertion (present/negated/historical) vocabulary; extracted 143K entities, 71K relations, and 243K attributes from 5.5K text units.
+        - Constructed the patient knowledge graph with hierarchical Leiden community detection (2,040 communities across 7 levels) and map-reduce LLM community reports on readmission themes; hardened the pipeline against API rate-limit saturation, silent chunk drops, and PHI leakage into summaries.
+    - title: Neonatal Lactation and Milk Intake Data Processing Project
+      dates: Sep 2025 – Present
+      bullets:
+        - Standardized raw EHR lactation and neonatal milk intake data (pumping records, feeding documentation, inconsistent entries) and built automated feature engineering pipelines.
+        - Partnered with neonatologists and lactation specialists to define and validate clinically meaningful features, such as NPO patterns, respiratory support status, maternal milk availability, feeding intolerance, and early nutrition indicators.
+        - Developed machine learning models for early identification of infants at risk for inadequate milk intake or feeding complications; revalidated data and feature definitions after source updates, retrained the models, and authored a model brief.
+        - Deployed model and data pipelines on on-premise servers for reproducible, continuously updated analytics, and connected Power BI dashboards to model outputs for clinicians and lactation teams.
+    - title: Graph-Based Modeling for Alzheimer's Disease Progression
+      dates: Dec 2023 – Nov 2025
+      summary: Built patient similarity graphs from EHR data and graph neural networks (PyTorch, NetworkX) to identify progression subphenotypes and support early detection.
+    - title: EHR Continuity for Type 2 Diabetes Risk Prediction
+      dates: Feb 2024 – Nov 2025
+      summary: Engineered a PCORnet-based pipeline on OneFlorida+ data, used the Harmonized Encounter Proportion Score to quantify data continuity, and assessed model fairness across racial and ethnic groups.
+    - title: OCT Retinal Biomarkers for ADRD Prediction
+      dates: Dec 2023 – Sep 2025
+      summary: Automated processing of OCT DICOM scans and used retinal thickness metrics to model the risk of Alzheimer's disease and related dementias.
+    - title: Healthcare Risk Prediction Web Application
+      dates: Nov 2023 – Sep 2025
+      summary: React front end and Flask API serving causal inference risk models, with FHIR and Epic integration, containerized with Docker.
+    - title: OMOP–FHIR Database Integration Platform
+      dates: Apr 2024 – Sep 2025
+      summary: Designed an OMOP database and a web platform combining OMOP and FHIR queries for standardized, real-time healthcare data access.
+  skills:
+    - group: LLM & NLP
+      items: Prompt engineering, RAG/GraphRAG, LLM-as-a-Judge, vLLM, LLM agents, Hugging Face Transformers, LangChain, spaCy, FAISS
+    - group: Clinical data standards
+      items: UMLS, SNOMED CT, RxNorm, OMOP, FHIR, PCORnet
+    - group: MLOps / LLMOps
+      items: SLURM, model serving and monitoring, CI/CD, structured output (JSON Schema, Pydantic), config-driven pipelines
+    - group: Machine learning
+      items: PyTorch, TensorFlow, scikit-learn, XGBoost, NetworkX, causal inference
+    - group: Programming
+      items: Python, SQL, R, C/C++, Java, JavaScript, HTML/CSS, Shell, MATLAB, LaTeX
+    - group: Tools & platforms
+      items: Docker, Linux, Git, Tableau, Power BI, cluster and cloud computing
+  honors:
+    - title: Herbert Wertheim College of Engineering Achievement Award and Scholarship
+      dates: '2021'
+      where: University of Florida
+    - title: Undergraduate Scholarship, top 5% of students
+      dates: '2020'
+      where: Hubei University of Technology
+    - title: Reviewer, IEEE International Conference on Healthcare Informatics (ICHI)
+      dates: 2024 – 2026
+
+not_found:
+  title: Page not found
+  game_hint: Press space or tap the game to play
+  game_over: Game over! Press space or tap to try again
+  game_score: Score
+  game_best: Best
+  text: "This page doesn't exist or has moved. Go back to the [home page](/), see my [CV](/cv/), or browse my [travels](/travel/)."
+
+effects:
+  cursor_tail: true
+  cursor_spotlight: true
+  ripple: true
+  hover_glow: true
+  theme_toggle: true
+  intro: true
+  title_letters: true
+  footer_weather_art: true
+  local_weather: true
+  name_decode: true
+  network_pulse: true
+  about_highlight: true
+  photo_flip: false
+  marquee: true
+  globe: true
+  globe_card_link: true
+  constellation: true
+  cv_timeline: true
+  copy_citation: true
+  game_404: true
+  motion_toggle: true
+  name_repel: true
+  sky_tint: true
+  news_magnet: true
+  ask_box: true
+  skill_links: true
+  flap_titles: true
+  travel_replay: true
+  globe_planes: true
+  polaroids: true
+  marker_highlight: true
+  aurora: true
+  card_slideshow: true
+  card_expand: true
+  scroll_line: true
+  flip_clock: true
+  hand_underline: true
+  tilt_cards: true
+  blur_load: true
+
+easter_egg:
+  enabled: true
+  secret: gogators
+  message: "Go Gators!"
+  sound: true
+  image: /images/go-gators.webp
+
+eggs:
+  night_owl:
+    show: true
+    from: 0
+    to: 5
+    text: "It's {time} where you are. Burning the midnight oil? Get some rest! 🦉"
+  shake:
+    show: true
+    text: "Whoa, easy there! 🐊"
+  console:
+    show: true
+    text: "Hi there, fellow developer! Thanks for peeking under the hood. Say hi: huyuaaaray@gmail.com"
+  tab_away:
+    show: true
+    away_title: "🐊 Come back!"
+    back_title: "👋 Welcome back!"
+  screensaver:
+    show: true
+    idle_seconds: 60
+  bottom_peek:
+    show: true
+    text: "You found the bottom! 🐊"
+  star_wish:
+    show: true
+    text: "Make a wish ✨"
+  globe_spin:
+    show: true
+    clicks: 5
+    text: "Chomp! 🐊"
+  long_press:
+    show: true
+    text: "Nom nom!"
+  vllm:
+    show: true
+    word: vllm
+    lines:
+      - "$ vllm serve google/gemma-4-31b --max-model-len 65536"
+      - "INFO  Loading model weights ... done (58.2 GiB)"
+      - "INFO  KV cache: 18,432 blocks allocated"
+      - "INFO  Uvicorn running on http://0.0.0.0:8000"
+      - "INFO  Avg generation throughput: 42.0 tokens/s"
+      - "INFO  Gator check: 🐊 chomp OK"
+  birthday:
+    show: true
+    date: "04-14"
+    text: "It's Yu's birthday today! 🎂"
+  returning:
+    show: true
+    visits: [10, 25, 50, 100]
+    text: "Welcome back, regular! Visit #{n} 🐊"
+  gold_gator:
+    show: true
+    score: 20
+    text: "Golden gator unlocked! 🏆"
+
+holidays:
+  enabled: true
+  decorations: true
+  new_year:         { show: true, text: "Happy New Year!", effect: fireworks }
+  mlk_day:          { show: true, text: "Honoring Dr. Martin Luther King Jr. today.", effect: none }
+  valentines:       { show: true, text: "Happy Valentine's Day!", effect: hearts }
+  presidents_day:   { show: true, text: "Happy Presidents' Day!", effect: none }
+  st_patricks:      { show: true, text: "Happy St. Patrick's Day!", effect: clovers }
+  easter:           { show: true, text: "Happy Easter!", effect: flowers }
+  mothers_day:      { show: true, text: "Happy Mother's Day!", effect: flowers }
+  memorial_day:     { show: true, text: "Remembering those who served, this Memorial Day.", effect: none }
+  fathers_day:      { show: true, text: "Happy Father's Day!", effect: none }
+  juneteenth:       { show: true, text: "Celebrating Juneteenth.", effect: none }
+  independence_day: { show: true, text: "Happy Fourth of July!", effect: fireworks }
+  labor_day:        { show: true, text: "Happy Labor Day!", effect: none }
+  columbus_day:     { show: true, text: "Indigenous Peoples' Day · Columbus Day", effect: none }
+  halloween:        { show: true, text: "Happy Halloween!", effect: spooky }
+  veterans_day:     { show: true, text: "Thank you to everyone who served. Happy Veterans Day.", effect: none }
+  thanksgiving:     { show: true, text: "Happy Thanksgiving!", effect: leaves }
+  christmas:        { show: true, text: "Merry Christmas!", effect: snow }
+  winter_snow:      { show: true, text: "", effect: snow }
+  spring_festival:  { show: true, text: "新年快乐 · Happy Lunar New Year", effect: lanterns }
+  lantern_festival: { show: true, text: "元宵快乐 · Happy Lantern Festival", effect: lanterns }
+  qingming:         { show: true, text: "清明 · Qingming Festival", effect: rain }
+  dragon_boat:      { show: true, text: "端午安康 · Dragon Boat Festival", effect: none }
+  qixi:             { show: true, text: "七夕快乐 · Qixi Festival", effect: hearts }
+  mid_autumn:       { show: true, text: "中秋快乐 · Happy Mid-Autumn Festival", effect: moon }
+  double_ninth:     { show: true, text: "重阳安康 · Double Ninth Festival", effect: none }
+  dongzhi:          { show: true, text: "冬至 · Winter Solstice", effect: none }
+  laba:             { show: true, text: "腊八节 · Laba Festival", effect: none }
+  solar_terms: true
+  solar_term_label: 今日节气
+  solar_term_names:
+    - 小寒 · Minor Cold
+    - 大寒 · Major Cold
+    - 立春 · Start of Spring
+    - 雨水 · Rain Water
+    - 惊蛰 · Awakening of Insects
+    - 春分 · Spring Equinox
+    - 清明 · Pure Brightness
+    - 谷雨 · Grain Rain
+    - 立夏 · Start of Summer
+    - 小满 · Grain Buds
+    - 芒种 · Grain in Ear
+    - 夏至 · Summer Solstice
+    - 小暑 · Minor Heat
+    - 大暑 · Major Heat
+    - 立秋 · Start of Autumn
+    - 处暑 · End of Heat
+    - 白露 · White Dew
+    - 秋分 · Autumn Equinox
+    - 寒露 · Cold Dew
+    - 霜降 · Frost's Descent
+    - 立冬 · Start of Winter
+    - 小雪 · Minor Snow
+    - 大雪 · Major Snow
+    - 冬至 · Winter Solstice
+  game_day: true
+  game_days:
+    - date: "2026-11-07"
+      text: "Game day: Gators vs. Oklahoma in The Swamp. Go Gators!"
+    - date: "2026-11-14"
+      text: "Game day: Gators at Kentucky. Go Gators!"
+    - date: "2026-11-21"
+      text: "Game day: Gators vs. Vanderbilt in The Swamp. Go Gators!"
+    - date: "2026-11-28"
+      text: "Game day: Gators at Florida State. Go Gators!"

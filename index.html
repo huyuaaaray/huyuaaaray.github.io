@@ -1,0 +1,152 @@
+---
+layout: default
+section: home
+network: true
+scripts:
+  - /assets/js/network.js
+---
+{%- comment -%} All text on this page is in the "home" section of _config.yml {%- endcomment -%}
+{%- assign a = site.author -%}
+{%- assign h = site.home -%}
+<div class="container">
+  <section class="intro" aria-labelledby="name">
+    <div class="intro-head" data-reveal>
+      <h1 class="display-name" id="name">{{ a.name }}</h1>
+      {%- if h.roles and h.roles.size > 0 %}
+      <p class="roles">
+        <span class="visually-hidden">{{ h.roles | join: ", " }}</span>
+        <span class="roles-text" aria-hidden="true" data-roles="{{ h.roles | jsonify | escape }}">{{ h.roles.first | escape }}</span><span class="caret" aria-hidden="true"></span>
+      </p>
+      {%- endif %}
+      {%- if h.tagline %}
+      <p class="tagline">{{ h.tagline | escape }}</p>
+      {%- endif %}
+    </div>
+
+    <div class="portrait reveal-delay-1" data-reveal>
+      <div class="photo{% if site.effects.photo_flip %} photo-flippable{% endif %}" data-tilt>
+        {%- if site.effects.photo_flip %}
+        <div class="photo-inner">
+          <button type="button" class="photo-face photo-front" aria-label="Portrait of {{ a.name }}. {{ h.photo_flip_label | escape }}">
+            <span class="photo-initials" aria-hidden="true">YH</span>
+            <!-- Your photo: images/profile.jpg -->
+            <img src="/images/profile.jpg" alt="" width="340" height="425" onerror="this.remove()">
+            <span class="glare" aria-hidden="true"></span>
+            <span class="flip-badge" aria-hidden="true">{% include icon.html name="flip" %}{{ h.photo_flip_label | escape }}</span>
+          </button>
+          <div class="photo-face photo-back" inert>
+            <p class="pb-title">{{ h.photo_back.title | escape }}</p>
+            <p class="pb-text">{% include inline-md.html text=h.photo_back.text %}</p>
+            <a class="btn btn-primary pb-cta" href="mailto:{{ a.email }}">{% include icon.html name="mail" %}{{ h.photo_back.cta | escape }}</a>
+            <button type="button" class="pb-flip" aria-label="{{ h.photo_flip_label | escape }}">{% include icon.html name="flip" %}</button>
+          </div>
+        </div>
+        {%- else %}
+        <span class="photo-initials" aria-hidden="true">YH</span>
+        <!-- Your photo: images/profile.jpg -->
+        <img src="/images/profile.jpg" alt="Portrait of {{ a.name }}" width="340" height="425" onerror="this.remove()">
+        <span class="glare" aria-hidden="true"></span>
+        {%- endif %}
+      </div>
+      <div class="photo-links" id="contact">{% include social-links.html email=true %}</div>
+    </div>
+
+    <div class="intro-about reveal-delay-2" data-reveal>
+      <h2 class="section-title">{{ h.about_title | escape }}</h2>
+      <div class="prose">
+        {{ h.bio | markdownify }}
+      </div>
+    </div>
+
+    {%- if h.research.text %}
+    <div class="research-wrap" data-reveal>
+      <span class="orb orb-a" aria-hidden="true"></span>
+      <span class="orb orb-b" aria-hidden="true"></span>
+      <div class="research-banner" data-glow>
+        <p class="research-label">{% include icon.html name="spark" %}{{ h.research.label | escape }}</p>
+        <p class="research-text">
+          <span class="visually-hidden">{{ h.research.text | escape }}</span>
+          <span class="research-ghost" aria-hidden="true">{{ h.research.text | escape }}</span>
+          <span class="research-live" aria-hidden="true"><span class="research-typed" data-type-once="{{ h.research.text | escape }}">{{ h.research.text | escape }}</span><span class="caret"></span></span>
+        </p>
+      </div>
+    </div>
+    {%- endif %}
+
+    {%- if h.stats and h.stats.size > 0 %}
+    <ul class="stat-strip" data-reveal-stagger>
+      {%- for st in h.stats %}
+      <li data-reveal>
+        <span class="stat-num"><span class="count" data-count="{{ st.number }}">{{ st.number }}</span>{{ st.suffix | escape }}</span>
+        <span class="stat-label">{{ st.label | escape }}</span>
+      </li>
+      {%- endfor %}
+    </ul>
+    {%- endif %}
+
+    {%- if site.effects.marquee and h.marquee and h.marquee.size > 0 %}
+    <div class="marquee" data-reveal>
+      <div class="marquee-track">
+        <ul class="marquee-list">
+          {%- for k in h.marquee %}
+          <li>{{ k | escape }}</li>
+          {%- endfor %}
+        </ul>
+        <ul class="marquee-list" aria-hidden="true">
+          {%- for k in h.marquee %}
+          <li>{{ k | escape }}</li>
+          {%- endfor %}
+        </ul>
+      </div>
+    </div>
+    {%- endif %}
+  </section>
+
+  {%- if h.news and h.news.size > 0 %}
+  <section class="home-news" aria-labelledby="news-title">
+    <h2 class="section-title" id="news-title" data-reveal>{{ h.news_title | escape }}</h2>
+    {%- assign shown = h.news_show | default: 6 %}
+    <ol class="news" id="news-list" data-reveal-stagger>
+      {%- for item in h.news %}
+      <li data-reveal data-glow{% if forloop.index > shown %} class="news-extra" hidden{% endif %}>
+        <time datetime="{{ item.datetime }}">{{ item.date }}</time>
+        <span class="news-rail" aria-hidden="true"></span>
+        <span class="news-dot{% if forloop.first %} is-latest{% endif %}" aria-hidden="true"></span>
+        <p>{% include inline-md.html text=item.text %}</p>
+      </li>
+      {%- endfor %}
+    </ol>
+    {%- if h.news.size > shown %}
+    <button type="button" class="btn news-more" aria-expanded="false" aria-controls="news-list" data-more="{{ h.news_more | escape }}" data-less="{{ h.news_less | escape }}">
+      <span class="news-more-text">{{ h.news_more | escape }}</span>
+      <span class="news-more-count">+{{ h.news.size | minus: shown }}</span>
+      {% include icon.html name="chevron" %}
+    </button>
+    {%- endif %}
+  </section>
+  {%- endif %}
+
+  {%- if site.effects.ask_box and h.ask.questions and h.ask.questions.size > 0 %}
+  {%- assign ask = h.ask %}
+  <section class="ask" aria-labelledby="ask-title" data-reveal>
+    <h2 class="section-title" id="ask-title">{{ ask.title | escape }}</h2>
+    <div class="ask-box">
+      <div class="ask-log" aria-live="polite">
+        <div class="msg msg-bot">
+          <span class="msg-avatar" aria-hidden="true"><img src="/images/header-icon.png" alt="" width="28" height="27"></span>
+          <div class="msg-bubble"><span class="msg-name">{{ ask.bot_name | escape }}</span>{{ ask.greeting | escape }}</div>
+        </div>
+      </div>
+      <div class="ask-chips">
+        {%- for item in ask.questions %}
+        <button type="button" class="ask-chip" data-q="{{ forloop.index0 }}">{{ item.q | escape }}</button>
+        {%- endfor %}
+      </div>
+      {%- comment -%} Answers, already turned into HTML; the script types them out {%- endcomment -%}
+      {%- for item in ask.questions %}
+      <template data-answer="{{ forloop.index0 }}">{% include inline-md.html text=item.a %}</template>
+      {%- endfor %}
+    </div>
+  </section>
+  {%- endif %}
+</div>
