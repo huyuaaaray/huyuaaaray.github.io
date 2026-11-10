@@ -77,7 +77,7 @@ scripts:
     <ul class="stat-strip" data-reveal-stagger>
       {%- for st in h.stats %}
       <li data-reveal>
-        <span class="stat-num"><span class="count" data-count="{{ st.number }}">{{ st.number }}</span>{{ st.suffix | escape }}</span>
+        <span class="stat-num"><span class="count"{% if site.effects.odometer %} data-odo="{{ st.number }}"{% else %} data-count="{{ st.number }}"{% endif %}>{{ st.number }}</span>{{ st.suffix | escape }}</span>
         <span class="stat-label">{{ st.label | escape }}</span>
       </li>
       {%- endfor %}
@@ -141,11 +141,17 @@ scripts:
         {%- for item in ask.questions %}
         <button type="button" class="ask-chip" data-q="{{ forloop.index0 }}">{{ item.q | escape }}</button>
         {%- endfor %}
+        {%- if site.eggs.ask_joke.show and h.ask_joke %}
+        <button type="button" class="ask-chip" data-q="joke" hidden>{{ h.ask_joke.q | escape }}</button>
+        {%- endif %}
       </div>
       {%- comment -%} Answers, already turned into HTML; the script types them out {%- endcomment -%}
       {%- for item in ask.questions %}
       <template data-answer="{{ forloop.index0 }}">{% include inline-md.html text=item.a %}</template>
       {%- endfor %}
+      {%- if site.eggs.ask_joke.show and h.ask_joke %}
+      <template data-answer="joke">{% include inline-md.html text=h.ask_joke.a %}</template>
+      {%- endif %}
     </div>
   </section>
   {%- endif %}

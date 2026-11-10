@@ -130,7 +130,7 @@
 
   function spawnShot(now) {
     var fromLeft = Math.random() < 0.5;
-    var speed = wishPreview ? 0.25 : rand(0.42, 0.6);          // px per ms
+    var speed = wishPreview ? 0.12 : rand(0.21, 0.3);          // px per ms
     var angle = rand(0.33, 0.45);                               // radians below the horizontal
     shooting.push({
       x0: fromLeft ? rand(0.05, 0.45) * W : rand(0.55, 0.95) * W,
@@ -138,13 +138,13 @@
       vx: (fromLeft ? 1 : -1) * speed * Math.cos(angle),
       vy: speed * Math.sin(angle),
       born: now,
-      dur: wishPreview ? 2600 : rand(1100, 1500)                  // ms on screen
+      dur: wishPreview ? 5200 : rand(2200, 3000)                  // ms on screen
     });
     nextShot = now + (wishPreview ? rand(900, 1400) : rand(2500, 6000));
   }
 
   // where a shooting star is now: head (x, y) and the end of its tail
-  var TAIL_MS = 220;
+  var TAIL_MS = 440;
   function streak(m, now) {
     var t = Math.min(now - m.born, m.dur);
     var x = m.x0 + m.vx * t, y = m.y0 + m.vy * t;
@@ -152,7 +152,7 @@
   }
 
   /* ---------- Easter egg: click a shooting star to make a wish ---------- */
-  var sparkles = [];
+  var sparkles = [], rings = [], darts = [], glitter = [];
   var wishCfg = null;
   try {
     var eggs = (JSON.parse((document.getElementById('egg-data') || {}).textContent || '{}') || {}).eggs || {};
@@ -164,7 +164,7 @@
     for (var k = 0; k < shooting.length; k++) {
       var m = shooting[k], st = streak(m, now);
       // count the whole stretch the star covered in the last ~0.6 s, so a slightly late click still lands
-      var back = Math.min(now - m.born, m.dur, 600);
+      var back = Math.min(now - m.born, m.dur, 1000);
       var vx = -m.vx * back, vy = -m.vy * back;
       var t = Math.max(0, Math.min(1, ((cx - st.x) * vx + (cy - st.y) * vy) / (vx * vx + vy * vy || 1)));
       var dx = cx - (st.x + vx * t), dy = cy - (st.y + vy * t);
@@ -180,10 +180,27 @@
       if (k < 0) return;
       shooting.splice(k, 1);
       root.classList.remove('star-near');
-      for (var n = 0; n < 46; n++) {
-        var a = Math.random() * Math.PI * 2, v = 1 + Math.random() * 3;
+      for (var n = 0; n < 70; n++) {
+        var a = Math.random() * Math.PI * 2, v = 1 + Math.random() * 4;
         sparkles.push({ x: e.clientX, y: e.clientY, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1 });
       }
+      // two shock rings, a ring of tiny shooting stars, and gold glitter drifting down
+      rings.push({ x: e.clientX, y: e.clientY, r: 4, life: 1, speed: 3.2 }, { x: e.clientX, y: e.clientY, r: 2, life: 1.25, speed: 2 });
+      for (var q2 = 0; q2 < 12; q2++) {
+        var aa = (q2 / 12) * Math.PI * 2;
+        darts.push({ x: e.clientX, y: e.clientY, vx: Math.cos(aa) * 7, vy: Math.sin(aa) * 7, life: 1 });
+      }
+      for (var q3 = 0; q3 < 60; q3++) {
+        glitter.push({ x: e.clientX + (Math.random() - 0.5) * 160, y: e.clientY - Math.random() * 60, vy: 0.6 + Math.random() * 1.2,
+                       sway: Math.random() * 6.28, life: 1, hue: [45, 30, 200, 330][q3 % 4] });
+      }
+      var big = document.createElement('span');
+      big.className = 'wish-star';
+      big.textContent = '🌟';
+      big.style.left = e.clientX + 'px';
+      big.style.top = e.clientY + 'px';
+      document.body.appendChild(big);
+      setTimeout(function () { big.remove(); }, 1600);
       var w = document.createElement('span');
       w.className = 'wish-text';
       w.textContent = wishCfg.text || '✨';
@@ -255,6 +272,31 @@
       ctx.stroke();
       ctx.fillStyle = 'rgba(255,255,255,' + (0.9 * st.fade).toFixed(3) + ')';
       ctx.beginPath(); ctx.arc(st.x, st.y, 1.8, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // shock rings, little shooting stars and glitter from a wished-upon star
+    for (var ri = rings.length - 1; ri >= 0; ri--) {
+      var rg = rings[ri];
+      rg.r += rg.speed * 2.2; rg.life -= 0.018;
+      if (rg.life <= 0) { rings.splice(ri, 1); continue; }
+      ctx.strokeStyle = 'rgba(255,220,140,' + Math.min(1, rg.life).toFixed(3) + ')';
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(rg.x, rg.y, rg.r, 0, Math.PI * 2); ctx.stroke();
+    }
+    for (var di = darts.length - 1; di >= 0; di--) {
+      var dt2 = darts[di];
+      dt2.x += dt2.vx; dt2.y += dt2.vy; dt2.vx *= 0.95; dt2.vy *= 0.95; dt2.life -= 0.025;
+      if (dt2.life <= 0) { darts.splice(di, 1); continue; }
+      ctx.strokeStyle = 'rgba(255,255,255,' + dt2.life.toFixed(3) + ')';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(dt2.x, dt2.y); ctx.lineTo(dt2.x - dt2.vx * 4, dt2.y - dt2.vy * 4); ctx.stroke();
+    }
+    for (var gi = glitter.length - 1; gi >= 0; gi--) {
+      var gl = glitter[gi];
+      gl.y += gl.vy; gl.sway += 0.08; gl.x += Math.sin(gl.sway) * 0.6; gl.life -= 0.007;
+      if (gl.life <= 0) { glitter.splice(gi, 1); continue; }
+      ctx.fillStyle = 'hsla(' + gl.hue + ', 100%, 70%, ' + gl.life.toFixed(3) + ')';
+      ctx.fillRect(gl.x, gl.y, 2.4, 2.4 * Math.abs(Math.cos(gl.sway)) + 0.6);
     }
 
     // sparkles from a wished-upon star

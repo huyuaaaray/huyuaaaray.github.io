@@ -116,6 +116,26 @@ home:
         a: "I'd love to hear from you. Email me at [huyuaaaray@gmail.com](mailto:huyuaaaray@gmail.com) or find me on LinkedIn."
       - q: Tell me a secret.
         a: "Try clicking my name at the very top of this page. Go Gators!"
+  greeting:
+    morning: Good morning ☀️
+    afternoon: Good afternoon 🌤️
+    evening: Good evening 🌙
+    night: Hello, night owl 🦉
+  orbit_icons: ["🧠", "🩺", "💻", "🐊"]
+  code_rain:
+    - "from vllm import LLM, SamplingParams"
+    - "llm = LLM(model=\"google/gemma-4-31b\", max_model_len=65536)"
+    - "params = SamplingParams(temperature=0.0, max_tokens=1024)"
+    - "notes = load_notes(cohort=\"readmission\")"
+    - "for batch in chunks(notes, size=32):"
+    - "    outputs = llm.generate(build_prompts(batch), params)"
+    - "    verdicts = judge(outputs, rubric=\"clinical_safety\")"
+    - "    flag_for_review(v for v in verdicts if v.score < 3)"
+    - "graph = build_graph(entities, relations)"
+    - "communities = leiden(graph, levels=7)"
+  ask_joke:
+    q: Tell me a joke
+    a: "Why did the language model see a doctor? Too many hallucinations. Don't worry, catching those is my day job. 🐊"
   news_title: News
   news_show: 6
   news_more: More news
@@ -147,6 +167,19 @@ travel:
   globe_hint: Drag to spin the globe. Click it first, then use your mouse wheel to zoom. Arcs show trips from home; orange dots mark countries I've visited.
   map_hint: Click the map to zoom with your mouse wheel. Lines show trips from home; shaded countries are ones I've visited.
   preview_cta: Click for photos and videos
+  random_label: Take me somewhere
+  photo_wall_label: Photo wall
+  stats_panel:
+    title: By the numbers
+    miles: miles traveled
+    farthest: farthest from home
+    states: U.S. states
+    countries: countries
+    earth: times around the Earth
+    note: "Miles follow my trips in date order, as the crow flies."
+  states_map:
+    title: U.S. states I've visited
+    count: "{n} of 50 states"
   no_media: Photos and stories from this trip are coming soon.
   replay_label: Replay my travels
   replay_stop: Stop
@@ -365,16 +398,12 @@ cv:
   copy_label: Copy citation
   copied_label: Copied!
   highlights:
-    - 7 of 10
-    - 30–50 tokens/s
-    - three clinical programs
-    - 637K clinical notes
-    - 3,946 patients
-    - 143K entities
-    - 71K relations
-    - 243K attributes
-    - 2,040 communities
-    - from weeks to days
+    - LLM-as-a-Judge
+    - clinical safety failure mode
+    - config-driven LLM platform
+    - GraphRAG pipeline
+    - Leiden community detection
+    - clinically meaningful features
   experience_title: Experience
   education_title: Education
   publications_title: Publications
@@ -530,6 +559,13 @@ cv:
     - title: Reviewer, IEEE International Conference on Healthcare Informatics (ICHI)
       dates: 2024 – 2026
 
+photos:
+  title: Photo wall
+  description: Photos from the places Yu Hu has lived, worked, and visited.
+  intro: Every photo from my travels in one place. Pick a place to filter, and click a photo to see it full size.
+  all_label: All places
+  empty: Photos are on their way.
+
 not_found:
   title: Page not found
   game_hint: Press space or tap the game to play
@@ -574,10 +610,35 @@ effects:
   card_slideshow: true
   card_expand: true
   scroll_line: true
-  flip_clock: true
+  flip_clock: false
   hand_underline: true
   tilt_cards: true
   blur_load: true
+  title_shine: true
+  header_shrink: true
+  header_fx: true
+  nav_scramble: true
+  nav_flourish: true
+  scroll_skew: true
+  dot_grid: true
+  flow_border: true
+  odometer: true
+  code_rain: true
+  progress_ring: true
+  particle_name: true
+  ink_transition: true
+  orbit_icons: true
+  neon_dark: true
+  reading_focus: true
+  greeting: true
+  footer_wave: true
+  drag_photo: true
+  liquid_buttons: true
+  travel_stats: true
+  states_map: true
+  card_weather: true
+  random_place: true
+  photo_wall: true
 
 easter_egg:
   enabled: true
@@ -636,6 +697,71 @@ eggs:
     show: true
     visits: [10, 25, 50, 100]
     text: "Welcome back, regular! Visit #{n} 🐊"
+  hire:
+    show: true
+    word: hire
+    title: "Let's work together"
+    text: "I build clinical AI that clinicians can trust. If you're hiring or want to collaborate, I'd love to hear from you."
+    cv_label: Download CV
+    email_label: Email me
+  chomp:
+    show: true
+    word: chomp
+  time_machine:
+    show: true
+    clicks: 2
+    text: "Welcome to 2016! Click here to come back to today."
+  circle:
+    show: true
+    circles: 2
+    text: "Whoosh! 🐊"
+  copy_note:
+    show: true
+    text: "Copied! Don't forget to cite me 😉"
+  print_note:
+    show: true
+    text: "Thanks for printing! 🐊"
+  friday:
+    show: true
+    text: "Happy Friday! 🎉"
+  rain_gator:
+    show: true
+  sun_click:
+    show: true
+    text: "Too bright out here! 😎"
+  long_read:
+    show: true
+    minutes: 5
+    text: "Thanks for reading! Here's a coffee ☕"
+  ask_joke:
+    show: true
+  hipergator:
+    show: true
+    word: HiPerGator
+    text: "🐊💻🔥 Crunching clinical notes on 8 GPUs..."
+  gator_facts:
+    show: true
+    label: Gator fact
+    facts:
+      - "An American alligator has about 80 teeth at a time and can go through 2,000 to 3,000 teeth in its life."
+      - "Whether a baby alligator is male or female depends on the temperature of its nest."
+      - "Florida is home to about 1.3 million wild alligators."
+      - "A newly hatched alligator is only about 6 to 8 inches long."
+      - "Alligators have a see-through third eyelid that works like built-in swim goggles."
+      - "Gatorade was invented at the University of Florida in 1965 to help the Gators football team."
+      - "Albert the Alligator has cheered on the Gators since 1970; Alberta joined him in 1984."
+      - "An alligator's bite is one of the strongest of any living animal, but the muscles that open its jaws are weak."
+  fire_tail:
+    show: true
+    speed: 3
+  sleepy_icon:
+    show: true
+  april_fools:
+    show: true
+    text: "April Fools! 🐊"
+  pi_day:
+    show: true
+    digits: "3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798"
   gold_gator:
     show: true
     score: 20

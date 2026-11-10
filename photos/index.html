@@ -1,0 +1,56 @@
+---
+layout: default
+section: photos
+theme: night
+scripts:
+  - /assets/js/photos.js
+---
+{%- comment -%} All text on this page is in the "photos" section of _config.yml; the photos come from each Travel place {%- endcomment -%}
+{%- assign ph = site.photos -%}
+{%- assign all_files = site.static_files | sort: "path" -%}
+<div class="container photo-wall-page">
+  <div class="page-head" data-reveal>
+    <h1>{{ ph.title | escape }}</h1>
+    <p>{% include inline-md.html text=ph.intro %}</p>
+  </div>
+
+  <div class="pw-filters" role="toolbar" aria-label="{{ ph.title | escape }}" data-all="{{ ph.all_label | escape }}"></div>
+
+  <div class="pw-grid" data-empty="{{ ph.empty | escape }}">
+    {%- for p in site.travel.places -%}
+      {%- assign slug = p.name | slugify -%}
+      {%- assign dir = "/images/travel/" | append: slug | append: "/" -%}
+      {%- if p.photo_folder and p.photo_folder != "" %}{% assign dir = p.photo_folder %}{% endif -%}
+      {%- assign listed = "" -%}
+      {%- for x in p.photos -%}
+        {%- assign src = x.src | default: x -%}
+        {%- assign listed = listed | append: "|" | append: src -%}
+        {%- assign cap = x.caption | default: p.name -%}
+    <figure class="pw-item" data-place="{{ p.name | escape }}">
+      <a class="pw-link" href="{{ src }}"><img src="{{ src }}" alt="{{ cap | escape }}" loading="lazy"></a>
+      <figcaption><strong>{{ p.name | escape }}</strong>{% if x.caption %} · {{ x.caption | escape }}{% endif %}</figcaption>
+    </figure>
+      {%- endfor -%}
+      {%- for f in all_files -%}
+        {%- if f.path contains dir -%}
+          {%- assign ext = f.extname | downcase -%}
+          {%- if ext == ".jpg" or ext == ".jpeg" or ext == ".png" or ext == ".webp" or ext == ".gif" -%}
+            {%- unless listed contains f.path %}
+    <figure class="pw-item" data-place="{{ p.name | escape }}">
+      <a class="pw-link" href="{{ f.path }}"><img src="{{ f.path }}" alt="{{ p.name | escape }}" loading="lazy"></a>
+      <figcaption><strong>{{ p.name | escape }}</strong></figcaption>
+    </figure>
+            {%- endunless -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endfor %}
+  </div>
+</div>
+
+<div class="pw-lightbox" hidden>
+  <button type="button" class="pw-close" aria-label="Close">&times;</button>
+  <button type="button" class="pw-prev" aria-label="Previous photo">&#8249;</button>
+  <figure><img src="data:," alt=""><figcaption></figcaption></figure>
+  <button type="button" class="pw-next" aria-label="Next photo">&#8250;</button>
+</div>

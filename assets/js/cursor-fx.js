@@ -39,6 +39,12 @@
     var LIFE = 420;       // ms a point stays visible
     var running = false;
     var night = document.documentElement.classList.contains('theme-night');
+    // Easter egg: flick the mouse really fast and the tail catches fire for a moment
+    var fireCfg = null, fireUntil = 0, lastMove = null;
+    try {
+      var ee = (JSON.parse((document.getElementById('egg-data') || {}).textContent || '{}') || {}).eggs || {};
+      if (ee.fire_tail && ee.fire_tail.show !== false) fireCfg = { speed: Number(ee.fire_tail.speed || 3) };
+    } catch (e) { fireCfg = null; }
 
     var resize = function () {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -62,8 +68,10 @@
           // orange near the cursor, blue toward the end of the tail
           var r = Math.round(0 + (250 - 0) * k), g = Math.round(33 + (70 - 33) * k), b = Math.round(165 + (22 - 165) * k);
           if (night) { r = Math.round(140 + 115 * k); g = Math.round(170 + 30 * k); b = 255 - Math.round(120 * k); }
+          var onFire = now < fireUntil;
+          if (onFire) { r = 255; g = Math.round(60 + 170 * k); b = Math.round(20 * k); }
           ctx.strokeStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + (0.75 * fade * k).toFixed(3) + ')';
-          ctx.lineWidth = 1 + 5 * k * fade;
+          ctx.lineWidth = (1 + 5 * k * fade) * (onFire ? 1.9 : 1);
           ctx.beginPath();
           ctx.moveTo(p0.x, p0.y);
           ctx.lineTo(p1.x, p1.y);
@@ -85,6 +93,11 @@
       var list = (e.getCoalescedEvents && e.getCoalescedEvents()) || [];
       if (!list.length) list = [e];
       var now = performance.now();
+      if (fireCfg && lastMove) {
+        var dt = now - lastMove.t, dist = Math.hypot(e.clientX - lastMove.x, e.clientY - lastMove.y);
+        if (dt > 0 && dt < 80 && dist / dt > fireCfg.speed) fireUntil = now + 900;
+      }
+      lastMove = { x: e.clientX, y: e.clientY, t: now };
       for (var j = 0; j < list.length; j++) points.push({ x: list[j].clientX, y: list[j].clientY, t: now });
       while (points.length > 60) points.shift();
       if (!running) { running = true; requestAnimationFrame(draw); }

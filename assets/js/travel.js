@@ -697,7 +697,22 @@
         hold();
         world.pointOfView({ lat: p.lat, lng: p.lng, altitude: REST_ALT }, reduceMotion ? 0 : 1000);
       },
-      unpeek: function () { if (!replaying) resumeSoon(2500); }
+      unpeek: function () { if (!replaying) resumeSoon(2500); },
+      // "Take me somewhere": spin fast, slow down, fly to a random place and open it
+      roulette: function (pick, done) {
+        if (replaying) return;
+        hideTip();
+        var saved = controls.autoRotateSpeed;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = reduceMotion ? 0 : 38;
+        setTimeout(function () {
+          controls.autoRotateSpeed = saved;
+          hold();
+          var p = places[pick];
+          world.pointOfView({ lat: p.lat, lng: p.lng, altitude: FOCUS_ALT }, reduceMotion ? 0 : 1400);
+          setTimeout(done, reduceMotion ? 0 : 1450);
+        }, reduceMotion ? 0 : 1700);
+      }
     };
   }
 
@@ -1020,5 +1035,154 @@
         showPhoto(lbIndex + (dx < 0 ? 1 : -1), true);
       }
     });
+  }
+
+  /* ---------- "Take me somewhere": a random place ---------- */
+  var randomBtn = document.querySelector('.random-btn');
+  if (randomBtn) {
+    randomBtn.addEventListener('click', function () {
+      var choices = [];
+      places.forEach(function (p, i) { if (typeof p.lat === 'number' && i !== activeIndex) choices.push(i); });
+      if (!choices.length) return;
+      var pick = choices[(Math.random() * choices.length) | 0];
+      randomBtn.disabled = true;
+      var open = function () { randomBtn.disabled = false; openPlace(pick); };
+      if (globeApi && globeApi.roulette) globeApi.roulette(pick, open);
+      else open();
+    });
+  }
+
+  /* ---------- Trip stats: miles, farthest place, states, countries ---------- */
+  var MONTH_NAMES = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+  var SEASON = { spring: 3, summer: 6, fall: 9, autumn: 9, winter: 12 };
+  function whenKey(p) {
+    var d = String(p.date || '').toLowerCase(), y = d.match(/\d{4}/);
+    if (!y) return Infinity;
+    var head = d.slice(0, y.index), m = 0;
+    MONTH_NAMES.forEach(function (n, k) { if (!m && head.indexOf(n) !== -1) m = k + 1; });
+    Object.keys(SEASON).forEach(function (n) { if (!m && head.indexOf(n) !== -1) m = SEASON[n]; });
+    return Number(y[0]) * 12 + m;
+  }
+  function milesBetween(a, b) {
+    var R = 3958.8, toR = Math.PI / 180;
+    var dLat = (b.lat - a.lat) * toR, dLng = (b.lng - a.lng) * toR;
+    var h = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(a.lat * toR) * Math.cos(b.lat * toR) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    return 2 * R * Math.asin(Math.sqrt(h));
+  }
+  var located = places.filter(function (p) { return typeof p.lat === 'number' && typeof p.lng === 'number'; });
+  var homePlace = located.filter(function (p) { return p.home; })[0] || located[0];
+  var usStates = {};
+  places.forEach(function (p) {
+    if (String(p.country).toLowerCase() === 'usa' || /,\s*usa$/i.test(p.region || '')) {
+      var st = String(p.region || '').split(',')[0].trim();
+      if (st && !/^usa$/i.test(st)) usStates[st.toLowerCase()] = st;
+    }
+  });
+  var statsBox = document.querySelector('.trip-stats');
+  if (statsBox && located.length) {
+    var ordered = located.map(function (p, i) { return { p: p, i: i }; })
+      .sort(function (a, b) { var wa = whenKey(a.p), wb = whenKey(b.p); return wa === wb ? a.i - b.i : (wa < wb ? -1 : 1); })
+      .map(function (o) { return o.p; });
+    var total = 0;
+    for (var k = 1; k < ordered.length; k++) total += milesBetween(ordered[k - 1], ordered[k]);
+    var far = null, farMi = 0;
+    located.forEach(function (p) { var d = milesBetween(homePlace, p); if (d > farMi) { farMi = d; far = p; } });
+    var countriesSeen = {};
+    places.forEach(function (p) { if (p.country) countriesSeen[String(p.country).toLowerCase()] = true; });
+    var put = function (key, val, odo) {
+      var el = statsBox.querySelector('[data-ts="' + key + '"]');
+      if (!el) return;
+      el.textContent = val;
+      if (odo && window.siteOdometer && fxOn('odometer')) { el.setAttribute('data-odo', val); window.siteOdometer(el); }
+    };
+    put('miles', Math.round(total).toLocaleString('en-US'), true);
+    put('earth', (total / 24901).toFixed(1) + '×', false);
+    put('farthest', Math.round(farMi).toLocaleString('en-US') + ' mi', true);
+    put('farthest-name', far ? '(' + far.name + ')' : '', false);
+    put('states', String(Object.keys(usStates).length), true);
+    put('countries', String(Object.keys(countriesSeen).length), true);
+  }
+
+  /* ---------- U.S. states map: the states I've been to in orange ---------- */
+  var statesBox = document.querySelector('.states-map');
+  if (statesBox && window.fetch && window.topojson) {
+    var visited = usStates;
+    var countEl = statesBox.querySelector('.sm-count');
+    countEl.textContent = String(statesBox.getAttribute('data-count-text') || '{n}').replace('{n}', Object.keys(visited).length);
+    fetch('https://cdn.jsdelivr.net/npm/us-atlas@3.0.1/states-albers-10m.json', { integrity: 'sha384-vyqp+z8MYIFZU8V1K7x8eeS6f4qq+zp2l6YqE81ZLpCykssi+zpvpQSkQNRqIaJb' })
+      .then(function (r) { return r.json(); })
+      .then(function (us) {
+        var feats = topojson.feature(us, us.objects.states).features;
+        var ring = function (pts) { return 'M' + pts.map(function (q) { return q[0].toFixed(1) + ' ' + q[1].toFixed(1); }).join('L') + 'Z'; };
+        var svg = '<svg viewBox="0 0 975 610" role="img" aria-label="' + esc(countEl.textContent) + '">';
+        feats.forEach(function (f) {
+          var g = f.geometry; if (!g) return;
+          var polys = g.type === 'Polygon' ? [g.coordinates] : g.coordinates;
+          var d = polys.map(function (poly) { return poly.map(ring).join(''); }).join('');
+          var name = f.properties.name, on = !!visited[String(name).toLowerCase()];
+          svg += '<path d="' + d + '" class="' + (on ? 'is-visited' : '') + '"><title>' + esc(name) + '</title></path>';
+        });
+        statesBox.querySelector('.sm-svg').innerHTML = svg + '</svg>';
+      })
+      .catch(function () { /* the count still shows without the map */ });
+  }
+
+  /* ---------- Local time and weather on every card ---------- */
+  if (fxOn('cardweather') && cards.length && window.fetch) {
+    var unitAttr = ((document.querySelector('.local-now') || {}).getAttribute ? document.querySelector('.local-now').getAttribute('data-unit') : 'F') || 'F';
+    var unitC = unitAttr.toUpperCase() === 'C';
+    var ICON = function (code, day) {
+      if (code === 0) return day ? '☀️' : '🌙';
+      if (code <= 2) return '⛅';
+      if (code === 3) return '☁️';
+      if (code === 45 || code === 48) return '🌫️';
+      if (code >= 51 && code <= 67) return '🌧️';
+      if (code >= 71 && code <= 77) return '❄️';
+      if (code >= 80 && code <= 82) return '🌦️';
+      if (code >= 85 && code <= 86) return '🌨️';
+      if (code >= 95) return '⛈️';
+      return '☁️';
+    };
+    var badges = cards.map(function (card) {
+      var media = card.querySelector('.place-media');
+      if (!media) return null;
+      var b = document.createElement('span');
+      b.className = 'card-now';
+      b.hidden = true;
+      media.appendChild(b);
+      return b;
+    });
+    var idxs = [];
+    cards.forEach(function (card, n) { var i = Number(card.getAttribute('data-index')); if (typeof places[i].lat === 'number') idxs.push({ n: n, i: i }); });
+    var render = function (list) {
+      var stamp = function () {
+        idxs.forEach(function (o, k) {
+          var w = list[k], b = badges[o.n];
+          if (!w || !b || !w.current) return;
+          var local = new Date(Date.now() + (w.utc_offset_seconds || 0) * 1000);
+          var h = local.getUTCHours(), mi = local.getUTCMinutes();
+          var time = ((h % 12) || 12) + ':' + String(mi).padStart(2, '0') + ' ' + (h < 12 ? 'AM' : 'PM');
+          b.textContent = time + ' · ' + ICON(w.current.weather_code, w.current.is_day === 1) + ' ' + Math.round(w.current.temperature_2m) + '°' + (unitC ? 'C' : 'F');
+          b.hidden = false;
+        });
+      };
+      stamp();
+      setInterval(stamp, 30000);
+    };
+    var CACHE = 'cardWeather:' + idxs.map(function (o) { return o.i; }).join(',') + unitC;
+    var cached = null;
+    try { cached = JSON.parse(sessionStorage.getItem(CACHE) || 'null'); } catch (e) { cached = null; }
+    if (cached && Date.now() - cached.t < 15 * 60000) render(cached.list);
+    else if (idxs.length) {
+      var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + idxs.map(function (o) { return places[o.i].lat; }).join(',') +
+        '&longitude=' + idxs.map(function (o) { return places[o.i].lng; }).join(',') +
+        '&current=temperature_2m,weather_code,is_day&timezone=auto&temperature_unit=' + (unitC ? 'celsius' : 'fahrenheit');
+      fetch(url).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+        if (!d) return;
+        var list = Array.isArray(d) ? d : [d];
+        try { sessionStorage.setItem(CACHE, JSON.stringify({ t: Date.now(), list: list })); } catch (e) { /* ignore */ }
+        render(list);
+      }).catch(function () { /* cards work fine without it */ });
+    }
   }
 })();

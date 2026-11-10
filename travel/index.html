@@ -22,6 +22,9 @@ scripts:
     <h1{% if site.effects.flap_titles %} data-flap{% endif %}>{{ t.title | escape }}</h1>
     <p>{% include inline-md.html text=t.intro %}</p>
     <p class="travel-stats">{% include icon.html name="pin" %}<span><span class="count" data-count="{{ places.size }}">{{ places.size }}</span> {% if places.size == 1 %}{{ t.stats.place }}{% else %}{{ t.stats.places }}{% endif %} {{ t.stats.in }} <span class="count" data-count="{{ countries.size }}">{{ countries.size }}</span> {% if countries.size == 1 %}{{ t.stats.country }}{% else %}{{ t.stats.countries }}{% endif %}</span></p>
+    {%- if site.effects.photo_wall %}
+    <p><a class="btn photo-wall-link" href="/photos/">{% include icon.html name="image" %}{{ t.photo_wall_label | escape }}</a></p>
+    {%- endif %}
   </div>
 
   <div class="map-wrap{% if site.effects.globe %} is-globe{% endif %} reveal-delay-1" data-reveal>
@@ -30,9 +33,35 @@ scripts:
     <p class="replay-caption" aria-live="polite"><span class="rc-when"></span><span class="rc-where"></span></p>
     <button type="button" class="btn replay-btn" data-label="{{ t.replay_label | escape }}" data-stop="{{ t.replay_stop | escape }}">{% include icon.html name="play" %}{% include icon.html name="stop" %}<span class="replay-text">{{ t.replay_label | escape }}</span></button>
     {%- endif %}
+    {%- if site.effects.random_place %}
+    <button type="button" class="btn random-btn">{% include icon.html name="shuffle" %}<span>{{ t.random_label | escape }}</span></button>
+    {%- endif %}
   </div>
   <p class="map-hint" data-hint="globe"{% unless site.effects.globe %} hidden{% endunless %}>{% include inline-md.html text=t.globe_hint %}</p>
   <p class="map-hint" data-hint="flat"{% if site.effects.globe %} hidden{% endif %}>{% include inline-md.html text=t.map_hint %}</p>
+
+  {%- if site.effects.travel_stats %}
+  {%- assign sp = t.stats_panel %}
+  <section class="trip-stats" data-reveal aria-labelledby="trip-stats-title">
+    <h2 class="section-title" id="trip-stats-title">{{ sp.title | escape }}</h2>
+    <ul class="ts-grid">
+      <li><span class="ts-num" data-ts="miles">–</span><span class="ts-label">{{ sp.miles | escape }}</span></li>
+      <li><span class="ts-num" data-ts="earth">–</span><span class="ts-label">{{ sp.earth | escape }}</span></li>
+      <li><span class="ts-num" data-ts="farthest">–</span><span class="ts-label">{{ sp.farthest | escape }} <span data-ts="farthest-name"></span></span></li>
+      <li><span class="ts-num" data-ts="states">–</span><span class="ts-label">{{ sp.states | escape }}</span></li>
+      <li><span class="ts-num" data-ts="countries">–</span><span class="ts-label">{{ sp.countries | escape }}</span></li>
+    </ul>
+    <p class="ts-note">{{ sp.note | escape }}</p>
+  </section>
+  {%- endif %}
+
+  {%- if site.effects.states_map %}
+  <section class="states-map" data-reveal aria-labelledby="states-title" data-count-text="{{ t.states_map.count | escape }}">
+    <h2 class="section-title" id="states-title">{{ t.states_map.title | escape }}</h2>
+    <p class="sm-count"></p>
+    <div class="sm-svg"></div>
+  </section>
+  {%- endif %}
 
   <div class="places" data-reveal-stagger>
     {%- for p in places %}

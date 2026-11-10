@@ -11,7 +11,7 @@
   var D = {};
   try { D = JSON.parse((document.getElementById('egg-data') || {}).textContent || '{}') || {}; } catch (e) { D = {}; }
 
-  /* ---------- Highlighter: key numbers on the CV get a marker stroke as they scroll in ---------- */
+  /* ---------- Highlighter: a few key terms on the CV get a marker stroke as they scroll in ---------- */
   var cvBody = document.querySelector('.cv-body');
   if (has('marker') && cvBody && (D.highlights || []).length) {
     var esc = function (t) { return t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); };
@@ -23,10 +23,13 @@
     });
     var nodes = [];
     while (walker.nextNode()) if (re.test(walker.currentNode.nodeValue)) nodes.push(walker.currentNode);
+    var used = {};                                  // highlight each term only the first time it appears
     nodes.forEach(function (n) {
       re.lastIndex = 0;
       var frag = document.createDocumentFragment(), text = n.nodeValue, at = 0, m;
       while ((m = re.exec(text))) {
+        if (used[m[0]]) continue;
+        used[m[0]] = true;
         if (m.index > at) frag.appendChild(document.createTextNode(text.slice(at, m.index)));
         var mk = document.createElement('mark');
         mk.className = 'hl';

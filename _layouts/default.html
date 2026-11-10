@@ -21,6 +21,27 @@
   {%- if site.effects.hand_underline %} underline{% endif -%}
   {%- if site.effects.tilt_cards %} tilt{% endif -%}
   {%- if site.effects.blur_load %} blurload{% endif -%}
+  {%- if site.effects.title_shine %} shine{% endif -%}
+  {%- if site.effects.header_shrink %} shrink{% endif -%}
+  {%- if site.effects.header_fx %} headerfx{% endif -%}
+  {%- if site.effects.nav_scramble %} navscramble{% endif -%}
+  {%- if site.effects.nav_flourish %} navfx{% endif -%}
+  {%- if site.effects.scroll_skew %} skew{% endif -%}
+  {%- if site.effects.dot_grid %} dotgrid{% endif -%}
+  {%- if site.effects.flow_border %} flowborder{% endif -%}
+  {%- if site.effects.odometer %} odometer{% endif -%}
+  {%- if site.effects.code_rain %} coderain{% endif -%}
+  {%- if site.effects.progress_ring %} ring{% endif -%}
+  {%- if site.effects.particle_name %} particles{% endif -%}
+  {%- if site.effects.ink_transition %} ink{% endif -%}
+  {%- if site.effects.orbit_icons %} orbit{% endif -%}
+  {%- if site.effects.neon_dark %} neon{% endif -%}
+  {%- if site.effects.reading_focus %} focus{% endif -%}
+  {%- if site.effects.greeting %} greeting{% endif -%}
+  {%- if site.effects.footer_wave %} wave{% endif -%}
+  {%- if site.effects.drag_photo %} drag{% endif -%}
+  {%- if site.effects.liquid_buttons %} liquid{% endif -%}
+  {%- if site.effects.card_weather %} cardweather{% endif -%}
   {%- if site.effects.globe_card_link %} cardglobe{% endif -%}
   {%- if site.effects.cv_timeline %} timeline{% endif -%}
   {%- if site.effects.copy_citation %} cite{% endif -%}
@@ -70,9 +91,11 @@
 <script src="/assets/js/site.js"></script>
 <script src="/assets/js/cursor-fx.js"></script>
 <script src="/assets/js/extras.js"></script>
-<script id="egg-data" type="application/json">{"eggs": {{ site.eggs | jsonify }}, "tz": {{ site.footer_clock.timezone | default: "America/New_York" | jsonify }}, "highlights": {{ site.cv.highlights | jsonify }}}</script>
+<script id="egg-data" type="application/json">{"eggs": {{ site.eggs | jsonify }}, "tz": {{ site.footer_clock.timezone | default: "America/New_York" | jsonify }}, "highlights": {{ site.cv.highlights | jsonify }}, "greeting": {{ site.home.greeting | jsonify }}, "orbit": {{ site.home.orbit_icons | jsonify }}, "code": {{ site.home.code_rain | jsonify }}, "joke": {{ site.home.ask_joke | jsonify }}, "email": {{ site.author.email | jsonify }}}</script>
 <script src="/assets/js/eggs.js"></script>
 <script src="/assets/js/more-fx.js"></script>
+<script src="/assets/js/fx-plus.js"></script>
+<script src="/assets/js/eggs-plus.js"></script>
 {%- if site.holidays.enabled %}
 {%- assign hd = site.holidays %}
 <script id="holiday-data" type="application/json">{"tz": {{ site.footer_clock.timezone | default: "America/New_York" | jsonify }}, "h": {{ site.holidays | jsonify }}, "bday": {{ site.eggs.birthday | jsonify }}}</script>

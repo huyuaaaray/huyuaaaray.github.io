@@ -25,6 +25,11 @@
     // "Reduce animations" button: the visitor's choice is remembered.
     try { if (localStorage.getItem('lite') === '1') d.classList.add('lite'); } catch (e) { /* ignore */ }
 
+    // Ink page transition: the new page starts covered and the ink pulls back (see fx-plus.js)
+    try {
+      if ((' ' + (d.getAttribute('data-fx') || '') + ' ').indexOf(' ink ') !== -1 && sessionStorage.getItem('inkFrom')) d.classList.add('ink-in');
+    } catch (e) { /* storage blocked */ }
+
     // First-visit intro: only once per browser (add ?intro to the address to see it again).
     var fx = ' ' + (d.getAttribute('data-fx') || '') + ' ';
     if (fx.indexOf(' intro ') !== -1) {
