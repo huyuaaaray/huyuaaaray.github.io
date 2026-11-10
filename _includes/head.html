@@ -25,9 +25,11 @@
     // "Reduce animations" button: the visitor's choice is remembered.
     try { if (localStorage.getItem('lite') === '1') d.classList.add('lite'); } catch (e) { /* ignore */ }
 
-    // Ink page transition: the new page starts covered and the ink pulls back (see fx-plus.js)
+    // Page transitions (star warp to Travel, page turn to CV, gator jaws elsewhere):
+    // the new page starts covered and the cover then opens (see fx-plus.js)
     try {
-      if ((' ' + (d.getAttribute('data-fx') || '') + ' ').indexOf(' ink ') !== -1 && sessionStorage.getItem('inkFrom')) d.classList.add('ink-in');
+      var pt = sessionStorage.getItem('ptType');
+      if ((' ' + (d.getAttribute('data-fx') || '') + ' ').indexOf(' pagefx ') !== -1 && pt) { d.classList.add('pt-in'); d.setAttribute('data-pt', pt); }
     } catch (e) { /* storage blocked */ }
 
     // First-visit intro: only once per browser (add ?intro to the address to see it again).

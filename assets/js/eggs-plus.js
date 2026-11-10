@@ -53,9 +53,26 @@
     var targets = document.querySelectorAll('.photo, .place-card, .news li, .ask-box, .research-banner, .cv-section .entry, .stat-strip li');
     Array.prototype.forEach.call(targets, function (el, i) {
       setTimeout(function () {
+        if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
         el.classList.add('is-bitten');
-        setTimeout(function () { el.classList.remove('is-bitten'); }, 3000);
-      }, i * 60);
+        // cracks around the bite, and a few crumbs falling off
+        var crack = document.createElement('span');
+        crack.className = 'bite-crack';
+        crack.setAttribute('aria-hidden', 'true');
+        el.appendChild(crack);
+        var w = el.getBoundingClientRect().width, size = Math.min(160, w * 0.6);
+        for (var c = 0; c < 6; c++) {
+          var cr = document.createElement('span');
+          cr.className = 'bite-crumb';
+          cr.setAttribute('aria-hidden', 'true');
+          cr.style.right = (size * (0.15 + Math.random() * 0.5)).toFixed(0) + 'px';
+          cr.style.top = (size * (0.1 + Math.random() * 0.45)).toFixed(0) + 'px';
+          cr.style.setProperty('--cx', ((Math.random() - 0.5) * 40).toFixed(0) + 'px');
+          el.appendChild(cr);
+          setTimeout(function (n) { return function () { n.remove(); }; }(cr), 950);
+        }
+        setTimeout(function () { el.classList.remove('is-bitten'); crack.remove(); }, 3200);
+      }, i * 70);
     });
     toast('CHOMP! 🐊', 2000);
   }

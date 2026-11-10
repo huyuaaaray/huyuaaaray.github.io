@@ -209,6 +209,23 @@
     if (tb) tb.textContent = TERM_ICONS[termIdx];
   }
 
+  /* ---------- Holiday colors for the line under the header ---------- */
+  if ((' ' + (root.getAttribute('data-fx') || '') + ' ').indexOf(' holidaycolors ') !== -1) {
+    var PAL = {
+      christmas: ['#c92a2a', '#2b8a3e', '#f8f9fa', '#c92a2a'], winter_snow: ['#74c0fc', '#e7f5ff', '#a5d8ff', '#74c0fc'],
+      halloween: ['#f76707', '#212529', '#7048e8', '#f76707'], thanksgiving: ['#d9480f', '#b8860b', '#8c4a12', '#d9480f'],
+      valentines: ['#e64980', '#ffdeeb', '#c2255c', '#e64980'], qixi: ['#e64980', '#9775fa', '#ffdeeb', '#e64980'],
+      st_patricks: ['#2b8a3e', '#69db7c', '#fcc419', '#2b8a3e'], easter: ['#b197fc', '#ffc9de', '#a5d8ff', '#b197fc'],
+      mothers_day: ['#f783ac', '#ffc9de', '#b197fc', '#f783ac'], new_year: ['#fcc419', '#7048e8', '#f8f9fa', '#fcc419'],
+      mid_autumn: ['#f2c35b', '#1c2541', '#ffe8a3', '#f2c35b'], birthday: ['#f06595', '#ff922b', '#fcc419', '#f06595'],
+      gameday: ['#0021a5', '#fa4616', '#0021a5', '#fa4616']
+    };
+    var US_FLAG = ['#b22234', '#f8f9fa', '#3c3b6e', '#b22234'], CN_RED = ['#c92a2a', '#fcc419', '#c92a2a', '#fcc419'], TERM = ['#2f6b5a', '#8aa36b', '#cfe8c8', '#2f6b5a'];
+    var firstId = game ? 'gameday' : active.length ? active[0].id : (termIdx >= 0 ? 'term' : '');
+    var pal = PAL[firstId] || (CHINESE.indexOf(firstId) !== -1 ? CN_RED : firstId === 'term' ? TERM : firstId ? US_FLAG : null);
+    if (pal) root.style.setProperty('--hdr-line', 'linear-gradient(90deg, transparent, ' + pal.join(', ') + ', transparent)');
+  }
+
   /* ---------- Decorations ---------- */
   var effects = {};
   active.forEach(function (a) { effects[a.effect] = true; });

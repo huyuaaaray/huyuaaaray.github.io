@@ -13,6 +13,29 @@
   try { D = JSON.parse((document.getElementById('egg-data') || {}).textContent || '{}') || {}; } catch (e) { D = {}; }
   var each = function (sel, fn) { Array.prototype.forEach.call(document.querySelectorAll(sel), fn); };
   var SCRAMBLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&@$';
+  // A simple silhouette of Gainesville: live oaks, campus buildings and Century Tower (windows light up at night)
+  var SKYLINE = '<svg viewBox="0 0 1200 90" preserveAspectRatio="xMidYMax slice">' +
+    '<g class="sk-trees">' +
+      '<circle cx="60" cy="62" r="26"/><circle cx="92" cy="56" r="30"/><circle cx="128" cy="64" r="22"/>' +
+      '<circle cx="330" cy="60" r="24"/><circle cx="362" cy="66" r="20"/>' +
+      '<circle cx="880" cy="58" r="28"/><circle cx="916" cy="64" r="22"/>' +
+      '<circle cx="1090" cy="60" r="26"/><circle cx="1124" cy="56" r="30"/><circle cx="1160" cy="64" r="24"/>' +
+    '</g>' +
+    '<g class="sk-build">' +
+      '<path d="M170 90 V58 L200 44 L230 58 V90 Z"/><rect x="230" y="62" width="70" height="28"/>' +
+      '<path d="M420 90 V60 H470 V52 L495 40 L520 52 V60 H570 V90 Z"/>' +
+      '<rect x="700" y="58" width="90" height="32"/><path d="M790 90 V64 L815 54 L840 64 V90 Z"/>' +
+      '<rect x="960" y="60" width="80" height="30"/>' +
+      '<path d="M620 90 V30 H610 L632 4 L654 30 H644 V90 Z"/>' +
+    '</g>' +
+    '<g class="sk-win">' +
+      '<rect x="182" y="66" width="6" height="8"/><rect x="200" y="66" width="6" height="8"/><rect x="246" y="70" width="6" height="7"/><rect x="270" y="70" width="6" height="7"/>' +
+      '<rect x="436" y="68" width="6" height="8"/><rect x="458" y="68" width="6" height="8"/><rect x="490" y="56" width="10" height="10"/><rect x="530" y="68" width="6" height="8"/><rect x="552" y="68" width="6" height="8"/>' +
+      '<rect x="714" y="66" width="6" height="8"/><rect x="740" y="66" width="6" height="8"/><rect x="766" y="66" width="6" height="8"/>' +
+      '<rect x="976" y="68" width="6" height="7"/><rect x="1000" y="68" width="6" height="7"/><rect x="1022" y="68" width="6" height="7"/>' +
+      '<circle class="sk-clock" cx="632" cy="40" r="5"/><rect x="628" y="54" width="8" height="10"/>' +
+    '</g></svg>';
+
 
   /* ---------- Title shine: a wave of light runs across a title when you point at it ---------- */
   if (has('shine') && !reduceMotion) {
@@ -284,43 +307,199 @@
     });
   }
 
-  /* ---------- Ink transition between pages ---------- */
-  if (has('ink') && !reduceMotion) {
-    // arriving: the ink that covered the old page pulls back to reveal this one
-    if (root.classList.contains('ink-in')) {
-      var from = (sessionStorage.getItem('inkFrom') || '50,50').split(',');
-      sessionStorage.removeItem('inkFrom');
-      var cover = document.createElement('div');
-      cover.className = 'ink is-full';
-      cover.style.setProperty('--ix', from[0] + '%');
-      cover.style.setProperty('--iy', from[1] + '%');
-      document.body.appendChild(cover);
-      root.classList.remove('ink-in');
-      requestAnimationFrame(function () { requestAnimationFrame(function () { cover.classList.add('is-out'); }); });
-      setTimeout(function () { cover.remove(); }, 900);
+  /* ---------- Page transitions ----------
+     Going to Travel: a hyperspace star warp. Going to the CV: a page turns like a book.
+     Anywhere else: gator jaws snap shut and open again on the new page. */
+  if (has('pagefx') && !reduceMotion) {
+    var TEETH_DOWN = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='26'%3E%3Cpath d='M2 0 L22 26 L42 0 Z' fill='%23fbfaf6'/%3E%3C/svg%3E\")";
+    var TEETH_UP = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='26'%3E%3Cpath d='M2 26 L22 0 L42 26 Z' fill='%23fbfaf6'/%3E%3C/svg%3E\")";
+    var typeFor = function (path) { return /^\/travel\b/.test(path) ? 'warp' : /^\/cv\b/.test(path) ? 'book' : 'jaws'; };
+
+    var build = function (type) {
+      var o = document.createElement('div');
+      o.className = 'pt pt-' + type;
+      o.setAttribute('aria-hidden', 'true');
+      if (type === 'jaws') {
+        o.innerHTML = '<span class="pt-jaw pt-top"><i style="background-image:' + TEETH_DOWN.replace(/"/g, '&quot;') + '"></i></span>' +
+                      '<span class="pt-jaw pt-bottom"><i style="background-image:' + TEETH_UP.replace(/"/g, '&quot;') + '"></i></span>';
+      } else if (type === 'book') {
+        o.innerHTML = '<span class="pt-page"><span class="pt-lines"></span></span>';
+      } else {
+        o.innerHTML = '<canvas class="pt-warp"></canvas>';
+      }
+      document.body.appendChild(o);
+      return o;
+    };
+
+    // Hyperspace: stars stream out of the middle, faster and longer, then (on arrival) slow down
+    var warp = function (o, out, ms, done) {
+      var cv = o.querySelector('canvas'), x = cv.getContext('2d');
+      var W = cv.width = innerWidth, H = cv.height = innerHeight, cx = W / 2, cy = H / 2;
+      var stars = [];
+      for (var i = 0; i < 260; i++) stars.push({ a: Math.random() * Math.PI * 2, r: Math.random() * Math.max(W, H) * 0.5, s: 0.4 + Math.random() });
+      var t0 = performance.now();
+      var step = function (now) {
+        var t = Math.min(1, (now - t0) / ms), k = out ? t : 1 - t;                 // speed: up when leaving, down when arriving
+        x.fillStyle = 'rgba(7,11,31,' + (out ? 0.25 + 0.75 * t * t : 1) + ')';
+        x.fillRect(0, 0, W, H);
+        x.lineCap = 'round';
+        stars.forEach(function (st) {
+          var v = (2 + 40 * k * k) * st.s;
+          st.r += v;
+          if (st.r > Math.max(W, H)) st.r = Math.random() * 40;
+          var x1 = cx + Math.cos(st.a) * st.r, y1 = cy + Math.sin(st.a) * st.r;
+          var len = 2 + 120 * k * k * st.s;
+          x.strokeStyle = 'rgba(' + (200 + (st.s * 55 | 0)) + ',215,255,' + (0.5 + 0.5 * st.s) + ')';
+          x.lineWidth = 1 + st.s;
+          x.beginPath(); x.moveTo(x1, y1); x.lineTo(x1 - Math.cos(st.a) * len, y1 - Math.sin(st.a) * len); x.stroke();
+        });
+        if (t < 1) requestAnimationFrame(step); else done();
+      };
+      requestAnimationFrame(step);
+    };
+
+    // arriving: the cover opens
+    if (root.classList.contains('pt-in')) {
+      var type = root.getAttribute('data-pt') || 'jaws';
+      sessionStorage.removeItem('ptType');
+      var cover = build(type);
+      cover.classList.add('is-closed');
+      root.classList.remove('pt-in');
+      root.removeAttribute('data-pt');
+      var finish = function () { cover.classList.add('is-gone'); setTimeout(function () { cover.remove(); }, 450); };
+      if (type === 'warp') {
+        warp(cover, false, 750, finish);
+      } else {
+        requestAnimationFrame(function () { requestAnimationFrame(function () { cover.classList.remove('is-closed'); cover.classList.add('is-opening'); }); });
+        setTimeout(function () { cover.remove(); }, type === 'book' ? 900 : 800);
+      }
     }
-    // leaving: ink spreads from where you clicked, then the next page loads
+
+    // leaving
     document.addEventListener('click', function (e) {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       var a = e.target.closest && e.target.closest('a[href]');
       if (!a || a.target === '_blank' || a.hasAttribute('download') || a.hasAttribute('data-photo')) return;
       var url = new URL(a.href, location.href);
       if (url.origin !== location.origin || /^(mailto|tel):/.test(a.href)) return;
-      if (url.pathname === location.pathname && url.hash) return;            // just a jump on this page
+      if (url.pathname === location.pathname) return;                     // same page (or just a #jump)
       if (/\.(pdf|jpg|jpeg|png|webp|zip)$/i.test(url.pathname)) return;
       e.preventDefault();
-      var px = (e.clientX / window.innerWidth * 100).toFixed(1), py = (e.clientY / window.innerHeight * 100).toFixed(1);
-      try { sessionStorage.setItem('inkFrom', px + ',' + py); } catch (err) { /* ignore */ }
-      var ink = document.createElement('div');
-      ink.className = 'ink is-in';
-      ink.style.setProperty('--ix', px + '%');
-      ink.style.setProperty('--iy', py + '%');
-      document.body.appendChild(ink);
-      requestAnimationFrame(function () { requestAnimationFrame(function () { ink.classList.add('is-full'); }); });
-      setTimeout(function () { location.href = url.href; }, 520);
+      var type = typeFor(url.pathname);
+      try { sessionStorage.setItem('ptType', type); } catch (err) { /* ignore */ }
+      var o = build(type);
+      var go = function () { location.href = url.href; };
+      if (type === 'warp') { warp(o, true, 700, go); }
+      else {
+        requestAnimationFrame(function () { requestAnimationFrame(function () { o.classList.add('is-closing'); }); });
+        setTimeout(go, type === 'book' ? 650 : 560);
+      }
     });
-    // coming back with the browser's Back button: don't leave ink on the page
-    window.addEventListener('pageshow', function (e) { if (e.persisted) each('.ink', function (n) { n.remove(); }); });
+    window.addEventListener('pageshow', function (e) { if (e.persisted) each('.pt', function (n) { n.remove(); }); });
+  }
+
+  /* ---------- Header: hides while you scroll down, comes back when you scroll up ---------- */
+  if (has('smarthead')) {
+    var lastHY = window.scrollY, hideTick = false;
+    window.addEventListener('scroll', function () {
+      if (hideTick) return;
+      hideTick = true;
+      requestAnimationFrame(function () {
+        hideTick = false;
+        var y = window.scrollY, dy = y - lastHY;
+        if (Math.abs(dy) < 6) return;
+        root.classList.toggle('header-hidden', dy > 0 && y > 220 && !document.querySelector('dialog[open]'));
+        lastHY = y;
+      });
+    }, { passive: true });
+  }
+
+  /* ---------- Header sky, fireflies, a crawling gator, and the logo blinking ---------- */
+  var header = document.querySelector('.site-header');
+  if (header) {
+    var hour = new Date().getHours();                                       // the visitor's own clock
+    var period = hour >= 5 && hour < 8 ? 'dawn' : hour >= 8 && hour < 17 ? 'day' : hour >= 17 && hour < 20 ? 'dusk' : 'night';
+    var sky = (location.search.match(/[?&]sky=(dawn|day|dusk|night)\b/) || [])[1];
+    if (sky) period = sky;
+    root.setAttribute('data-period', period);
+    if (has('headsky')) {
+      var hs = document.createElement('span');
+      hs.className = 'hdr-sky';
+      hs.setAttribute('aria-hidden', 'true');
+      header.insertBefore(hs, header.firstChild);
+    }
+    if (has('fireflies') && !reduceMotion) {
+      var ff = document.createElement('span');
+      ff.className = 'hdr-flies';
+      ff.setAttribute('aria-hidden', 'true');
+      for (var f = 0; f < 9; f++) {
+        var b = document.createElement('i');
+        b.style.left = (5 + Math.random() * 90).toFixed(1) + '%';
+        b.style.top = (15 + Math.random() * 70).toFixed(1) + '%';
+        b.style.animationDelay = (-Math.random() * 8).toFixed(2) + 's, ' + (-Math.random() * 3).toFixed(2) + 's';
+        b.style.animationDuration = (6 + Math.random() * 6).toFixed(2) + 's, ' + (1.6 + Math.random() * 2).toFixed(2) + 's';
+        ff.appendChild(b);
+      }
+      header.insertBefore(ff, header.firstChild);
+    }
+    if (has('headgator') && !reduceMotion) {
+      var hg = document.createElement('span');
+      hg.className = 'hdr-gator';
+      hg.setAttribute('aria-hidden', 'true');
+      hg.innerHTML = '<span>🐊</span>';
+      header.appendChild(hg);
+    }
+    var logo = header.querySelector('.brand img');
+    if (has('blink') && logo && !reduceMotion) {
+      var blinkLater = function () {
+        setTimeout(function () {
+          if (!document.hidden && !isLite()) {
+            var move = Math.random() < 0.7 ? 'is-blinking' : 'is-yawning';
+            logo.classList.add(move);
+            setTimeout(function () { logo.classList.remove(move); }, move === 'is-blinking' ? 520 : 1300);
+          }
+          blinkLater();
+        }, 4000 + Math.random() * 6000);
+      };
+      blinkLater();
+    }
+  }
+
+  /* ---------- Footer: Gainesville skyline, a swimming gator, and the season ---------- */
+  var foot = document.querySelector('.site-footer');
+  if (foot) {
+    if (has('skyline')) {
+      var sk = document.createElement('div');
+      sk.className = 'footer-skyline';
+      sk.setAttribute('aria-hidden', 'true');
+      sk.innerHTML = SKYLINE;
+      foot.insertBefore(sk, foot.firstChild);
+    }
+    if (has('swimmer') && !reduceMotion) {
+      var sw = document.createElement('span');
+      sw.className = 'footer-swimmer';
+      sw.setAttribute('aria-hidden', 'true');
+      sw.innerHTML = '<span>🐊</span>';
+      foot.appendChild(sw);
+    }
+    if (has('seasons') && !reduceMotion) {
+      var m = new Date().getMonth() + 1;                                   // the visitor's own calendar
+      var season = (location.search.match(/[?&]season=(spring|summer|fall|winter)\b/) || [])[1] ||
+        (m >= 3 && m <= 5 ? 'spring' : m >= 6 && m <= 8 ? 'summer' : m >= 9 && m <= 11 ? 'fall' : 'winter');
+      var glyph = { spring: ['🌸', '🌸', '🌼'], summer: ['', '', ''], fall: ['🍂', '🍁', '🍂'], winter: ['❄️', '❄️', '✻'] }[season];
+      var se = document.createElement('div');
+      se.className = 'footer-season season-' + season;
+      se.setAttribute('aria-hidden', 'true');
+      for (var q = 0; q < 12; q++) {
+        var it = document.createElement('i');
+        it.textContent = glyph[q % 3];
+        it.style.left = (q * 8.3 + Math.random() * 6).toFixed(1) + '%';
+        it.style.animationDelay = (-Math.random() * 12).toFixed(2) + 's';
+        it.style.animationDuration = (8 + Math.random() * 7).toFixed(2) + 's';
+        se.appendChild(it);
+      }
+      foot.insertBefore(se, foot.firstChild);
+    }
   }
 
   /* ---------- Orbit icons: little icons circling the profile photo ---------- */

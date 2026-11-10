@@ -619,21 +619,30 @@ effects:
   header_fx: true
   nav_scramble: true
   nav_flourish: true
-  scroll_skew: true
+  scroll_skew: false
   dot_grid: true
-  flow_border: true
-  odometer: true
+  flow_border: false
+  odometer: false
   code_rain: true
   progress_ring: true
-  particle_name: true
-  ink_transition: true
-  orbit_icons: true
+  particle_name: false
+  page_transition: true
+  orbit_icons: false
   neon_dark: true
   reading_focus: true
   greeting: true
   footer_wave: true
   drag_photo: true
   liquid_buttons: true
+  smart_header: true
+  header_sky: true
+  header_fireflies: true
+  header_gator: true
+  header_blink: true
+  holiday_colors: true
+  footer_skyline: true
+  footer_swimmer: true
+  footer_seasons: true
   travel_stats: true
   states_map: true
   card_weather: true
@@ -712,7 +721,7 @@ eggs:
     clicks: 2
     text: "Welcome to 2016! Click here to come back to today."
   circle:
-    show: true
+    show: false
     circles: 2
     text: "Whoosh! 🐊"
   copy_note:
@@ -736,7 +745,7 @@ eggs:
   ask_joke:
     show: true
   hipergator:
-    show: true
+    show: false
     word: HiPerGator
     text: "🐊💻🔥 Crunching clinical notes on 8 GPUs..."
   gator_facts:
@@ -752,7 +761,7 @@ eggs:
       - "Albert the Alligator has cheered on the Gators since 1970; Alberta joined him in 1984."
       - "An alligator's bite is one of the strongest of any living animal, but the muscles that open its jaws are weak."
   fire_tail:
-    show: true
+    show: false
     speed: 3
   sleepy_icon:
     show: true
