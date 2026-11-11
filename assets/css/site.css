@@ -4466,11 +4466,11 @@ html.star-near body {
   mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 45%, transparent 100%);
   left: 0;
   right: 0;
-  top: -40px;
+  top: -30px;
   z-index: -1;
-  height: 440px;
+  height: 330px;
   pointer-events: none;
-  opacity: 0.95;
+  opacity: 0.57;
 }
 
 /* the colors slowly shift: blue → violet → orange and back */
@@ -6892,6 +6892,10 @@ html.caffeinated body { animation: jitter 0.12s steps(2) 12; }
 }
 
 /* CV summary: justified, so both edges line up */
+.page-head p.cv-summary {
+  max-width: none;
+}
+
 .cv-summary {
   text-align: justify;
   text-justify: inter-word;

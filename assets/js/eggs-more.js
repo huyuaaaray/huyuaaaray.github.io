@@ -163,10 +163,11 @@
 
   /* ---------- Make the window very narrow: a squeezed gator ---------- */
   if (on('squeeze')) {
-    var limit = Number(E.squeeze.width || 480), wasWide = innerWidth > limit + 60, sqCool = 0;
+    // only when a person drags a wide window narrow (not while the page is still loading)
+    var limit = Number(E.squeeze.width || 480), wasWide = innerWidth > limit + 60, sqCool = Date.now() + 4000;
     window.addEventListener('resize', function () {
       if (innerWidth > limit + 60) { wasWide = true; return; }
-      if (innerWidth < limit && wasWide && Date.now() > sqCool) {
+      if (innerWidth < limit && wasWide && Date.now() > sqCool && !document.hidden) {
         wasWide = false; sqCool = Date.now() + 8000;
         var s = make('egg-squeeze', '<span class="sq-gator">🐊</span><span class="sq-text"></span>');
         s.querySelector('.sq-text').textContent = E.squeeze.text || '';
