@@ -48,6 +48,7 @@ footer_clock:
 nav:
   - label: Travel
     url: /travel/
+    icon: plane
   - label: CV
     url: /cv/
 
@@ -810,7 +811,7 @@ eggs:
   name_disco:
     show: true
   theme_disco:
-    show: true
+    show: false
     toggles: 5
     text: "Make up your mind! 🌗"
   select_all:

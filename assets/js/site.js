@@ -31,7 +31,7 @@
   }
 
   /* ---------- Light / dark: header button, browser bar color, following the system ---------- */
-  var THEME_BG = { light: '#f6f5f8', dark: '#0e1320', latte: '#f4ece2', matcha: '#eef3e6' };
+  var THEME_BG = { light: '#f6f5f8', dark: '#0e1320', latte: '#ead9c3', matcha: '#dfead0' };
   function syncThemeColor() {
     if (root.classList.contains('theme-night')) return;
     var c = THEME_BG[root.getAttribute('data-theme')] || THEME_BG.light;
@@ -45,7 +45,11 @@
     var btn = document.querySelector('.theme-toggle');
     if (!btn) return;
     var order = (btn.getAttribute('data-themes') || 'light dark').split(/\s+/);
-    btn.setAttribute('data-next', order[(order.indexOf(root.getAttribute('data-theme')) + 1) % order.length] || 'light');
+    var nx = order[(order.indexOf(root.getAttribute('data-theme')) + 1) % order.length] || 'light';
+    btn.setAttribute('data-next', nx);
+    var label = 'Switch to ' + nx.charAt(0).toUpperCase() + nx.slice(1) + ' theme';
+    btn.setAttribute('title', label);
+    btn.setAttribute('aria-label', label);
   }
   function applyTheme(t, remember) {
     root.setAttribute('data-theme', t);

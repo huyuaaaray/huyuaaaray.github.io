@@ -307,6 +307,23 @@ h3 {
 .icon-btn[data-brand="linkedin"] { --brand: var(--c-linkedin); }
 .icon-btn[data-brand="scholar"] { --brand: var(--c-scholar); }
 .icon-btn[data-brand="email"] { --brand: var(--c-email); }
+.icon-btn[data-brand="plane"] { --brand: #ff2bd6; }
+
+/* Travel in the header: a plane that glows fluorescent pink and takes off a little on hover */
+.nav-icon[data-brand="plane"]:hover .icon,
+.nav-icon[data-brand="plane"]:focus-visible .icon {
+  filter: drop-shadow(0 0 4px rgba(255, 43, 214, 0.9)) drop-shadow(0 0 10px rgba(255, 43, 214, 0.55));
+  animation: plane-hop 0.7s var(--ease);
+}
+
+.nav-icon[aria-current="page"] {
+  color: #ff2bd6;
+}
+
+@keyframes plane-hop {
+  40% { transform: translate(3px, -4px) rotate(-8deg) scale(1.15); }
+  100% { transform: scale(1.1); }
+}
 
 .icon-btn:hover {
   color: var(--brand, var(--accent));
@@ -2125,28 +2142,28 @@ html[data-fx~="glow"] .to-top:hover {
 /* Latte and Matcha themes: light themes in coffee and green tea colors */
 :root[data-theme="latte"] {
   color-scheme: light;
-  --bg: #f4ece2;
-  --surface: #fbf6ef;
-  --surface-2: #efe3d4;
-  --text: #3b2a20;
-  --muted: #7d6656;
-  --line: #e2d3c1;
-  --accent: #8b5a2b;
-  --accent-strong: #6b4220;
-  --accent-soft: rgba(139, 90, 43, 0.1);
-  --mark: #c0702e;
+  --bg: #ead9c3;
+  --surface: #f6ebdc;
+  --surface-2: #e2ccb0;
+  --text: #3a2416;
+  --muted: #7a5a43;
+  --line: #d6bd9c;
+  --accent: #7b4a22;
+  --accent-strong: #5c3416;
+  --accent-soft: rgba(123, 74, 34, 0.12);
+  --mark: #c4652a;
   --net-rgb: 139, 90, 43;
   --pulse-rgb: 192, 112, 46;
 }
 
 :root[data-theme="matcha"] {
   color-scheme: light;
-  --bg: #eef3e6;
-  --surface: #f8fbf3;
-  --surface-2: #e2ebd6;
-  --text: #24321f;
-  --muted: #5d6f55;
-  --line: #d4e0c6;
+  --bg: #dfead0;
+  --surface: #eef5e4;
+  --surface-2: #cfe0bb;
+  --text: #22301c;
+  --muted: #566b4c;
+  --line: #bfd3a6;
   --accent: #4f7a2a;
   --accent-strong: #3a5c1e;
   --accent-soft: rgba(79, 122, 42, 0.1);
@@ -5686,18 +5703,19 @@ html[data-fx~="headerfx"] .site-header::after {
    Transitions, round 2: rising water (CV) and a glitch (404)
    ========================================================= */
 html.pt-in[data-pt="liquid"]::after { background: #1c5fd6; }
-html.pt-in[data-pt="fade"]::after { background: var(--bg); }
+html.pt-in[data-pt="fade"]::after { background: linear-gradient(135deg, #0021a5, #6a3fc4 50%, #fa4616); }
 
+/* CV: the screen fades into a blue → purple → orange gradient, then the CV fades in */
 .pt-fade {
-  background: var(--bg);
+  background: linear-gradient(135deg, #0021a5, #6a3fc4 50%, #fa4616);
   opacity: 0;
-  transition: opacity 360ms var(--ease);
+  transition: opacity 420ms var(--ease);
 }
 
 .pt-fade.is-closing,
 .pt-fade.is-closed { opacity: 1; }
 .pt-fade.is-closed { transition: none; }
-.pt-fade.is-opening { opacity: 0; transition-duration: 550ms; }
+.pt-fade.is-opening { opacity: 0; transition-duration: 650ms; }
 
 .pt-water {
   position: absolute;

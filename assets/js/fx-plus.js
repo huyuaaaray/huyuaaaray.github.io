@@ -308,7 +308,7 @@
   }
 
   /* ---------- Page transitions ----------
-     Going to Travel: a hyperspace star warp. Going to the CV: a wave of water rises and falls.
+     Going to Travel: a hyperspace star warp. Going to the CV: a fade through a blue-to-orange gradient.
      Anywhere else: gator jaws snap shut and open again. The 404 page arrives with a glitch. */
   if (has('pagefx') && !reduceMotion) {
     var TEETH_DOWN = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='26'%3E%3Cpath d='M2 0 L22 26 L42 0 Z' fill='%23fbfaf6'/%3E%3C/svg%3E\")";
@@ -373,7 +373,7 @@
         warp(cover, false, 750, finish);
       } else {
         requestAnimationFrame(function () { requestAnimationFrame(function () { cover.classList.remove('is-closed'); cover.classList.add('is-opening'); }); });
-        setTimeout(function () { cover.remove(); }, type === 'book' ? 900 : type === 'liquid' ? 1000 : type === 'fade' ? 700 : 800);
+        setTimeout(function () { cover.remove(); }, type === 'book' ? 900 : type === 'liquid' ? 1000 : type === 'fade' ? 800 : 800);
       }
     }
 
@@ -394,7 +394,7 @@
       if (type === 'warp') { warp(o, true, 700, go); }
       else {
         requestAnimationFrame(function () { requestAnimationFrame(function () { o.classList.add('is-closing'); }); });
-        setTimeout(go, type === 'book' ? 650 : type === 'liquid' ? 700 : type === 'fade' ? 380 : 560);
+        setTimeout(go, type === 'book' ? 650 : type === 'liquid' ? 700 : type === 'fade' ? 440 : 560);
       }
     });
     window.addEventListener('pageshow', function (e) { if (e.persisted) each('.pt', function (n) { n.remove(); }); });
