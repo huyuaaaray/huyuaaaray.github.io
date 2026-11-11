@@ -21,7 +21,7 @@ progress: true
       <div class="page-head" data-reveal>
         <h1>{{ cv.heading | escape }}</h1>
         {%- if cv.summary %}
-        <p>{% include inline-md.html text=cv.summary %}</p>
+        <p class="cv-summary">{% include inline-md.html text=cv.summary %}</p>
         {%- endif %}
         <div class="actions">
           <a class="btn btn-primary" href="/resume.pdf" download>{% include icon.html name="download" %}{{ cv.download_label | escape }}</a>

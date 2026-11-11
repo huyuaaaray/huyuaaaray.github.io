@@ -6890,3 +6890,20 @@ html.caffeinated body { animation: jitter 0.12s steps(2) 12; }
 @media (prefers-reduced-motion: reduce) {
   .aurora { animation: none !important; }
 }
+
+/* CV summary: justified, so both edges line up */
+.cv-summary {
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+}
+
+/* Travel: glittering firework sparks where you click */
+.spark-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}

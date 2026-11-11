@@ -1243,4 +1243,63 @@
       }).catch(function () { /* cards work fine without it */ });
     }
   }
+
+  /* ---------- Firework sparks: every click on the Travel page throws a little burst of glitter ---------- */
+  if (fxOn('sparkles') && !reduceMotion) {
+    var sparkCv = null, sctx = null, sparks = [], sparkRaf = null;
+    var COLORS = ['255,214,102', '255,120,200', '120,220,255', '255,255,255', '255,150,80', '190,150,255'];
+    var sizeSparks = function () {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      sparkCv.width = Math.round(innerWidth * dpr);
+      sparkCv.height = Math.round(innerHeight * dpr);
+      sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    var drawSparks = function (now) {
+      sctx.clearRect(0, 0, innerWidth, innerHeight);
+      sctx.globalCompositeOperation = 'lighter';
+      for (var i = sparks.length - 1; i >= 0; i--) {
+        var p = sparks[i];
+        p.vx *= 0.965; p.vy = p.vy * 0.965 + 0.09;
+        p.x += p.vx; p.y += p.vy;
+        p.life -= p.decay;
+        if (p.life <= 0) { sparks.splice(i, 1); continue; }
+        var tw = 0.55 + 0.45 * Math.sin(now / 55 + p.phase);              // twinkle
+        var a = Math.max(0, p.life * tw), r = p.size * (0.6 + 0.4 * p.life);
+        sctx.strokeStyle = sctx.fillStyle = 'rgba(' + p.c + ',' + a.toFixed(3) + ')';
+        if (p.star) {                                                     // a four-pointed glint
+          sctx.lineWidth = 1.2;
+          sctx.beginPath();
+          sctx.moveTo(p.x - r * 2.2, p.y); sctx.lineTo(p.x + r * 2.2, p.y);
+          sctx.moveTo(p.x, p.y - r * 2.2); sctx.lineTo(p.x, p.y + r * 2.2);
+          sctx.stroke();
+        }
+        sctx.beginPath(); sctx.arc(p.x, p.y, r, 0, Math.PI * 2); sctx.fill();
+      }
+      sctx.globalCompositeOperation = 'source-over';
+      if (sparks.length) sparkRaf = requestAnimationFrame(drawSparks);
+      else { sparkRaf = null; sctx.clearRect(0, 0, innerWidth, innerHeight); }
+    };
+    document.addEventListener('click', function (e) {
+      if (isLite() || !e.clientX && !e.clientY) return;
+      if (!sparkCv) {
+        sparkCv = document.createElement('canvas');
+        sparkCv.className = 'spark-canvas';
+        sparkCv.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(sparkCv);
+        sctx = sparkCv.getContext('2d');
+        sizeSparks();
+        window.addEventListener('resize', sizeSparks);
+      }
+      var n = 34;
+      for (var i = 0; i < n; i++) {
+        var ang = (i / n) * Math.PI * 2 + Math.random() * 0.3, sp = 2 + Math.random() * 4.5;
+        sparks.push({
+          x: e.clientX, y: e.clientY, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp - 1,
+          life: 1, decay: 0.012 + Math.random() * 0.012, size: 1.2 + Math.random() * 1.6,
+          c: COLORS[(Math.random() * COLORS.length) | 0], phase: Math.random() * 6.3, star: Math.random() < 0.35
+        });
+      }
+      if (!sparkRaf) sparkRaf = requestAnimationFrame(drawSparks);
+    });
+  }
 })();

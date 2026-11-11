@@ -391,6 +391,36 @@ travel:
       cover: ""
       photos: []
       videos: []
+    - name: Death Valley National Park
+      region: California, USA
+      country: USA
+      lat: 36.5054
+      lng: -117.0794
+      date: Dec 2025
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: Joshua Tree National Park
+      region: California, USA
+      country: USA
+      lat: 33.8734
+      lng: -115.901
+      date: Dec 2025
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: San Diego
+      region: California, USA
+      country: USA
+      lat: 32.7157
+      lng: -117.1611
+      date: Dec 2025
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
     - name: Miami
       region: Florida, USA
       country: USA
@@ -715,6 +745,7 @@ effects:
   card_weather: true
   random_place: true
   photo_wall: true
+  travel_sparkles: true
 
 easter_egg:
   enabled: true
