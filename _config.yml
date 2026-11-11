@@ -640,19 +640,19 @@ effects:
   footer_skyline: false
   footer_swimmer: false
   footer_seasons: true
-  latte_cursor: true
-  matcha_click: true
+  latte_cursor: false
+  matcha_click: false
   coffee_progress: true
   drip_loading: true
   steam_titles: true
   latte_theme: true
   matcha_theme: true
-  coffee_stains: true
-  coaster_cards: true
-  foam_buttons: true
-  ice_cubes: true
-  latte_signature: true
-  coffee_thermometer: true
+  coffee_stains: false
+  coaster_cards: false
+  foam_buttons: false
+  ice_cubes: false
+  latte_signature: false
+  coffee_thermometer: false
   travel_stats: true
   states_map: true
   card_weather: true
@@ -807,6 +807,8 @@ eggs:
   gator_nap:
     show: true
     seconds: 5
+  name_disco:
+    show: true
   theme_disco:
     show: true
     toggles: 5

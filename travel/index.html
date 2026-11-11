@@ -30,15 +30,14 @@ scripts:
     {%- if site.effects.travel_replay and site.eggs.travel_replay.show %}
     <p class="replay-caption" aria-live="polite"><span class="rc-when"></span><span class="rc-where"></span></p>
     {%- endif %}
-    {%- if site.effects.random_place %}
-    <button type="button" class="btn random-btn">{% include icon.html name="shuffle" %}<span>{{ t.random_label | escape }}</span></button>
-    {%- endif %}
+
   </div>
+  {%- if site.effects.random_place %}
+  <p class="map-actions"><button type="button" class="btn random-btn">{% include icon.html name="shuffle" %}<span>{{ t.random_label | escape }}</span></button></p>
+  {%- endif %}
   <p class="map-hint" data-hint="globe"{% unless site.effects.globe %} hidden{% endunless %}>{% include inline-md.html text=t.globe_hint %}</p>
   <p class="map-hint" data-hint="flat"{% if site.effects.globe %} hidden{% endif %}>{% include inline-md.html text=t.map_hint %}</p>
-  {%- if site.effects.photo_wall %}
-  <p class="photo-wall-row"><a class="btn photo-wall-link" href="/photos/">{% include icon.html name="image" %}{{ t.photo_wall_label | escape }}</a></p>
-  {%- endif %}
+
 
   {%- if site.effects.travel_stats %}
   {%- assign sp = t.stats_panel %}
@@ -61,6 +60,9 @@ scripts:
     <p class="sm-count"></p>
     <div class="sm-svg"></div>
   </section>
+  {%- endif %}
+  {%- if site.effects.photo_wall %}
+  <p class="photo-wall-row"><a class="btn photo-wall-link" href="/photos/">{% include icon.html name="image" %}{{ t.photo_wall_label | escape }}</a></p>
   {%- endif %}
 
   <div class="places" data-reveal-stagger>

@@ -313,7 +313,7 @@
   if (has('pagefx') && !reduceMotion) {
     var TEETH_DOWN = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='26'%3E%3Cpath d='M2 0 L22 26 L42 0 Z' fill='%23fbfaf6'/%3E%3C/svg%3E\")";
     var TEETH_UP = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='26'%3E%3Cpath d='M2 26 L22 0 L42 26 Z' fill='%23fbfaf6'/%3E%3C/svg%3E\")";
-    var typeFor = function (path) { return /^\/travel\b/.test(path) ? 'warp' : /^\/cv\b/.test(path) ? 'liquid' : 'jaws'; };
+    var typeFor = function (path) { return /^\/travel\b/.test(path) ? 'warp' : /^\/cv\b/.test(path) ? 'fade' : 'jaws'; };
 
     var build = function (type) {
       var o = document.createElement('div');
@@ -373,7 +373,7 @@
         warp(cover, false, 750, finish);
       } else {
         requestAnimationFrame(function () { requestAnimationFrame(function () { cover.classList.remove('is-closed'); cover.classList.add('is-opening'); }); });
-        setTimeout(function () { cover.remove(); }, type === 'book' ? 900 : type === 'liquid' ? 1000 : 800);
+        setTimeout(function () { cover.remove(); }, type === 'book' ? 900 : type === 'liquid' ? 1000 : type === 'fade' ? 700 : 800);
       }
     }
 
@@ -394,7 +394,7 @@
       if (type === 'warp') { warp(o, true, 700, go); }
       else {
         requestAnimationFrame(function () { requestAnimationFrame(function () { o.classList.add('is-closing'); }); });
-        setTimeout(go, type === 'book' ? 650 : type === 'liquid' ? 700 : 560);
+        setTimeout(go, type === 'book' ? 650 : type === 'liquid' ? 700 : type === 'fade' ? 380 : 560);
       }
     });
     window.addEventListener('pageshow', function (e) { if (e.persisted) each('.pt', function (n) { n.remove(); }); });
@@ -554,7 +554,15 @@
     var p = document.createElement('p');
     p.className = 'greeting';
     p.textContent = D.greeting[key] || '';
-    if (p.textContent) head.insertBefore(p, head.firstChild);
+    if (p.textContent) {
+      head.insertBefore(p, head.firstChild);
+      setTimeout(function () {
+        p.style.height = p.offsetHeight + 'px';                              // so the space can close smoothly
+        p.classList.add('is-gone');
+        setTimeout(function () { p.classList.add('is-closed'); }, 1300);
+        setTimeout(function () { p.remove(); }, 2200);
+      }, 10000);
+    }
   }
 
   /* ---------- Footer wave ---------- */

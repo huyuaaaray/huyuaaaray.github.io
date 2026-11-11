@@ -4893,6 +4893,9 @@ html.ink-in::after {
 }
 
 /* Greeting above the name */
+.greeting.is-gone { opacity: 0; transition: opacity 1.2s var(--ease); }
+.greeting.is-closed { height: 0 !important; margin: 0; overflow: hidden; transition: height 0.7s var(--ease), margin 0.7s var(--ease); }
+
 .greeting {
   margin: 0 0 20px;
   color: var(--mark);
@@ -5250,17 +5253,12 @@ html.upside-down body { transform: rotate(180deg); }
 /* =========================================================
    Travel additions
    ========================================================= */
+.map-actions {
+  margin: 14px 0 0;
+}
+
 .random-btn {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
-  z-index: 3;
   gap: 8px;
-  background: rgba(20, 27, 52, 0.75);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(160, 172, 230, 0.3);
-  color: #e9ebf5;
 }
 
 .photo-wall-link { gap: 8px; }
@@ -5688,6 +5686,18 @@ html[data-fx~="headerfx"] .site-header::after {
    Transitions, round 2: rising water (CV) and a glitch (404)
    ========================================================= */
 html.pt-in[data-pt="liquid"]::after { background: #1c5fd6; }
+html.pt-in[data-pt="fade"]::after { background: var(--bg); }
+
+.pt-fade {
+  background: var(--bg);
+  opacity: 0;
+  transition: opacity 360ms var(--ease);
+}
+
+.pt-fade.is-closing,
+.pt-fade.is-closed { opacity: 1; }
+.pt-fade.is-closed { transition: none; }
+.pt-fade.is-opening { opacity: 0; transition-duration: 550ms; }
 
 .pt-water {
   position: absolute;
@@ -5819,15 +5829,17 @@ html.glitching .site-header {
   z-index: 2900;
   overflow: hidden;
   pointer-events: none;
-  mix-blend-mode: screen;
 }
+
+/* on dark pages the lights add up like real spotlights */
+:is(:root[data-theme="dark"], :root.theme-night) .egg-disco { mix-blend-mode: screen; }
 
 .egg-disco i {
   position: absolute;
   width: 46vmax;
   height: 46vmax;
   border-radius: 50%;
-  opacity: 0.35;
+  opacity: 0.42;
   animation: disco 1.1s ease-in-out infinite alternate;
 }
 
@@ -6707,6 +6719,5 @@ html.caffeinated body { animation: jitter 0.12s steps(2) 12; }
 }
 
 .photo-wall-row {
-  margin: 14px 0 0;
-  text-align: center;
+  margin: 18px 0 0;
 }

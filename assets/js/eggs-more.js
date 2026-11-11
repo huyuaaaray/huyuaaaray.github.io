@@ -124,7 +124,14 @@
     }
   }
 
-  /* ---------- Switching light/dark again and again: a disco ---------- */
+  /* ---------- Disco lights: after switching themes again and again, and when the big name is clicked ---------- */
+  var disco = function () {
+    if (reduceMotion || document.querySelector('.egg-disco')) return;
+    var d = make('egg-disco', '<i></i><i></i><i></i><i></i><i></i><i></i>');
+    setTimeout(function () { d.remove(); }, 3200);
+  };
+  var bigName = document.querySelector('.display-name');
+  if (on('name_disco') && bigName) bigName.addEventListener('click', disco);
   if (on('theme_disco')) {
     var tb = document.querySelector('.theme-toggle'), hits = [];
     if (tb) tb.addEventListener('click', function () {
@@ -135,9 +142,7 @@
         hits = [];
         setTimeout(function () {
           toast(E.theme_disco.text || '', 3000);
-          if (reduceMotion) return;
-          var d = make('egg-disco', '<i></i><i></i><i></i><i></i><i></i><i></i>');
-          setTimeout(function () { d.remove(); }, 3200);
+          disco();
         }, 800);
       }
     });

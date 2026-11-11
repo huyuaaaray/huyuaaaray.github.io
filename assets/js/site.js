@@ -68,31 +68,42 @@
   }
 
   var themeBtn = document.querySelector('.theme-toggle');
-  var lastThemeClick = 0;
+  var currentVT = null, wanted = null;
+  function toggleTheme(cx, cy) {
+    // light → dark → latte → matcha → light (latte and matcha only if switched on).
+    // Count from the theme the last click asked for, which may not be painted yet.
+    var order = (themeBtn.getAttribute('data-themes') || 'light dark').split(/\s+/);
+    var next = order[(order.indexOf(wanted || root.getAttribute('data-theme')) + 1) % order.length] || 'light';
+    wanted = next;
+    if (!document.startViewTransition || reduceMotion) { applyTheme(next, true); wanted = null; return; }
+    // A switch that is still running finishes at once, so every click gets its own circle.
+    if (currentVT) { try { currentVT.skipTransition(); } catch (e) { /* ignore */ } }
+    // The new colors spread out in a circle from where you clicked.
+    var b = themeBtn.getBoundingClientRect();
+    var x = cx || (b.left + b.width / 2), y = cy || (b.top + b.height / 2);
+    var radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+    root.classList.add('theme-switching');
+    var vt = currentVT = document.startViewTransition(function () { applyTheme(next, true); });
+    vt.ready.then(function () {
+      root.animate(
+        { clipPath: ['circle(0px at ' + x + 'px ' + y + 'px)', 'circle(' + radius + 'px at ' + x + 'px ' + y + 'px)'] },
+        { duration: 480, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)', pseudoElement: '::view-transition-new(root)' }
+      );
+    }).catch(function () { /* skipped */ });
+    var done = function () { if (currentVT === vt) { currentVT = null; wanted = null; root.classList.remove('theme-switching'); } };
+    vt.finished.then(done, done);
+  }
   if (themeBtn) {
-    themeBtn.addEventListener('click', function () {
-      // light → dark → latte → matcha → light (latte and matcha only if switched on)
-      var order = (themeBtn.getAttribute('data-themes') || 'light dark').split(/\s+/);
-      var next = order[(order.indexOf(root.getAttribute('data-theme')) + 1) % order.length] || 'light';
-      // rapid clicks switch instantly (a running transition would swallow the next click)
-      var quick = Date.now() - lastThemeClick < 1500;
-      lastThemeClick = Date.now();
-      if (!document.startViewTransition || reduceMotion || quick) { applyTheme(next, true); return; }
-      // The new colors spread out in a circle from the button.
+    themeBtn.addEventListener('click', function (e) { toggleTheme(e.clientX, e.clientY); });
+    // While a switch is running the page is covered by its snapshot, so a click lands on <html>
+    // instead of the button. Pass it on to the button, so quick clicks are never lost.
+    document.addEventListener('click', function (e) {
+      if (!currentVT || themeBtn.contains(e.target)) return;
       var b = themeBtn.getBoundingClientRect();
-      var x = b.left + b.width / 2, y = b.top + b.height / 2;
-      var radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
-      root.classList.add('theme-switching');
-      var vt = document.startViewTransition(function () { applyTheme(next, true); });
-      vt.ready.then(function () {
-        root.animate(
-          { clipPath: ['circle(0px at ' + x + 'px ' + y + 'px)', 'circle(' + radius + 'px at ' + x + 'px ' + y + 'px)'] },
-          { duration: 480, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)', pseudoElement: '::view-transition-new(root)' }
-        );
-      }).catch(function () { /* skipped */ });
-      vt.finished.then(done, done);
-      function done() { root.classList.remove('theme-switching'); }
-    });
+      if (e.clientX >= b.left && e.clientX <= b.right && e.clientY >= b.top && e.clientY <= b.bottom) {
+        themeBtn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, clientX: e.clientX, clientY: e.clientY }));
+      }
+    }, true);
   }
 
   /* ---------- Scroll reveal ---------- */
