@@ -299,6 +299,7 @@
       fetch(WORLD_URL, { integrity: WORLD_SRI })
         .then(function (res) { return res.json(); })
         .then(function (data) {
+          landShapes = topojson.feature(data, data.objects.countries).features;
           var land = topojson.feature(data, data.objects.countries).features
             .filter(function (f) { return f.properties.name !== 'Antarctica'; })
             .map(cleanFeature)
@@ -437,6 +438,45 @@
     controls.addEventListener('start', function () { hold(); hideTip(); });
     controls.addEventListener('end', function () { resumeSoon(3500); });
     mapEl.addEventListener('click', function () { controls.enableZoom = true; });
+
+    // Easter egg: click the ocean (not land, not a marker, not a drag) for a splash
+    var splashCfg = eggData.ocean_splash && eggData.ocean_splash.show !== false ? eggData.ocean_splash : null;
+    var landShapes = [];
+    var inRing = function (lng, lat, ring) {
+      var inside = false;
+      for (var a = 0, b = ring.length - 1; a < ring.length; b = a++) {
+        var xa = ring[a][0], ya = ring[a][1], xb = ring[b][0], yb = ring[b][1];
+        if (((ya > lat) !== (yb > lat)) && (lng < (xb - xa) * (lat - ya) / (yb - ya) + xa)) inside = !inside;
+      }
+      return inside;
+    };
+    var onLand = function (lng, lat) {
+      return landShapes.some(function (f) {
+        var g = f.geometry, polys = g.type === 'Polygon' ? [g.coordinates] : g.coordinates;
+        return polys.some(function (poly) { return inRing(lng, lat, poly[0]) && !poly.slice(1).some(function (h) { return inRing(lng, lat, h); }); });
+      });
+    };
+    if (splashCfg) {
+      var downAt = null;
+      mapEl.addEventListener('pointerdown', function (e) { downAt = { x: e.clientX, y: e.clientY }; });
+      mapEl.addEventListener('click', function (e) {
+        if (!downAt || Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y) > 5) return;
+        if (e.target.closest && e.target.closest('.globe-pin, button')) return;
+        var r = mapEl.getBoundingClientRect();
+        var g = world.toGlobeCoords(e.clientX - r.left, e.clientY - r.top);
+        if (!g || !landShapes.length || onLand(g.lng, g.lat)) return;
+        var sp = document.createElement('span');
+        sp.className = 'ocean-splash';
+        sp.setAttribute('aria-hidden', 'true');
+        sp.innerHTML = '<i></i><i></i><i></i><b>💧</b>';
+        var wr = wrap.getBoundingClientRect();
+        sp.style.left = (e.clientX - wr.left) + 'px';
+        sp.style.top = (e.clientY - wr.top) + 'px';
+        wrap.appendChild(sp);
+        setTimeout(function () { sp.remove(); }, 1400);
+        if (window.siteToast && splashCfg.text) window.siteToast(splashCfg.text, 1800);
+      });
+    }
     mapEl.addEventListener('mouseleave', function () { controls.enableZoom = false; });
 
     /* ---------- Little planes flying the routes ----------
@@ -568,7 +608,7 @@
       return Number(y[0]) * 12 + m;
     }
     function setReplayBtn(on) {
-      if (!replayBtn) return;
+      if (!replayBtn || !replayBtn.querySelector('.replay-text')) return;
       replayBtn.classList.toggle('is-playing', on);
       replayBtn.querySelector('.replay-text').textContent = on ? (text.replayStop || 'Stop') : (text.replayLabel || 'Replay');
     }
@@ -638,6 +678,16 @@
     }
     if (replayBtn) {
       replayBtn.addEventListener('click', function () { if (replaying) stopReplay(); else startReplay(); });
+    }
+    // Easter egg: double-click the "Travel" title to replay the trips (double-click again to stop)
+    var replayTitle = caption && document.querySelector('.page-head h1');
+    if (replayTitle) {
+      replayTitle.addEventListener('mousedown', function (e) { if (e.detail > 1) e.preventDefault(); });   // no text selection
+      replayTitle.addEventListener('dblclick', function () {
+        if (replaying) { stopReplay(); return; }
+        wrap.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+        setTimeout(startReplay, reduceMotion ? 0 : 500);
+      });
     }
 
     // "Reduce animations": no spin, no flowing dashes, no ripples, no planes.

@@ -308,12 +308,12 @@
   }
 
   /* ---------- Page transitions ----------
-     Going to Travel: a hyperspace star warp. Going to the CV: a page turns like a book.
-     Anywhere else: gator jaws snap shut and open again on the new page. */
+     Going to Travel: a hyperspace star warp. Going to the CV: a wave of water rises and falls.
+     Anywhere else: gator jaws snap shut and open again. The 404 page arrives with a glitch. */
   if (has('pagefx') && !reduceMotion) {
     var TEETH_DOWN = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='26'%3E%3Cpath d='M2 0 L22 26 L42 0 Z' fill='%23fbfaf6'/%3E%3C/svg%3E\")";
     var TEETH_UP = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='26'%3E%3Cpath d='M2 26 L22 0 L42 26 Z' fill='%23fbfaf6'/%3E%3C/svg%3E\")";
-    var typeFor = function (path) { return /^\/travel\b/.test(path) ? 'warp' : /^\/cv\b/.test(path) ? 'book' : 'jaws'; };
+    var typeFor = function (path) { return /^\/travel\b/.test(path) ? 'warp' : /^\/cv\b/.test(path) ? 'liquid' : 'jaws'; };
 
     var build = function (type) {
       var o = document.createElement('div');
@@ -324,6 +324,8 @@
                       '<span class="pt-jaw pt-bottom"><i style="background-image:' + TEETH_UP.replace(/"/g, '&quot;') + '"></i></span>';
       } else if (type === 'book') {
         o.innerHTML = '<span class="pt-page"><span class="pt-lines"></span></span>';
+      } else if (type === 'liquid') {
+        o.innerHTML = '<span class="pt-water"><i class="pt-crest c1"></i><i class="pt-crest c2"></i></span>';
       } else {
         o.innerHTML = '<canvas class="pt-warp"></canvas>';
       }
@@ -371,7 +373,7 @@
         warp(cover, false, 750, finish);
       } else {
         requestAnimationFrame(function () { requestAnimationFrame(function () { cover.classList.remove('is-closed'); cover.classList.add('is-opening'); }); });
-        setTimeout(function () { cover.remove(); }, type === 'book' ? 900 : 800);
+        setTimeout(function () { cover.remove(); }, type === 'book' ? 900 : type === 'liquid' ? 1000 : 800);
       }
     }
 
@@ -392,10 +394,16 @@
       if (type === 'warp') { warp(o, true, 700, go); }
       else {
         requestAnimationFrame(function () { requestAnimationFrame(function () { o.classList.add('is-closing'); }); });
-        setTimeout(go, type === 'book' ? 650 : 560);
+        setTimeout(go, type === 'book' ? 650 : type === 'liquid' ? 700 : 560);
       }
     });
     window.addEventListener('pageshow', function (e) { if (e.persisted) each('.pt', function (n) { n.remove(); }); });
+
+    // The 404 page always arrives with a short glitch
+    if (document.querySelector('.not-found')) {
+      root.classList.add('glitching');
+      setTimeout(function () { root.classList.remove('glitching'); }, 900);
+    }
   }
 
   /* ---------- Header: hides while you scroll down, comes back when you scroll up ---------- */

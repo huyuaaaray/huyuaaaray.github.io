@@ -51,6 +51,17 @@
   {%- if site.effects.footer_skyline %} skyline{% endif -%}
   {%- if site.effects.footer_swimmer %} swimmer{% endif -%}
   {%- if site.effects.footer_seasons %} seasons{% endif -%}
+  {%- if site.effects.latte_cursor %} lattecursor{% endif -%}
+  {%- if site.effects.matcha_click %} matchaclick{% endif -%}
+  {%- if site.effects.coffee_progress %} cupprogress{% endif -%}
+  {%- if site.effects.drip_loading %} drip{% endif -%}
+  {%- if site.effects.steam_titles %} steam{% endif -%}
+  {%- if site.effects.coffee_stains %} stains{% endif -%}
+  {%- if site.effects.coaster_cards %} coaster{% endif -%}
+  {%- if site.effects.foam_buttons %} foam{% endif -%}
+  {%- if site.effects.ice_cubes %} ice{% endif -%}
+  {%- if site.effects.latte_signature %} lattesign{% endif -%}
+  {%- if site.effects.coffee_thermometer %} thermo{% endif -%}
   {%- if site.effects.globe_card_link %} cardglobe{% endif -%}
   {%- if site.effects.cv_timeline %} timeline{% endif -%}
   {%- if site.effects.copy_citation %} cite{% endif -%}
@@ -105,6 +116,8 @@
 <script src="/assets/js/more-fx.js"></script>
 <script src="/assets/js/fx-plus.js"></script>
 <script src="/assets/js/eggs-plus.js"></script>
+<script src="/assets/js/eggs-more.js"></script>
+<script src="/assets/js/cafe.js"></script>
 {%- if site.holidays.enabled %}
 {%- assign hd = site.holidays %}
 <script id="holiday-data" type="application/json">{"tz": {{ site.footer_clock.timezone | default: "America/New_York" | jsonify }}, "h": {{ site.holidays | jsonify }}, "bday": {{ site.eggs.birthday | jsonify }}}</script>

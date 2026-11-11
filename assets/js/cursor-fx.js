@@ -39,6 +39,7 @@
     var LIFE = 420;       // ms a point stays visible
     var running = false;
     var night = document.documentElement.classList.contains('theme-night');
+    var latteTail = (' ' + (document.documentElement.getAttribute('data-fx') || '') + ' ').indexOf(' lattecursor ') !== -1;
     // Easter egg: flick the mouse really fast and the tail catches fire for a moment
     var fireCfg = null, fireUntil = 0, lastMove = null;
     try {
@@ -68,6 +69,7 @@
           // orange near the cursor, blue toward the end of the tail
           var r = Math.round(0 + (250 - 0) * k), g = Math.round(33 + (70 - 33) * k), b = Math.round(165 + (22 - 165) * k);
           if (night) { r = Math.round(140 + 115 * k); g = Math.round(170 + 30 * k); b = 255 - Math.round(120 * k); }
+          if (latteTail) { r = Math.round(120 + 128 * k); g = Math.round(78 + 158 * k); b = Math.round(40 + 180 * k); }   // espresso → milk foam
           var onFire = now < fireUntil;
           if (onFire) { r = 255; g = Math.round(60 + 170 * k); b = Math.round(20 * k); }
           ctx.strokeStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + (0.75 * fade * k).toFixed(3) + ')';

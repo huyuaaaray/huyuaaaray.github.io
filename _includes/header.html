@@ -19,8 +19,8 @@
       </button>
       {%- endif %}
       {%- if site.effects.theme_toggle and page.theme != "night" %}
-      <button type="button" class="icon-btn theme-toggle" data-brand="theme" aria-label="{{ site.theme_toggle_label | escape }}" title="{{ site.theme_toggle_label | escape }}">
-        {% include icon.html name="moon" %}{% include icon.html name="sun" %}
+      <button type="button" class="icon-btn theme-toggle" data-themes="light dark{% if site.effects.latte_theme %} latte{% endif %}{% if site.effects.matcha_theme %} matcha{% endif %}" data-brand="theme" aria-label="{{ site.theme_toggle_label | escape }}" title="{{ site.theme_toggle_label | escape }}">
+        {% include icon.html name="moon" %}{% include icon.html name="sun" %}{% include icon.html name="cup" %}{% include icon.html name="leaf" %}
       </button>
       {%- endif %}
     </div>

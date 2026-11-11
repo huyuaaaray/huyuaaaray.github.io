@@ -58,6 +58,9 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     var target = Math.round(Math.min(110, Math.max(24, (W * H) / 14000)));
     while (nodes.length < target) nodes.push(makeNode());
+    if (nodes.length > target) nodes.length = target;
+    // drop signals that pointed at nodes that no longer exist (the window got smaller)
+    pulses = pulses.filter(function (p) { return p.a < nodes.length && p.b < nodes.length; });
     nodes.length = target;
   }
 
@@ -88,6 +91,7 @@
   // Send the signal from node i to its nearest linked neighbours.
   function fanOut(i, hop, wave) {
     var a = nodes[i];
+    if (!a) return;
     a.flash = 1;
     a.wave = wave;
     if (hop >= MAX_HOPS) return;

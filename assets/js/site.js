@@ -31,7 +31,7 @@
   }
 
   /* ---------- Light / dark: header button, browser bar color, following the system ---------- */
-  var THEME_BG = { light: '#f6f5f8', dark: '#0e1320' };
+  var THEME_BG = { light: '#f6f5f8', dark: '#0e1320', latte: '#f4ece2', matcha: '#eef3e6' };
   function syncThemeColor() {
     if (root.classList.contains('theme-night')) return;
     var c = THEME_BG[root.getAttribute('data-theme')] || THEME_BG.light;
@@ -40,13 +40,22 @@
       m.setAttribute('content', c);
     });
   }
+  // The theme button shows the theme it will switch to next
+  function syncNext() {
+    var btn = document.querySelector('.theme-toggle');
+    if (!btn) return;
+    var order = (btn.getAttribute('data-themes') || 'light dark').split(/\s+/);
+    btn.setAttribute('data-next', order[(order.indexOf(root.getAttribute('data-theme')) + 1) % order.length] || 'light');
+  }
   function applyTheme(t, remember) {
     root.setAttribute('data-theme', t);
+    syncNext();
     if (remember) { try { localStorage.setItem('theme', t); } catch (e) { /* storage blocked */ } }
     syncThemeColor();
     window.dispatchEvent(new CustomEvent('themechange', { detail: t }));
   }
   syncThemeColor();
+  syncNext();
 
   // Follow the system setting live, unless the visitor picked a theme themselves.
   var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
@@ -59,10 +68,16 @@
   }
 
   var themeBtn = document.querySelector('.theme-toggle');
+  var lastThemeClick = 0;
   if (themeBtn) {
     themeBtn.addEventListener('click', function () {
-      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      if (!document.startViewTransition || reduceMotion) { applyTheme(next, true); return; }
+      // light → dark → latte → matcha → light (latte and matcha only if switched on)
+      var order = (themeBtn.getAttribute('data-themes') || 'light dark').split(/\s+/);
+      var next = order[(order.indexOf(root.getAttribute('data-theme')) + 1) % order.length] || 'light';
+      // rapid clicks switch instantly (a running transition would swallow the next click)
+      var quick = Date.now() - lastThemeClick < 1500;
+      lastThemeClick = Date.now();
+      if (!document.startViewTransition || reduceMotion || quick) { applyTheme(next, true); return; }
       // The new colors spread out in a circle from the button.
       var b = themeBtn.getBoundingClientRect();
       var x = b.left + b.width / 2, y = b.top + b.height / 2;
@@ -72,7 +87,7 @@
       vt.ready.then(function () {
         root.animate(
           { clipPath: ['circle(0px at ' + x + 'px ' + y + 'px)', 'circle(' + radius + 'px at ' + x + 'px ' + y + 'px)'] },
-          { duration: 700, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)', pseudoElement: '::view-transition-new(root)' }
+          { duration: 480, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)', pseudoElement: '::view-transition-new(root)' }
         );
       }).catch(function () { /* skipped */ });
       vt.finished.then(done, done);

@@ -52,24 +52,21 @@ nav:
     url: /cv/
 
 home:
-  description: >-
-    Yu Hu is a data scientist at the University of Florida College of Medicine
-    building clinical AI with large language models on EHR and clinical notes.
-
+  description: "Yu Hu is a healthcare AI researcher at the University of Florida College of Medicine studying the reliability, generalizability, and responsible integration of AI into real-world clinical practice."
   roles:
-    - Data Scientist
-    - Clinical NLP
-    - LLM Evaluation
-    - LLMOps
+    - Healthcare AI Researcher
+    - Trustworthy Clinical AI
+    - Clinical LLM Evaluation
+    - Data Scientist at UF
   tagline: "Quality & Patient Safety, University of Florida College of Medicine"
   research:
     label: Research interest
-    text: "I study how to make large language models reliable enough for real clinical work: reading EHR notes, surfacing risks, and supporting the clinicians who review them."
+    text: "I study how to make AI reliable, generalizable, and responsibly integrated into real-world clinical practice: models that hold up across patients and settings, and that clinicians can trust."
   about_title: About
   bio: |
-    I'm a data scientist at the University of Florida College of Medicine, where I work with the Quality & Patient Safety group to build clinical AI systems. My work focuses on applying large language models to electronic health records and clinical notes, turning unstructured documentation into information that clinicians and quality teams can act on, from readmission analyses to care-coordination programs.
+    I'm a healthcare AI researcher at the University of Florida College of Medicine, working with the Quality & Patient Safety group. My research asks what it takes for AI to work in real-world clinical practice: whether models are reliable, whether they generalize beyond the data they were built on, and how they can be brought into clinical workflows responsibly.
 
-    Along the way, I've built a shared, configuration-driven LLM platform that now supports several clinical programs, developed an LLM-as-a-Judge framework to evaluate model outputs before they reach clinician review, and scaled inference on UF's HiPerGator supercomputer. This work has led to six peer-reviewed publications in clinical informatics, and I enjoy doing it alongside clinicians, researchers, and engineers.
+    In practice, that means evaluating large language models against clinician review, building clinician-in-the-loop validation and LLM-as-a-Judge frameworks, studying algorithmic fairness and causal machine learning on EHR data, and running LLMOps pipelines now used by three clinical programs. This work has led to six peer-reviewed publications in clinical informatics, and I do it alongside clinicians, researchers, and engineers.
 
   stats:
     - number: 7
@@ -107,7 +104,7 @@ home:
       - q: What are you working on right now?
         a: "I lead clinical LLM evaluation for UF's Quality & Patient Safety group: comparing models like Gemma 4 and MedGemma against clinician review, and building LLM-as-a-Judge workflows that send flagged cases to clinicians."
       - q: What is your research focus?
-        a: "Making large language models reliable enough for real clinical work: reading EHR notes, surfacing risks, and supporting the clinicians who review them. Lately that includes GraphRAG knowledge graphs for heart failure readmission."
+        a: "The reliability, generalizability, and responsible integration of AI into real-world clinical practice. I evaluate clinical LLMs against clinician review, study fairness and causal methods on EHR data, and build pipelines clinicians can trust."
       - q: What does your tech stack look like?
         a: "Python, vLLM and SLURM on UF's HiPerGator supercomputer, config-driven pipelines with JSON Schema and Pydantic, plus PyTorch, OMOP and FHIR on the clinical data side."
       - q: Where have you worked?
@@ -392,8 +389,8 @@ travel:
 cv:
   title: CV
   heading: Curriculum Vitae
-  description: Curriculum vitae of Yu Hu, covering clinical LLM evaluation, LLMOps, and machine learning on EHR data at the University of Florida College of Medicine.
-  summary: Data scientist with 3+ years of experience in clinical LLM evaluation and safety on EHR and clinical notes data. Built LLM-as-a-Judge and clinician-validated evaluation workflows, and end-to-end MLOps/LLMOps pipelines, including a config-driven LLM platform adopted by three clinical programs with self-hosted inference on HPC (vLLM).
+  description: "Curriculum vitae of Yu Hu, a healthcare AI researcher working on trustworthy clinical AI, clinical LLM evaluation, and EHR-based machine learning at the University of Florida College of Medicine."
+  summary: "Healthcare AI researcher with 3+ years of experience developing, evaluating, and deploying machine learning systems in real-world clinical settings. Research interests include trustworthy clinical AI, model reliability, generalizability, and responsible AI integration into clinical workflows. Experienced in clinical LLM evaluation, clinician-in-the-loop validation, algorithmic fairness, causal machine learning, and EHR-based predictive modeling. Also developed scalable LLM evaluation frameworks and production-ready MLOps/LLMOps pipelines adopted by three clinical programs."
   download_label: Download PDF
   copy_label: Copy citation
   copied_label: Copied!
@@ -616,7 +613,7 @@ effects:
   blur_load: true
   title_shine: true
   header_shrink: true
-  header_fx: true
+  header_fx: false
   nav_scramble: true
   nav_flourish: true
   scroll_skew: false
@@ -624,25 +621,38 @@ effects:
   flow_border: false
   odometer: false
   code_rain: true
-  progress_ring: true
+  progress_ring: false
   particle_name: false
   page_transition: true
   orbit_icons: false
   neon_dark: true
   reading_focus: true
   greeting: true
-  footer_wave: true
+  footer_wave: false
   drag_photo: true
   liquid_buttons: true
   smart_header: true
   header_sky: true
   header_fireflies: true
-  header_gator: true
+  header_gator: false
   header_blink: true
   holiday_colors: true
-  footer_skyline: true
-  footer_swimmer: true
+  footer_skyline: false
+  footer_swimmer: false
   footer_seasons: true
+  latte_cursor: true
+  matcha_click: true
+  coffee_progress: true
+  drip_loading: true
+  steam_titles: true
+  latte_theme: true
+  matcha_theme: true
+  coffee_stains: true
+  coaster_cards: true
+  foam_buttons: true
+  ice_cubes: true
+  latte_signature: true
+  coffee_thermometer: true
   travel_stats: true
   states_map: true
   card_weather: true
@@ -771,9 +781,97 @@ eggs:
   pi_day:
     show: true
     digits: "3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798"
+  travel_replay:
+    show: true
+  sudo:
+    show: true
+    word: sudo
+    lines:
+      - "visitor@huyuaaaray:~$ sudo make me a website"
+      - "[sudo] password for visitor: ********"
+      - "visitor is not in the sudoers file. This incident will be reported."
+      - "Permission denied 🐊 (nice try)"
+  uf_chomp:
+    show: true
+    word: uf
+    text: "Go Gators! 🐊"
+  matrix:
+    show: true
+    word: matrix
+  star_now:
+    show: true
+    word: star
+  ocean_splash:
+    show: true
+    text: "🌊 Splash!"
+  gator_nap:
+    show: true
+    seconds: 5
+  theme_disco:
+    show: true
+    toggles: 5
+    text: "Make up your mind! 🌗"
+  select_all:
+    show: true
+  squeeze:
+    show: true
+    width: 480
+    text: "It's tight in here!"
+  hourly_chime:
+    show: true
+  midnight:
+    show: true
+    text: "It's midnight! Happy new day 🌙"
+  city_wave:
+    show: true
+  home_word:
+    show: true
+    word: home
+  news_dots:
+    show: true
+    clicks: 3
+  coffee:
+    show: true
+    word: coffee
+    text: "Brewing… ☕"
+  matcha:
+    show: true
+    word: matcha
+    text: "Whisking up some matcha… 🍵"
+  latte:
+    show: true
+    word: latte
+  espresso:
+    show: true
+    word: espresso
+    text: "Caffeinated! Everything is twice as fast ⚡"
+  boba:
+    show: true
+    word: boba
+  dirty_matcha:
+    show: true
+    word: dirty matcha
+    text: "Dirty matcha unlocked! 🍵☕"
+  morning_coffee:
+    show: true
+    from: 7
+    to: 9
+    text: "Morning! Coffee first? ☕"
+  matcha_oclock:
+    show: true
+    hour: 15
+    text: "Matcha o'clock 🍵"
+  teapot:
+    show: true
+    word: tea
+    title: "418 I'm a teapot"
+    text: "The server refuses to brew coffee because it is, permanently, a teapot. (It's a real joke status code from 1998.)"
+  barista:
+    show: true
+    text: "One flat white for you! ☕"
   gold_gator:
     show: true
-    score: 20
+    score: 100
     text: "Golden gator unlocked! 🏆"
 
 holidays:

@@ -329,6 +329,13 @@
   resize();
   nextShot = performance.now() + 1800;
   nextFigure = performance.now() + 7000;
+  // Easter egg hook: typing "star" shows a constellation right away
+  window.siteConstellation = function () {
+    if (!constellationOn || reduce) return;
+    figure = null;
+    nextFigure = 0;
+    if (!raf) start();
+  };
   draw(performance.now(), false);
   start();
 

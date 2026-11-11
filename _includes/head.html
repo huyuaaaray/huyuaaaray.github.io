@@ -17,7 +17,7 @@
     var d = document.documentElement, t = null;
     d.classList.add('js');
     try { t = localStorage.getItem('theme'); } catch (e) { /* storage blocked */ }
-    if (t !== 'light' && t !== 'dark') {
+    if (t !== 'light' && t !== 'dark' && t !== 'latte' && t !== 'matcha') {
       t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
     d.setAttribute('data-theme', t);

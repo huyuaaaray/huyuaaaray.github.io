@@ -22,16 +22,13 @@ scripts:
     <h1{% if site.effects.flap_titles %} data-flap{% endif %}>{{ t.title | escape }}</h1>
     <p>{% include inline-md.html text=t.intro %}</p>
     <p class="travel-stats">{% include icon.html name="pin" %}<span><span class="count" data-count="{{ places.size }}">{{ places.size }}</span> {% if places.size == 1 %}{{ t.stats.place }}{% else %}{{ t.stats.places }}{% endif %} {{ t.stats.in }} <span class="count" data-count="{{ countries.size }}">{{ countries.size }}</span> {% if countries.size == 1 %}{{ t.stats.country }}{% else %}{{ t.stats.countries }}{% endif %}</span></p>
-    {%- if site.effects.photo_wall %}
-    <p><a class="btn photo-wall-link" href="/photos/">{% include icon.html name="image" %}{{ t.photo_wall_label | escape }}</a></p>
-    {%- endif %}
   </div>
 
   <div class="map-wrap{% if site.effects.globe %} is-globe{% endif %} reveal-delay-1" data-reveal>
     <section id="map" data-mode="{% if site.effects.globe %}globe{% else %}flat{% endif %}" aria-label="Map of places I've been"></section>
-    {%- if site.effects.travel_replay and site.effects.globe %}
+    
+    {%- if site.effects.travel_replay and site.eggs.travel_replay.show %}
     <p class="replay-caption" aria-live="polite"><span class="rc-when"></span><span class="rc-where"></span></p>
-    <button type="button" class="btn replay-btn" data-label="{{ t.replay_label | escape }}" data-stop="{{ t.replay_stop | escape }}">{% include icon.html name="play" %}{% include icon.html name="stop" %}<span class="replay-text">{{ t.replay_label | escape }}</span></button>
     {%- endif %}
     {%- if site.effects.random_place %}
     <button type="button" class="btn random-btn">{% include icon.html name="shuffle" %}<span>{{ t.random_label | escape }}</span></button>
@@ -39,6 +36,9 @@ scripts:
   </div>
   <p class="map-hint" data-hint="globe"{% unless site.effects.globe %} hidden{% endunless %}>{% include inline-md.html text=t.globe_hint %}</p>
   <p class="map-hint" data-hint="flat"{% if site.effects.globe %} hidden{% endif %}>{% include inline-md.html text=t.map_hint %}</p>
+  {%- if site.effects.photo_wall %}
+  <p class="photo-wall-row"><a class="btn photo-wall-link" href="/photos/">{% include icon.html name="image" %}{{ t.photo_wall_label | escape }}</a></p>
+  {%- endif %}
 
   {%- if site.effects.travel_stats %}
   {%- assign sp = t.stats_panel %}
