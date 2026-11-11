@@ -565,6 +565,31 @@
     }
   }
 
+  /* ---------- A drink next to the name: coffee in the morning, matcha in the afternoon (visitor's clock) ---------- */
+  var big = document.querySelector('.display-name');
+  if (has('drink') && big && head) {
+    var hh = new Date().getHours();
+    var drink = (location.search.match(/[?&]drink=(coffee|matcha)\b/) || [])[1] || (hh >= 5 && hh < 12 ? 'coffee' : hh >= 12 && hh < 17 ? 'matcha' : '');
+    if (drink) {
+      var place = function () {
+        var r = document.createRange();
+        r.selectNodeContents(big);
+        var t = r.getBoundingClientRect(), hb = head.getBoundingClientRect();
+        var d = document.createElement('span');
+        d.className = 'name-drink name-drink-' + drink;
+        d.setAttribute('aria-hidden', 'true');
+        d.innerHTML = '<span class="nd-steam"><i></i><i></i><i></i></span>' + (drink === 'coffee' ? '☕' : '🍵');
+        d.style.left = (t.right - hb.left + 14) + 'px';
+        d.style.top = (t.top - hb.top + t.height / 2 - 26) + 'px';
+        head.appendChild(d);
+        setTimeout(function () { d.classList.add('is-gone'); }, 3000);
+        setTimeout(function () { d.remove(); }, 3900);
+      };
+      var ready = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+      ready.then(function () { setTimeout(place, 700); });
+    }
+  }
+
   /* ---------- Footer wave ---------- */
   var footer = document.querySelector('.site-footer');
   if (has('wave') && footer) {

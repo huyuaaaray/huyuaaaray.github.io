@@ -1,0 +1,6 @@
+{%- comment -%} The Travel plane icon with a small tooltip; used in the header, the footer and under the profile photo {%- endcomment -%}
+{%- for item in site.nav -%}
+{%- if item.icon %}
+<a class="icon-btn nav-icon has-tip" data-brand="{{ item.icon }}" href="{{ item.url }}" aria-label="{{ item.label | escape }}" data-tip="{{ item.tip | default: item.label | escape }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{% include icon.html name=item.icon %}</a>
+{%- endif -%}
+{%- endfor -%}

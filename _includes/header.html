@@ -15,11 +15,7 @@
       </nav>
       <span class="header-divider" aria-hidden="true"></span>
       <div class="social">
-        {%- for item in site.nav -%}
-        {%- if item.icon %}
-        <a class="icon-btn nav-icon" data-brand="{{ item.icon }}" href="{{ item.url }}" aria-label="{{ item.label | escape }}" title="{{ item.label | escape }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{% include icon.html name=item.icon %}</a>
-        {%- endif -%}
-        {%- endfor -%}
+        {%- include travel-icon.html -%}
         {% include social-links.html %}</div>
       {%- if site.effects.motion_toggle %}
       <button type="button" class="icon-btn motion-toggle" data-brand="theme" aria-pressed="false" aria-label="{{ site.motion_toggle_label | escape }}" title="{{ site.motion_toggle_label | escape }}">

@@ -49,6 +49,7 @@ nav:
   - label: Travel
     url: /travel/
     icon: plane
+    tip: "🐊 See my travel"
   - label: CV
     url: /cv/
 
@@ -593,11 +594,11 @@ effects:
   cv_timeline: true
   copy_citation: true
   game_404: true
-  motion_toggle: true
+  motion_toggle: false
   name_repel: true
   sky_tint: true
   news_magnet: true
-  ask_box: true
+  ask_box: false
   skill_links: true
   flap_titles: true
   travel_replay: true
@@ -632,6 +633,7 @@ effects:
   footer_wave: false
   drag_photo: true
   liquid_buttons: true
+  name_drink: true
   smart_header: true
   header_sky: true
   header_fireflies: true
