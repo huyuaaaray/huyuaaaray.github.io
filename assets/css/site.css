@@ -177,7 +177,7 @@ h3 {
   background: color-mix(in srgb, var(--bg) 86%, transparent);
   -webkit-backdrop-filter: saturate(150%) blur(12px);
   backdrop-filter: saturate(150%) blur(12px);
-  border-bottom: 1px solid color-mix(in srgb, var(--line) 45%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 22%, transparent);
 }
 
 .header-inner {
@@ -196,7 +196,6 @@ h3 {
 }
 
 .header-divider {
-  opacity: 0.45;
   width: 1px;
   height: 22px;
   background: var(--line);
@@ -366,13 +365,13 @@ h3 {
   transform: translate(-50%, 0) scale(1);
 }
 
-/* in the footer (which clips anything above it) the box opens to the left */
+/* in the footer (which clips anything above it) the box opens to the right */
 .site-footer .has-tip::after {
-  left: auto;
-  right: calc(100% + 8px);
+  left: calc(100% + 8px);
+  right: auto;
   top: 50%;
   bottom: auto;
-  transform: translate(4px, -50%) scale(0);
+  transform: translate(-4px, -50%) scale(0);
 }
 
 .site-footer .has-tip:hover::after,
@@ -4864,7 +4863,7 @@ html[data-fx~="headerfx"] .site-header::after {
   animation: code-up 46s linear infinite;
 }
 
-.research-banner > :not(.code-rain) {
+.research-banner > :not(.code-rain):not(.glare) {
   position: relative;
   z-index: 1;
 }
@@ -6129,7 +6128,8 @@ html.all-selected .site-footer ::selection { background: #fa4616; color: #fff; }
 }
 
 /* coffee stains on the CV paper */
-.cv-body { position: relative; overflow-x: clip; }
+.cv-body { position: relative; }
+html[data-fx~="stains"] .cv-body { overflow-x: clip; }
 
 .coffee-stain {
   position: absolute;
@@ -6852,3 +6852,29 @@ html.caffeinated body { animation: jitter 0.12s steps(2) 12; }
 @media (prefers-reduced-motion: reduce) {
   .name-drink, .name-drink .nd-steam i { animation: none !important; }
 }
+
+/* Research-interest banner: the same 3D tilt and glare as the photo, a little gentler because it is wide */
+.research-banner[data-tilt] {
+  transform: perspective(1200px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(var(--tilt-scale, 1));
+  transition: transform 600ms var(--ease), box-shadow 400ms var(--ease);
+}
+
+.research-banner[data-tilt].is-tilting {
+  --tilt-scale: 1.012;
+  box-shadow: var(--shadow-lg);
+  transition: transform 90ms linear, box-shadow 400ms var(--ease);
+}
+
+.research-banner .glare {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.12) 30%, transparent 60%);
+  mix-blend-mode: overlay;
+  opacity: 0;
+  transition: opacity 400ms var(--ease);
+}
+
+.research-banner.is-tilting .glare { opacity: 1; }

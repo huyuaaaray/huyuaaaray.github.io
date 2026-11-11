@@ -14,9 +14,7 @@
         {%- endfor %}
       </nav>
       <span class="header-divider" aria-hidden="true"></span>
-      <div class="social">
-        {%- include travel-icon.html -%}
-        {% include social-links.html %}</div>
+      <div class="social">{% include social-links.html %}</div>
       {%- if site.effects.motion_toggle %}
       <button type="button" class="icon-btn motion-toggle" data-brand="theme" aria-pressed="false" aria-label="{{ site.motion_toggle_label | escape }}" title="{{ site.motion_toggle_label | escape }}">
         {% include icon.html name="zap" %}{% include icon.html name="zap-off" %}

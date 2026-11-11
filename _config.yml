@@ -635,7 +635,7 @@ effects:
   liquid_buttons: true
   name_drink: true
   smart_header: true
-  header_sky: true
+  header_sky: false
   header_fireflies: true
   header_gator: false
   header_blink: true

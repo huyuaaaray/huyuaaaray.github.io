@@ -144,12 +144,13 @@
   /* ---------- Photo 3D tilt + glare ---------- */
   if (finePointer && !reduceMotion) {
     Array.prototype.forEach.call(document.querySelectorAll('[data-tilt]'), function (el) {
+      var k = parseFloat(el.getAttribute('data-tilt')) || 1;          // how strong the tilt is
       el.addEventListener('pointermove', function (e) {
         var r = el.getBoundingClientRect();
         var x = (e.clientX - r.left) / r.width;
         var y = (e.clientY - r.top) / r.height;
-        el.style.setProperty('--rx', ((0.5 - y) * 14).toFixed(2) + 'deg');
-        el.style.setProperty('--ry', ((x - 0.5) * 16).toFixed(2) + 'deg');
+        el.style.setProperty('--rx', ((0.5 - y) * 14 * k).toFixed(2) + 'deg');
+        el.style.setProperty('--ry', ((x - 0.5) * 16 * k).toFixed(2) + 'deg');
         el.style.setProperty('--gx', (x * 100).toFixed(1) + '%');
         el.style.setProperty('--gy', (y * 100).toFixed(1) + '%');
         el.classList.add('is-tilting');
