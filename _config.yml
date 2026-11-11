@@ -197,10 +197,8 @@ travel:
       lng: 114.3055
       date: 2016 – 2020
       summary: Where I studied electrical engineering at Hubei University of Technology.
-      cover: /images/travel/sample-wuhan.jpg
-      photos:
-        - src: /images/travel/sample-wuhan.jpg
-          caption: Placeholder photo. Replace with your own.
+      cover: ""
+      photos: []
       videos: []
     - name: Berlin
       region: Germany
@@ -230,10 +228,18 @@ travel:
       lng: -82.3248
       date: Aug 2021 – present
       summary: Home base since starting graduate school at the University of Florida. Go Gators!
-      cover: /images/travel/sample-gainesville.jpg
-      photos:
-        - src: /images/travel/sample-gainesville.jpg
-          caption: Placeholder photo. Replace with your own.
+      cover: ""
+      photos: []
+      videos: []
+    - name: Sequoia National Park
+      region: California, USA
+      country: USA
+      lat: 36.4864
+      lng: -118.5658
+      date: May 2022
+      summary: ""
+      cover: ""
+      photos: []
       videos: []
     - name: San Francisco
       region: California, USA
@@ -251,6 +257,16 @@ travel:
       lat: 34.0522
       lng: -118.2437
       date: Jun 2022
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: Atlanta
+      region: Georgia, USA
+      country: USA
+      lat: 33.749
+      lng: -84.388
+      date: Nov 2022
       summary: ""
       cover: ""
       photos: []
@@ -325,6 +341,36 @@ travel:
       cover: ""
       photos: []
       videos: []
+    - name: Grand Canyon National Park
+      region: Arizona, USA
+      country: USA
+      lat: 36.0544
+      lng: -112.1401
+      date: Dec 2024
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: Bryce Canyon National Park
+      region: Utah, USA
+      country: USA
+      lat: 37.593
+      lng: -112.1871
+      date: Dec 2024
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
+    - name: Zion National Park
+      region: Utah, USA
+      country: USA
+      lat: 37.2982
+      lng: -113.0263
+      date: Dec 2024
+      summary: ""
+      cover: ""
+      photos: []
+      videos: []
     - name: Indianapolis
       region: Indiana, USA
       country: USA
@@ -332,10 +378,18 @@ travel:
       lng: -86.1581
       date: Summer 2025
       summary: Spent the summer at the Regenstrief Institute working on clinical data pipelines.
-      cover: /images/travel/sample-indianapolis.jpg
-      photos:
-        - src: /images/travel/sample-indianapolis.jpg
-          caption: Placeholder photo. Replace with your own.
+      cover: ""
+      photos: []
+      videos: []
+    - name: Sedona
+      region: Arizona, USA
+      country: USA
+      lat: 34.8697
+      lng: -111.761
+      date: Dec 2025
+      summary: ""
+      cover: ""
+      photos: []
       videos: []
     - name: Miami
       region: Florida, USA
@@ -635,7 +689,7 @@ effects:
   liquid_buttons: true
   name_drink: true
   smart_header: true
-  header_sky: false
+  header_sky: true
   header_fireflies: true
   header_gator: false
   header_blink: true

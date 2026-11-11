@@ -41,6 +41,14 @@
   var closeBtn = document.getElementById('dialog-close');
   var cards = Array.prototype.slice.call(document.querySelectorAll('.place-card'));
 
+  // Placeholder cards (places whose photo folder is still empty) get a random color each visit
+  Array.prototype.forEach.call(document.querySelectorAll('.place-art'), function (art) {
+    art.style.setProperty('--h', Math.floor(Math.random() * 360));
+    art.style.setProperty('--ang', (100 + Math.floor(Math.random() * 120)) + 'deg');
+    art.style.setProperty('--cx', (15 + Math.floor(Math.random() * 75)) + '%');
+    art.style.setProperty('--cy', (10 + Math.floor(Math.random() * 60)) + '%');
+  });
+
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
