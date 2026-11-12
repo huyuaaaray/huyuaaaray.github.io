@@ -54,21 +54,26 @@ nav:
     url: /cv/
 
 home:
-  description: "Yu Hu is a healthcare AI researcher at the University of Florida College of Medicine studying the reliability, generalizability, and responsible integration of AI into real-world clinical practice."
+  description: "Yu Hu is a healthcare AI researcher at the University of Florida College of Medicine, focusing on trustworthy machine learning, clinical LLM evaluation, and the reliability and generalizability of AI in real-world healthcare."
+
   roles:
     - Healthcare AI Researcher
-    - Trustworthy Clinical AI
+    - Trustworthy Machine Learning
     - Clinical LLM Evaluation
-    - Data Scientist at UF
-  tagline: "Quality & Patient Safety, University of Florida College of Medicine"
+    - AI for Healthcare
+  tagline: "University of Florida College of Medicine"
+
   research:
-    label: Research interest
-    text: "I study how to make AI reliable, generalizable, and responsibly integrated into real-world clinical practice: models that hold up across patients and settings, and that clinicians can trust."
+    label: Research Interests
+    text: "My research focuses on trustworthy machine learning and clinical AI, with an emphasis on reliable LLM reasoning, evidence grounding, and generalization across patient populations and healthcare settings."
+
   about_title: About
   bio: |
-    I'm a healthcare AI researcher at the University of Florida College of Medicine, working with the Quality & Patient Safety group. My research asks what it takes for AI to work in real-world clinical practice: whether models are reliable, whether they generalize beyond the data they were built on, and how they can be brought into clinical workflows responsibly.
+    I'm a healthcare AI researcher at the University of Florida College of Medicine, working with the Quality & Patient Safety group. My research focuses on making AI systems more reliable, generalizable, and trustworthy for real-world clinical decision-making. I'm particularly interested in how large language models and foundation models can reason over complex clinical information, recognize uncertainty, and produce conclusions grounded in evidence.
 
-    In practice, that means evaluating large language models against clinician review, building clinician-in-the-loop validation and LLM-as-a-Judge frameworks, studying algorithmic fairness and causal machine learning on EHR data, and running LLMOps pipelines now used by three clinical programs. This work has led to six peer-reviewed publications in clinical informatics, and I do it alongside clinicians, researchers, and engineers.
+    In my current work, I develop and evaluate clinical LLM systems, including LLM-as-a-Judge frameworks, evidence-grounding and hallucination assessments, and clinician-in-the-loop validation workflows. I also build and maintain LLMOps infrastructure supporting three clinical programs.
+
+    My broader research spans EHR-based machine learning, federated causal learning, and algorithmic fairness, including a co-first-author publication in JAMIA Open. These experiences motivate my interest in developing trustworthy AI methods that generalize across patient populations and clinical environments, while remaining useful and accountable in real-world healthcare.
 
   stats:
     - number: 7
