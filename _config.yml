@@ -659,7 +659,7 @@ not_found:
 
 effects:
   cursor_tail: true
-  cursor_spotlight: true
+  cursor_spotlight: false
   ripple: true
   hover_glow: true
   theme_toggle: true
@@ -689,7 +689,7 @@ effects:
   globe_planes: true
   polaroids: true
   marker_highlight: true
-  aurora: true
+  aurora: false
   card_slideshow: true
   card_expand: true
   scroll_line: true
@@ -701,7 +701,7 @@ effects:
   header_shrink: true
   header_fx: false
   nav_scramble: true
-  nav_flourish: true
+  nav_flourish: false
   scroll_skew: false
   dot_grid: true
   flow_border: false
@@ -717,6 +717,7 @@ effects:
   footer_wave: false
   drag_photo: true
   liquid_buttons: true
+  paper_grain: true
   name_drink: true
   smart_header: true
   header_sky: true
@@ -731,7 +732,7 @@ effects:
   matcha_click: false
   coffee_progress: true
   drip_loading: true
-  steam_titles: true
+  steam_titles: false
   latte_theme: true
   matcha_theme: true
   coffee_stains: false
@@ -774,7 +775,7 @@ eggs:
     show: true
     idle_seconds: 60
   bottom_peek:
-    show: true
+    show: false
     text: "You found the bottom! 🐊"
   star_wish:
     show: true
