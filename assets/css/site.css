@@ -2250,12 +2250,7 @@ html.theme-switching .site-header {
 }
 
 .display-name .dc.is-scrambling {
-  color: var(--accent);
-  opacity: 0.8;
-}
-
-.display-name .dc.is-fresh {
-  color: var(--mark);
+  opacity: 0.55;
 }
 
 /* ---- About: words light up as you scroll ---- */

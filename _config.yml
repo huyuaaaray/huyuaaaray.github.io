@@ -371,16 +371,6 @@ travel:
       cover: ""
       photos: []
       videos: []
-    - name: Indianapolis
-      region: Indiana, USA
-      country: USA
-      lat: 39.7684
-      lng: -86.1581
-      date: Summer 2025
-      summary: Spent the summer at the Regenstrief Institute working on clinical data pipelines.
-      cover: ""
-      photos: []
-      videos: []
     - name: Sedona
       region: Arizona, USA
       country: USA

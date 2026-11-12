@@ -1163,10 +1163,13 @@
 
   /* ---------- U.S. states map: the states I've been to in orange ---------- */
   var statesBox = document.querySelector('.states-map');
+  if (statesBox) {
+    // the count shows even if the map itself can't load
+    statesBox.querySelector('.sm-count').textContent = String(statesBox.getAttribute('data-count-text') || '{n}').replace('{n}', Object.keys(usStates).length);
+  }
   if (statesBox && window.fetch && window.topojson) {
     var visited = usStates;
     var countEl = statesBox.querySelector('.sm-count');
-    countEl.textContent = String(statesBox.getAttribute('data-count-text') || '{n}').replace('{n}', Object.keys(visited).length);
     fetch('https://cdn.jsdelivr.net/npm/us-atlas@3.0.1/states-albers-10m.json', { integrity: 'sha384-vyqp+z8MYIFZU8V1K7x8eeS6f4qq+zp2l6YqE81ZLpCykssi+zpvpQSkQNRqIaJb' })
       .then(function (r) { return r.json(); })
       .then(function (us) {

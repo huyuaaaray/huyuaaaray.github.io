@@ -131,7 +131,9 @@
     setTimeout(function () { d.remove(); }, 3200);
   };
   var bigName = document.querySelector('.display-name');
-  if (on('name_disco') && bigName) bigName.addEventListener('click', disco);
+  if (on('name_disco') && bigName) bigName.addEventListener('click', function (e) {
+    if (!window.siteIsYuClick || window.siteIsYuClick(e)) disco();
+  });
   if (on('theme_disco')) {
     var tb = document.querySelector('.theme-toggle'), hits = [];
     if (tb) tb.addEventListener('click', function () {

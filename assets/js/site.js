@@ -535,9 +535,37 @@
     if (typed === secret) { typed = ''; goGators(); }
   });
 
+  // Was the click on the first word of the name ("Yu")? Letters that the mouse has pushed
+  // aside still count where they belong, so the test uses their resting positions.
+  function onFirstWord(e) {
+    if (!nameEl) return false;
+    var full = (nameEl.getAttribute('aria-label') || nameEl.textContent).trim();
+    var n = full.indexOf(' ');
+    if (n < 1) return true;                                       // one-word name: the whole name counts
+    var spans = nameEl.querySelectorAll('.dc');
+    var x = e.clientX, boundary;
+    if (spans.length > n) {
+      var first = spans[0], gap = spans[n];
+      var shift = parseFloat(first.style.getPropertyValue('--rx')) || 0;
+      var restLeft = first.getBoundingClientRect().left - shift;
+      boundary = restLeft + (gap.offsetLeft + gap.offsetWidth / 2) - first.offsetLeft;
+    } else {
+      var node = nameEl.firstChild;
+      while (node && node.nodeType !== 3) node = node.firstChild;
+      if (!node) return true;
+      var r = document.createRange();
+      r.setStart(node, 0);
+      r.setEnd(node, Math.min(n + 1, node.length));
+      var rr = r.getBoundingClientRect();
+      boundary = rr.right - (rr.width / (n + 1)) / 2;
+    }
+    return x < boundary;
+  }
+  window.siteIsYuClick = onFirstWord;
+
   if (nameEl && eggOn) {
-    nameEl.addEventListener('click', function () {
-      goGators();
+    nameEl.addEventListener('click', function (e) {
+      if (onFirstWord(e)) goGators();
       decodeName();
     });
   }

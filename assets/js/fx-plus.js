@@ -39,7 +39,7 @@
 
   /* ---------- Title shine: a wave of light runs across a title when you point at it ---------- */
   if (has('shine') && !reduceMotion) {
-    each('.section-title, .cv-section > h2, .display-name', function (h) {
+    each('.section-title, .cv-section > h2', function (h) {
       h.addEventListener('mouseenter', function () {
         var chars = h.querySelectorAll('.tl-ch, .dc');
         Array.prototype.forEach.call(chars, function (c, i) { c.style.setProperty('--si', i); });
@@ -561,7 +561,7 @@
         p.classList.add('is-gone');
         setTimeout(function () { p.classList.add('is-closed'); }, 1300);
         setTimeout(function () { p.remove(); }, 2200);
-      }, 10000);
+      }, 5000);
     }
   }
 
