@@ -70,10 +70,9 @@ home:
   about_title: About
 
   bio: |
-    I'm a healthcare AI researcher at the University of Florida College of Medicine, working with the Quality & Patient Safety group. My research focuses on trustworthy machine learning and clinical AI, particularly the reliability, reasoning, and generalizability of AI systems in real-world healthcare.
+    I'm a healthcare AI researcher at the University of Florida College of Medicine, working with the Quality & Patient Safety group. My research asks what it takes for AI to work in real-world clinical practice: whether models are reliable, whether they generalize beyond the data they were built on, and how they can be brought into clinical workflows responsibly.
 
-    My work spans clinical LLM evaluation, evidence grounding, clinician-in-the-loop validation, and LLMOps, alongside research in EHR-based machine learning, algorithmic fairness, and causal inference. I aim to develop AI systems that are not only technically robust but also trustworthy and useful in clinical practice.
-
+    In practice, that means evaluating large language models against clinician review, building clinician-in-the-loop validation and LLM-as-a-Judge frameworks, studying algorithmic fairness and causal machine learning on EHR data, and running LLMOps pipelines now used by three clinical programs. This work has led to six peer-reviewed publications in clinical informatics, and I do it alongside clinicians, researchers, and engineers.
   stats:
     - number: 7
       label: peer-reviewed publications
