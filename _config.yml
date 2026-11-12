@@ -61,19 +61,18 @@ home:
     - Trustworthy Machine Learning
     - Clinical LLM Evaluation
     - AI for Healthcare
-  tagline: "University of Florida College of Medicine"
+  tagline: "College of Medicine, University of Florida"
 
   research:
     label: Research Interests
     text: "My research focuses on trustworthy machine learning and clinical AI, with an emphasis on reliable LLM reasoning, evidence grounding, and generalization across patient populations and healthcare settings."
 
   about_title: About
+
   bio: |
-    I'm a healthcare AI researcher at the University of Florida College of Medicine, working with the Quality & Patient Safety group. My research focuses on making AI systems more reliable, generalizable, and trustworthy for real-world clinical decision-making. I'm particularly interested in how large language models and foundation models can reason over complex clinical information, recognize uncertainty, and produce conclusions grounded in evidence.
+    I'm a healthcare AI researcher at the University of Florida College of Medicine, working with the Quality & Patient Safety group. My research focuses on trustworthy machine learning and clinical AI, particularly the reliability, reasoning, and generalizability of AI systems in real-world healthcare.
 
-    In my current work, I develop and evaluate clinical LLM systems, including LLM-as-a-Judge frameworks, evidence-grounding and hallucination assessments, and clinician-in-the-loop validation workflows. I also build and maintain LLMOps infrastructure supporting three clinical programs.
-
-    My broader research spans EHR-based machine learning, federated causal learning, and algorithmic fairness, including a co-first-author publication in JAMIA Open. These experiences motivate my interest in developing trustworthy AI methods that generalize across patient populations and clinical environments, while remaining useful and accountable in real-world healthcare.
+    My work spans clinical LLM evaluation, evidence grounding, clinician-in-the-loop validation, and LLMOps, alongside research in EHR-based machine learning, algorithmic fairness, and causal inference. I aim to develop AI systems that are not only technically robust but also trustworthy and useful in clinical practice.
 
   stats:
     - number: 7
