@@ -587,9 +587,9 @@ h3 {
 .research-text {
   position: relative;
   margin: 0;
-  max-width: 62ch;
+  max-width: calc(62ch / 0.9);        /* same width as before the text got smaller */
   font-family: var(--serif);
-  font-size: clamp(17.6px, 1.92vw, 22.4px);
+  font-size: clamp(19.8px, 2.16vw, 25.2px);
   font-weight: 600;
   line-height: 1.38;
   letter-spacing: -0.005em;
@@ -2125,9 +2125,9 @@ html[data-fx~="glow"] .photo:hover {
   box-shadow: var(--shadow-lg), 0 0 46px color-mix(in srgb, var(--accent) 28%, transparent);
 }
 
-html[data-fx~="glow"] .research-banner:hover {
-  box-shadow: 0 10px 40px rgba(52, 46, 43, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    0 0 44px color-mix(in srgb, var(--mark) 22%, transparent);
+html[data-fx~="glow"] .research-banner:hover,
+html[data-fx~="glow"] .research-banner[data-tilt].is-tilting {
+  box-shadow: inset 0 1px 0 var(--hl), var(--shadow-lg), 0 0 46px rgba(181, 160, 255, 0.32);
 }
 
 html[data-fx~="glow"] .place-card:hover {
@@ -6871,8 +6871,8 @@ html.caffeinated body { animation: jitter 0.12s steps(2) 12; }
   z-index: 2;
   border-radius: inherit;
   pointer-events: none;
-  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.12) 30%, transparent 60%);
-  mix-blend-mode: overlay;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(214, 200, 255, 0.55), rgba(214, 200, 255, 0.14) 30%, transparent 60%);
+  mix-blend-mode: soft-light;
   opacity: 0;
   transition: opacity 400ms var(--ease);
 }
@@ -7009,4 +7009,97 @@ html[data-fx~="grain"] body::after {
   text-align: justify;
   text-justify: inter-word;
   hyphens: auto;
+}
+
+/* =========================================================
+   Slogan above the About text
+   ========================================================= */
+.slogan {
+  position: relative;
+  margin: 0 0 24px;
+  padding: 4px 0 4px 20px;
+}
+
+/* the accent bar on the left grows in first */
+.slogan::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 4px;
+  background: linear-gradient(var(--mark), #ffb067);
+  box-shadow: 0 0 10px rgba(250, 70, 22, 0.35);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 700ms var(--ease);
+}
+
+.slogan.is-lit::before {
+  transform: scaleY(1);
+}
+
+.slogan-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  color: var(--mark);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.slogan-label .icon {
+  width: 14px;
+  height: 14px;
+}
+
+.slogan-text {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(24px, 2.7vw, 32px);
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+/* each word starts dim, flares up in orange, then settles with a soft glow */
+.js .sw {
+  color: color-mix(in srgb, var(--text) 28%, transparent);
+}
+
+/* without JavaScript the slogan is simply shown in orange */
+html:not(.js) .sw {
+  color: var(--mark);
+}
+
+.slogan.is-lit .sw {
+  animation: sw-light 1100ms ease-out forwards;
+  animation-delay: calc(300ms + var(--i) * 220ms);
+}
+
+.slogan.is-instant .sw {
+  animation: none;
+  color: var(--mark);
+}
+
+@keyframes sw-light {
+  0% { color: color-mix(in srgb, var(--text) 28%, transparent); text-shadow: none; }
+  45% { color: #ff7a2f; text-shadow: 0 0 8px rgba(255, 122, 47, 0.9), 0 0 22px rgba(255, 122, 47, 0.55); }
+  100% { color: var(--mark); text-shadow: 0 0 12px rgba(250, 70, 22, 0.22); }
+}
+
+:root[data-theme="dark"] .slogan.is-lit .sw,
+:root.theme-night .slogan.is-lit .sw {
+  animation-name: sw-light-dark;
+}
+
+@keyframes sw-light-dark {
+  0% { color: color-mix(in srgb, var(--text) 28%, transparent); text-shadow: none; }
+  45% { color: #ffa25c; text-shadow: 0 0 10px rgba(255, 140, 60, 0.95), 0 0 26px rgba(255, 120, 40, 0.6); }
+  100% { color: #ff8a4c; text-shadow: 0 0 14px rgba(255, 120, 40, 0.35); }
 }

@@ -561,7 +561,7 @@
         p.classList.add('is-gone');
         setTimeout(function () { p.classList.add('is-closed'); }, 1300);
         setTimeout(function () { p.remove(); }, 2200);
-      }, 5000);
+      }, (Number(D.greeting.seconds) || 7) * 1000);
     }
   }
 
@@ -587,6 +587,21 @@
       };
       var ready = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
       ready.then(function () { setTimeout(place, 700); });
+    }
+  }
+
+  /* ---------- Slogan: its words light up in orange, one after another ---------- */
+  var slogan = document.querySelector('.slogan');
+  if (slogan) {
+    Array.prototype.forEach.call(slogan.querySelectorAll('.sw'), function (w, i) { w.style.setProperty('--i', i); });
+    if (reduceMotion || !('IntersectionObserver' in window)) slogan.classList.add('is-lit', 'is-instant');
+    else {
+      var sio = new IntersectionObserver(function (en) {
+        if (!en[0].isIntersecting) return;
+        sio.disconnect();
+        setTimeout(function () { slogan.classList.add('is-lit'); }, 300);
+      }, { threshold: 0.6 });
+      sio.observe(slogan);
     }
   }
 
