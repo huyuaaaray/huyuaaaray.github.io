@@ -561,7 +561,7 @@
         p.classList.add('is-gone');
         setTimeout(function () { p.classList.add('is-closed'); }, 1300);
         setTimeout(function () { p.remove(); }, 2200);
-      }, 7000);
+      }, 5000);
     }
   }
 
