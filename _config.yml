@@ -52,6 +52,7 @@ nav:
     tip: "🐊 See my travel"
   - label: CV
     url: /cv/
+    hover_icon: page
 
 home:
   description: "Yu Hu is a healthcare AI researcher at the University of Florida College of Medicine, focusing on trustworthy machine learning, clinical LLM evaluation, and the reliability and generalizability of AI in real-world healthcare."
@@ -62,18 +63,17 @@ home:
     - Trustworthy Machine Learning
     - Clinical LLM Evaluation
     - AI for Healthcare
-  tagline: "College of Medicine, University of Florida"
+  tagline: "University of Florida College of Medicine"
 
   research:
     label: Research Interests
     text: "My research focuses on trustworthy machine learning and clinical AI, with an emphasis on reliable LLM reasoning, evidence grounding, and generalization across patient populations and healthcare settings."
 
   about_title: About
-  slogan_label: Research mission
-  slogan: "Building trustworthy AI that holds up across patients and care settings."
+  slogan: "Building trustworthy AI that generalizes across patients and clinical settings."
 
   bio: |
-    I'm a Data Scientist III and healthcare AI researcher at the University of Florida College of Medicine. My work focuses on trustworthy machine learning for clinical care: evaluating how reliably large language models reason against clinician review, grounding their answers in patient evidence, and testing whether models generalize across patient populations and healthcare settings. Along the way I've built clinician-in-the-loop evaluation and LLM-as-a-Judge frameworks and LLMOps pipelines now used by three clinical programs, work that has led to six peer-reviewed publications in clinical informatics.
+    I'm a healthcare AI researcher at the University of Florida College of Medicine, working with the Quality & Patient Safety group. My research focuses on making AI reliable, generalizable, and trustworthy in real-world clinical practice. My work spans clinical LLM evaluation, evidence grounding, clinician-in-the-loop validation, and trustworthy machine learning, including research on algorithmic fairness and causal inference using real-world health data. I'm particularly interested in developing AI systems that clinicians can trust and that generalize across diverse patient populations and healthcare settings.
 
   stats:
     - number: 7
@@ -696,7 +696,7 @@ effects:
   title_shine: true
   header_shrink: true
   header_fx: false
-  nav_scramble: true
+  nav_scramble: false
   nav_flourish: false
   scroll_skew: false
   dot_grid: true

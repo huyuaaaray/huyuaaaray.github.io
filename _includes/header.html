@@ -8,7 +8,7 @@
       <nav class="tabs" aria-label="Main">
         {%- for item in site.nav -%}
         {%- unless item.icon %}
-        <a class="tab" href="{{ item.url }}" {% if page.url == item.url %}aria-current="page"{% endif %}>{{ item.label | escape }}</a>
+        <a class="tab{% if item.hover_icon %} tab-morph{% endif %}" href="{{ item.url }}" {% if page.url == item.url %}aria-current="page"{% endif %}>{{ item.label | escape }}{% if item.hover_icon %}<span class="tab-icon" aria-hidden="true">{% include icon.html name=item.hover_icon %}</span>{% endif %}</a>
         {%- endunless -%}
         {%- endfor %}
       </nav>

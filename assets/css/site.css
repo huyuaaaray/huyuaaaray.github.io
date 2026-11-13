@@ -587,9 +587,9 @@ h3 {
 .research-text {
   position: relative;
   margin: 0;
-  max-width: calc(62ch / 0.9);        /* same width as before the text got smaller */
+  max-width: calc(62ch / 0.945);      /* same line width as the original size */
   font-family: var(--serif);
-  font-size: clamp(19.8px, 2.16vw, 25.2px);
+  font-size: clamp(20.8px, 2.27vw, 26.5px);
   font-weight: 600;
   line-height: 1.38;
   letter-spacing: -0.005em;
@@ -7016,8 +7016,10 @@ html[data-fx~="grain"] body::after {
    ========================================================= */
 .slogan {
   position: relative;
-  margin: 0 0 24px;
+  max-width: 68ch;                    /* the same width as the About text */
+  margin: 0 0 32px;
   padding: 4px 0 4px 20px;
+  --sl-mark: color-mix(in srgb, var(--mark) 80%, #000);
 }
 
 /* the accent bar on the left grows in first */
@@ -7029,11 +7031,11 @@ html[data-fx~="grain"] body::after {
   bottom: 0;
   width: 4px;
   border-radius: 4px;
-  background: linear-gradient(var(--mark), #ffb067);
-  box-shadow: 0 0 10px rgba(250, 70, 22, 0.35);
+  background: linear-gradient(var(--sl-mark), color-mix(in srgb, #ffb067 80%, #000));
+  box-shadow: 0 0 10px rgba(200, 56, 18, 0.28);
   transform: scaleY(0);
   transform-origin: top;
-  transition: transform 700ms var(--ease);
+  transition: transform 1000ms var(--ease);
 }
 
 .slogan.is-lit::before {
@@ -7074,23 +7076,23 @@ html[data-fx~="grain"] body::after {
 
 /* without JavaScript the slogan is simply shown in orange */
 html:not(.js) .sw {
-  color: var(--mark);
+  color: var(--sl-mark);
 }
 
 .slogan.is-lit .sw {
-  animation: sw-light 1100ms ease-out forwards;
-  animation-delay: calc(300ms + var(--i) * 220ms);
+  animation: sw-light 1570ms ease-out forwards;
+  animation-delay: calc(430ms + var(--i) * 315ms);
 }
 
 .slogan.is-instant .sw {
   animation: none;
-  color: var(--mark);
+  color: var(--sl-mark);
 }
 
 @keyframes sw-light {
   0% { color: color-mix(in srgb, var(--text) 28%, transparent); text-shadow: none; }
-  45% { color: #ff7a2f; text-shadow: 0 0 8px rgba(255, 122, 47, 0.9), 0 0 22px rgba(255, 122, 47, 0.55); }
-  100% { color: var(--mark); text-shadow: 0 0 12px rgba(250, 70, 22, 0.22); }
+  45% { color: #cc6226; text-shadow: 0 0 8px rgba(204, 98, 38, 0.72), 0 0 22px rgba(204, 98, 38, 0.44); }
+  100% { color: var(--sl-mark); text-shadow: 0 0 12px rgba(200, 56, 18, 0.18); }
 }
 
 :root[data-theme="dark"] .slogan.is-lit .sw,
@@ -7100,6 +7102,74 @@ html:not(.js) .sw {
 
 @keyframes sw-light-dark {
   0% { color: color-mix(in srgb, var(--text) 28%, transparent); text-shadow: none; }
-  45% { color: #ffa25c; text-shadow: 0 0 10px rgba(255, 140, 60, 0.95), 0 0 26px rgba(255, 120, 40, 0.6); }
-  100% { color: #ff8a4c; text-shadow: 0 0 14px rgba(255, 120, 40, 0.35); }
+  45% { color: #cc824a; text-shadow: 0 0 10px rgba(204, 112, 48, 0.76), 0 0 26px rgba(204, 96, 32, 0.48); }
+  100% { color: #cc6e3d; text-shadow: 0 0 14px rgba(204, 96, 32, 0.28); }
+}
+
+/* The CV link turns into an animated page icon with a lavender glow on hover */
+.tab-morph {
+  display: inline-grid;
+  place-items: center;
+}
+
+.tab-morph > * { grid-area: 1 / 1; }
+
+.tab-morph .tab-label,
+.tab-morph {
+  transition: color 200ms var(--ease);
+}
+
+.tab-morph .tab-label {
+  transition: opacity 220ms var(--ease), transform 260ms var(--ease);
+}
+
+.tab-icon {
+  display: inline-flex;
+  color: #b5a0ff;
+  opacity: 0;
+  transform: perspective(200px) rotateY(-90deg) scale(0.7);
+  transition: opacity 220ms var(--ease), transform 380ms cubic-bezier(0.3, 1.5, 0.5, 1);
+  filter: drop-shadow(0 0 4px rgba(181, 160, 255, 0.9)) drop-shadow(0 0 10px rgba(181, 160, 255, 0.55));
+  pointer-events: none;
+}
+
+.tab-icon .icon {
+  width: 22px;
+  height: 22px;
+}
+
+.tab-icon .pg-line {
+  stroke-dasharray: 10;
+  stroke-dashoffset: 10;
+}
+
+.tab-morph:hover .tab-label,
+.tab-morph:focus-visible .tab-label {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.85);
+}
+
+.tab-morph:hover .tab-icon,
+.tab-morph:focus-visible .tab-icon {
+  opacity: 1;
+  transform: none;
+}
+
+/* the lines of text get "written" onto the page, and the corner flutters */
+.tab-morph:hover .tab-icon .pg-line { animation: pg-write 0.5s ease-out forwards; }
+.tab-morph:hover .tab-icon .l1 { animation-delay: 0.18s; }
+.tab-morph:hover .tab-icon .l2 { animation-delay: 0.32s; }
+.tab-morph:hover .tab-icon .l3 { animation-delay: 0.08s; }
+.tab-morph:hover .tab-icon .pg-fold { animation: pg-flutter 1.6s ease-in-out 0.5s infinite; transform-origin: 16.5px 4.5px; }
+
+@keyframes pg-write { to { stroke-dashoffset: 0; } }
+@keyframes pg-flutter { 50% { transform: rotate(-12deg) translate(0.4px, -0.4px); } }
+
+.tab-morph:hover {
+  background: color-mix(in srgb, #b5a0ff 12%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-morph:hover .tab-icon .pg-line { animation: none; stroke-dashoffset: 0; }
+  .tab-morph:hover .tab-icon .pg-fold { animation: none; }
 }

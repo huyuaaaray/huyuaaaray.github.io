@@ -61,12 +61,16 @@
 
   /* ---------- Menu links: letters scramble, and a little flourish (a plane for Travel, a pencil for CV) ---------- */
   each('.site-header .tab', function (tab) {
-    var text = tab.textContent.trim();
-    tab.textContent = '';
+    // wrap just the words in a label, keeping anything else (like the CV page icon) in place
+    var text = '';
+    Array.prototype.slice.call(tab.childNodes).forEach(function (n) {
+      if (n.nodeType === 3) { text += n.nodeValue; n.remove(); }
+    });
+    text = text.trim();
     var label = document.createElement('span');
     label.className = 'tab-label';
     label.textContent = text;
-    tab.appendChild(label);
+    tab.insertBefore(label, tab.firstChild);
     if (has('navfx')) {
       var href = tab.getAttribute('href') || '';
       var kind = /travel/.test(href) ? 'plane' : /cv/.test(href) ? 'pencil' : 'spark';
