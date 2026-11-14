@@ -7217,10 +7217,3 @@ html[data-fx~="glow"] .tab-morph:hover {
 @media (prefers-reduced-motion: reduce) {
   .slogan.is-lit .sw { animation: none; color: var(--sl-mark); text-shadow: 0 0 10px rgba(250, 70, 22, 0.25); }
 }
-
-/* Two-column layout: when the photo column is taller than the About text, push the extra
-   space above the slogan instead of below the About text, so the gap down to the research
-   card is the same as the gap below it. */
-@media (min-width: 1001px) {
-  .intro-about { align-self: end; }
-}
