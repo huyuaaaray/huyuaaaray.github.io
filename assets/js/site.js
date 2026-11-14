@@ -370,7 +370,7 @@
 
   /* ---------- Magnetic icons (and News items, which are big, so they move less) ---------- */
   if (finePointer && !reduceMotion) {
-    var magnets = Array.prototype.slice.call(document.querySelectorAll('.icon-btn'));
+    var magnets = Array.prototype.slice.call(document.querySelectorAll('.icon-btn, .tab-morph'));
     if (has('magnet')) magnets = magnets.concat(Array.prototype.slice.call(document.querySelectorAll('.news li')));
     magnets.forEach(function (btn) {
       var big = btn.tagName === 'LI';

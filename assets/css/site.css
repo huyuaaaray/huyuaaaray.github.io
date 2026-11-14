@@ -6480,7 +6480,7 @@ html.caffeinated body { animation: jitter 0.12s steps(2) 12; }
   }
 
   .research-wrap {
-    margin-top: 40px;
+    margin-top: 32px;
   }
 
   .stat-strip {
@@ -7019,7 +7019,7 @@ html[data-fx~="grain"] body::after {
   max-width: 68ch;                    /* the same width as the About text */
   margin: 0 0 32px;
   padding: 4px 0 4px 20px;
-  --sl-mark: color-mix(in srgb, var(--mark) 80%, #000);
+  --sl-mark: var(--mark);
 }
 
 /* the accent bar on the left grows in first */
@@ -7031,8 +7031,8 @@ html[data-fx~="grain"] body::after {
   bottom: 0;
   width: 4px;
   border-radius: 4px;
-  background: linear-gradient(var(--sl-mark), color-mix(in srgb, #ffb067 80%, #000));
-  box-shadow: 0 0 10px rgba(200, 56, 18, 0.28);
+  background: linear-gradient(var(--sl-mark), #ffb067);
+  box-shadow: 0 0 10px rgba(250, 70, 22, 0.35);
   transform: scaleY(0);
   transform-origin: top;
   transition: transform 1000ms var(--ease);
@@ -7062,9 +7062,9 @@ html[data-fx~="grain"] body::after {
 .slogan-text {
   margin: 0;
   font-family: var(--serif);
-  font-size: clamp(24px, 2.7vw, 32px);
+  font-size: clamp(26.4px, 2.97vw, 35.2px);   /* 110% of the earlier size */
   font-weight: 650;
-  line-height: 1.25;
+  line-height: 1.22;
   letter-spacing: -0.015em;
   text-wrap: balance;
 }
@@ -7080,9 +7080,26 @@ html:not(.js) .sw {
 }
 
 .slogan.is-lit .sw {
-  animation: sw-light 1570ms ease-out forwards;
-  animation-delay: calc(430ms + var(--i) * 315ms);
+  animation: sw-light 1570ms ease-out forwards, sw-breathe 3.6s ease-in-out infinite alternate;
+  animation-delay: calc(430ms + var(--i) * 315ms), calc(2000ms + var(--i) * 315ms);
 }
+
+@keyframes sw-breathe {
+  from { text-shadow: 0 0 6px rgba(250, 70, 22, 0.12); }
+  to { text-shadow: 0 0 14px rgba(255, 110, 50, 0.55), 0 0 30px rgba(255, 110, 50, 0.25); }
+}
+
+:root[data-theme="dark"] .slogan.is-lit .sw,
+:root.theme-night .slogan.is-lit .sw {
+  animation-name: sw-light-dark, sw-breathe-dark;
+}
+
+@keyframes sw-breathe-dark {
+  from { text-shadow: 0 0 8px rgba(255, 120, 40, 0.2); }
+  to { text-shadow: 0 0 16px rgba(255, 140, 60, 0.7), 0 0 34px rgba(255, 120, 40, 0.35); }
+}
+
+.lite .slogan .sw { animation-play-state: paused; }
 
 .slogan.is-instant .sw {
   animation: none;
@@ -7091,19 +7108,16 @@ html:not(.js) .sw {
 
 @keyframes sw-light {
   0% { color: color-mix(in srgb, var(--text) 28%, transparent); text-shadow: none; }
-  45% { color: #cc6226; text-shadow: 0 0 8px rgba(204, 98, 38, 0.72), 0 0 22px rgba(204, 98, 38, 0.44); }
-  100% { color: var(--sl-mark); text-shadow: 0 0 12px rgba(200, 56, 18, 0.18); }
+  45% { color: #ff7a2f; text-shadow: 0 0 8px rgba(255, 122, 47, 0.9), 0 0 22px rgba(255, 122, 47, 0.55); }
+  100% { color: var(--sl-mark); text-shadow: 0 0 12px rgba(250, 70, 22, 0.22); }
 }
 
-:root[data-theme="dark"] .slogan.is-lit .sw,
-:root.theme-night .slogan.is-lit .sw {
-  animation-name: sw-light-dark;
-}
+
 
 @keyframes sw-light-dark {
   0% { color: color-mix(in srgb, var(--text) 28%, transparent); text-shadow: none; }
-  45% { color: #cc824a; text-shadow: 0 0 10px rgba(204, 112, 48, 0.76), 0 0 26px rgba(204, 96, 32, 0.48); }
-  100% { color: #cc6e3d; text-shadow: 0 0 14px rgba(204, 96, 32, 0.28); }
+  45% { color: #ffa25c; text-shadow: 0 0 10px rgba(255, 140, 60, 0.95), 0 0 26px rgba(255, 120, 40, 0.6); }
+  100% { color: #ff8a4c; text-shadow: 0 0 14px rgba(255, 120, 40, 0.35); }
 }
 
 /* The CV link turns into an animated page icon with a lavender glow on hover */
@@ -7172,4 +7186,41 @@ html:not(.js) .sw {
 @media (prefers-reduced-motion: reduce) {
   .tab-morph:hover .tab-icon .pg-line { animation: none; stroke-dashoffset: 0; }
   .tab-morph:hover .tab-icon .pg-fold { animation: none; }
+}
+
+/* nothing extra under the last About line, so the gap down to the research card is exact */
+.intro-about .prose p:last-child { margin-bottom: 0; }
+
+/* the CV page icon moves and glows like the other header icons */
+.tab-morph {
+  translate: var(--mx, 0px) var(--my, 0px);
+  transition: color 200ms var(--ease), background 200ms var(--ease), transform 220ms var(--ease), translate 260ms var(--ease), box-shadow 260ms var(--ease);
+}
+
+.tab-morph.is-magnet {
+  transition: color 200ms var(--ease), background 200ms var(--ease), transform 220ms var(--ease), translate 80ms linear, box-shadow 260ms var(--ease);
+}
+
+.tab-morph:hover {
+  transform: translateY(-2px);
+}
+
+html[data-fx~="glow"] .tab-morph:hover {
+  box-shadow: 0 0 0 1px rgba(181, 160, 255, 0.3), 0 0 20px rgba(181, 160, 255, 0.45);
+}
+
+.tab-morph:hover .tab-icon .icon {
+  transform: scale(1.1);
+  transition: transform 220ms var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slogan.is-lit .sw { animation: none; color: var(--sl-mark); text-shadow: 0 0 10px rgba(250, 70, 22, 0.25); }
+}
+
+/* Two-column layout: when the photo column is taller than the About text, push the extra
+   space above the slogan instead of below the About text, so the gap down to the research
+   card is the same as the gap below it. */
+@media (min-width: 1001px) {
+  .intro-about { align-self: end; }
 }
