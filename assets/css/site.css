@@ -2122,7 +2122,7 @@ html[data-fx~="glow"] .brand:hover img {
 }
 
 html[data-fx~="glow"] .photo:hover {
-  box-shadow: var(--shadow-lg), 0 0 46px color-mix(in srgb, var(--accent) 28%, transparent);
+  box-shadow: var(--shadow-lg), 0 0 46px color-mix(in srgb, var(--mark) 32%, transparent);
 }
 
 html[data-fx~="glow"] .research-banner:hover,
@@ -7031,11 +7031,11 @@ html[data-fx~="grain"] body::after {
   bottom: 0;
   width: 4px;
   border-radius: 4px;
-  background: linear-gradient(var(--sl-mark), #ffb067);
+  background: var(--sl-mark);
   box-shadow: 0 0 10px rgba(250, 70, 22, 0.35);
   transform: scaleY(0);
   transform-origin: top;
-  transition: transform 1000ms var(--ease);
+  transition: transform 1000ms var(--ease), background-color 1800ms ease, box-shadow 1800ms ease;
 }
 
 .slogan.is-lit::before {
@@ -7139,7 +7139,7 @@ html:not(.js) .sw {
 
 .tab-icon {
   display: inline-flex;
-  color: #b5a0ff;
+  color: var(--text);
   opacity: 0;
   transform: perspective(200px) rotateY(-90deg) scale(0.7);
   transition: opacity 220ms var(--ease), transform 380ms cubic-bezier(0.3, 1.5, 0.5, 1);
@@ -7225,4 +7225,74 @@ html[data-fx~="glow"] .tab-morph:hover {
 
 @media (max-width: 1000px) {
   .research-wrap { margin-top: 86px; }
+}
+
+/* Once every word has lit up, the slogan and its bar ease back to the regular text color;
+   a faint warm halo keeps breathing around the words. */
+.slogan.is-settled::before {
+  background: var(--text);
+  box-shadow: none;
+}
+
+.slogan.is-settled .sw {
+  animation: sw-settle 1800ms ease forwards, sw-breathe-soft 3.6s ease-in-out infinite alternate;
+  animation-delay: 0ms, calc(1800ms + var(--i) * 315ms);
+}
+
+@keyframes sw-settle {
+  from { color: var(--sl-mark); text-shadow: 0 0 12px rgba(250, 70, 22, 0.22); }
+  to { color: var(--text); text-shadow: 0 0 8px rgba(250, 70, 22, 0.1); }
+}
+
+@keyframes sw-breathe-soft {
+  from { color: var(--text); text-shadow: 0 0 6px rgba(250, 70, 22, 0.06); }
+  to { color: var(--text); text-shadow: 0 0 12px rgba(255, 110, 50, 0.28), 0 0 26px rgba(255, 110, 50, 0.12); }
+}
+
+.slogan.is-instant .sw { color: var(--text); }
+.slogan.is-instant::before { background: var(--text); box-shadow: none; }
+
+/* =========================================================
+   Page transitions, round 3: soft refocus (most pages) and blur crossfade (CV)
+   ========================================================= */
+html.pt-in[data-pt="soft"]::after,
+html.pt-in[data-pt="blur"]::after { content: none; }
+
+/* arriving: start out of focus, then sharpen */
+html.pt-in[data-pt="soft"] main {
+  opacity: 0;
+  filter: blur(6px);
+  transform: translateY(10px);
+}
+
+html.pt-in[data-pt="blur"] :is(main, .site-header, .site-footer, .holiday-banner) {
+  opacity: 0;
+  filter: blur(14px);
+}
+
+html.pt-arrive main {
+  transition: opacity 520ms cubic-bezier(0.25, 0.1, 0.25, 1), filter 520ms cubic-bezier(0.25, 0.1, 0.25, 1), transform 520ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+html.pt-arrive :is(.site-header, .site-footer, .holiday-banner) {
+  transition: opacity 600ms ease, filter 600ms ease;
+}
+
+/* leaving */
+html.pt-leave-soft main {
+  opacity: 0;
+  filter: blur(6px);
+  transform: translateY(-6px);
+  transition: opacity 280ms ease-in, filter 280ms ease-in, transform 280ms ease-in;
+}
+
+html.pt-leave-blur :is(main, .site-header, .site-footer, .holiday-banner) {
+  opacity: 0;
+  filter: blur(14px);
+  transition: opacity 380ms ease-in, filter 380ms ease-in;
+}
+
+:root[data-theme="dark"] .slogan.is-settled .sw,
+:root.theme-night .slogan.is-settled .sw {
+  animation-name: sw-settle, sw-breathe-soft;
 }

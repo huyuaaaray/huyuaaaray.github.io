@@ -317,7 +317,10 @@
   if (has('pagefx') && !reduceMotion) {
     var TEETH_DOWN = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='26'%3E%3Cpath d='M2 0 L22 26 L42 0 Z' fill='%23fbfaf6'/%3E%3C/svg%3E\")";
     var TEETH_UP = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='26'%3E%3Cpath d='M2 26 L22 0 L42 26 Z' fill='%23fbfaf6'/%3E%3C/svg%3E\")";
-    var typeFor = function (path) { return /^\/travel\b/.test(path) ? 'warp' : /^\/cv\b/.test(path) ? 'fade' : 'jaws'; };
+    // Travel: star warp. CV: the whole page blurs out and the CV comes into focus.
+    // Everything else: the header stays put and only the content softly fades and refocuses.
+    var typeFor = function (path) { return /^\/travel\b/.test(path) ? 'warp' : /^\/cv\b/.test(path) ? 'blur' : 'soft'; };
+    var CSS_ONLY = { soft: 1, blur: 1 };                                 // done with page styles, no cover
 
     var build = function (type) {
       var o = document.createElement('div');
@@ -365,8 +368,19 @@
     };
 
     // arriving: the cover opens
-    if (root.classList.contains('pt-in')) {
-      var type = root.getAttribute('data-pt') || 'jaws';
+    if (root.classList.contains('pt-in') && CSS_ONLY[root.getAttribute('data-pt')]) {
+      // the page starts blurred and transparent (set in the head); let it come into focus
+      sessionStorage.removeItem('ptType');
+      var t2 = root.getAttribute('data-pt');
+      root.classList.add('pt-arrive');
+      void document.body.offsetWidth;
+      requestAnimationFrame(function () {
+        root.classList.remove('pt-in');
+        root.removeAttribute('data-pt');
+        setTimeout(function () { root.classList.remove('pt-arrive'); }, t2 === 'blur' ? 700 : 600);
+      });
+    } else if (root.classList.contains('pt-in')) {
+      var type = root.getAttribute('data-pt') || 'soft';
       sessionStorage.removeItem('ptType');
       var cover = build(type);
       cover.classList.add('is-closed');
@@ -393,15 +407,24 @@
       e.preventDefault();
       var type = typeFor(url.pathname);
       try { sessionStorage.setItem('ptType', type); } catch (err) { /* ignore */ }
-      var o = build(type);
       var go = function () { location.href = url.href; };
+      if (CSS_ONLY[type]) {
+        root.classList.add('pt-leave-' + type);
+        setTimeout(go, type === 'blur' ? 400 : 300);
+        return;
+      }
+      var o = build(type);
       if (type === 'warp') { warp(o, true, 700, go); }
       else {
         requestAnimationFrame(function () { requestAnimationFrame(function () { o.classList.add('is-closing'); }); });
         setTimeout(go, type === 'book' ? 650 : type === 'liquid' ? 700 : type === 'fade' ? 440 : 560);
       }
     });
-    window.addEventListener('pageshow', function (e) { if (e.persisted) each('.pt', function (n) { n.remove(); }); });
+    window.addEventListener('pageshow', function (e) {
+      if (!e.persisted) return;
+      each('.pt', function (n) { n.remove(); });
+      root.classList.remove('pt-leave-soft', 'pt-leave-blur');
+    });
 
     // The 404 page always arrives with a short glitch
     if (document.querySelector('.not-found')) {
@@ -600,10 +623,15 @@
     Array.prototype.forEach.call(slogan.querySelectorAll('.sw'), function (w, i) { w.style.setProperty('--i', i); });
     if (reduceMotion || !('IntersectionObserver' in window)) slogan.classList.add('is-lit', 'is-instant');
     else {
+      var nWords = slogan.querySelectorAll('.sw').length;
       var sio = new IntersectionObserver(function (en) {
         if (!en[0].isIntersecting) return;
         sio.disconnect();
-        setTimeout(function () { slogan.classList.add('is-lit'); }, 300);
+        setTimeout(function () {
+          slogan.classList.add('is-lit');
+          // when the last word has finished lighting up, everything eases back to the text color
+          setTimeout(function () { slogan.classList.add('is-settled'); }, 430 + (nWords - 1) * 315 + 1570 + 500);
+        }, 300);
       }, { threshold: 0.6 });
       sio.observe(slogan);
     }
