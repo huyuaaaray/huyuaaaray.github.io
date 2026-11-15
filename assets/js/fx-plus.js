@@ -319,7 +319,7 @@
     var TEETH_UP = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='26'%3E%3Cpath d='M2 26 L22 0 L42 26 Z' fill='%23fbfaf6'/%3E%3C/svg%3E\")";
     // Travel: star warp. CV: the whole page blurs out and the CV comes into focus.
     // Everything else: the header stays put and only the content softly fades and refocuses.
-    var typeFor = function (path) { return /^\/travel\b/.test(path) ? 'warp' : /^\/cv\b/.test(path) ? 'blur' : 'soft'; };
+    var typeFor = function (path) { return /^\/travel\b/.test(path) ? 'warp' : /^\/cv\b/.test(path) ? 'fade' : 'soft'; };
     var CSS_ONLY = { soft: 1, blur: 1 };                                 // done with page styles, no cover
 
     var build = function (type) {
