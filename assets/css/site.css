@@ -7217,3 +7217,12 @@ html[data-fx~="glow"] .tab-morph:hover {
 @media (prefers-reduced-motion: reduce) {
   .slogan.is-lit .sw { animation: none; color: var(--sl-mark); text-shadow: 0 0 10px rgba(250, 70, 22, 0.25); }
 }
+
+/* Two matching gaps, each 20% larger than the old gap above "News" (72px → 86px):
+   the photo's icon row down to the research card, and the keyword chips down to "News". */
+.research-wrap { margin-top: 86px; }
+.home-news { margin-top: 78px; }          /* + the 8px under the chips = 86px */
+
+@media (max-width: 1000px) {
+  .research-wrap { margin-top: 86px; }
+}
