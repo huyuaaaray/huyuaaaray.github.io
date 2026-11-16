@@ -52,10 +52,13 @@ scripts:
     </div>
 
     <div class="intro-about reveal-delay-2" data-reveal>
-      {%- if h.slogan and h.slogan_show %}
-      {%- assign slogan_words = h.slogan | split: " " %}
-      <div class="slogan">
-        <p class="slogan-text"><span class="visually-hidden">{{ h.slogan | escape }}</span>{% for w in slogan_words %}<span class="sw" aria-hidden="true">{{ w | escape }}</span>{% unless forloop.last %}&#32;{% endunless %}{% endfor %}</p>
+      {%- if h.slogan_show and h.slogan_big %}
+      {%- assign slogan_words = h.slogan_big | split: " " %}
+      <div class="slogan slogan-mag">
+        <p class="slogan-text"><span class="visually-hidden">{{ h.slogan_big | escape }} {{ h.slogan | escape }}</span>{% for w in slogan_words %}<span class="sw" aria-hidden="true">{{ w | escape }}</span>{% unless forloop.last %}&#32;{% endunless %}{% endfor %}</p>
+        {%- if h.slogan %}
+        <p class="slogan-sub" aria-hidden="true">{{ h.slogan | escape }}</p>
+        {%- endif %}
       </div>
       {%- endif %}
       <h2 class="section-title">{{ h.about_title | escape }}</h2>
