@@ -52,7 +52,7 @@ scripts:
     </div>
 
     <div class="intro-about reveal-delay-2" data-reveal>
-      {%- if h.slogan %}
+      {%- if h.slogan and h.slogan_show %}
       {%- assign slogan_words = h.slogan | split: " " %}
       <div class="slogan">
         <p class="slogan-text"><span class="visually-hidden">{{ h.slogan | escape }}</span>{% for w in slogan_words %}<span class="sw" aria-hidden="true">{{ w | escape }}</span>{% unless forloop.last %}&#32;{% endunless %}{% endfor %}</p>

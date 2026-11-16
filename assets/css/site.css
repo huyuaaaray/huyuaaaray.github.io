@@ -2127,7 +2127,7 @@ html[data-fx~="glow"] .photo:hover {
 
 html[data-fx~="glow"] .research-banner:hover,
 html[data-fx~="glow"] .research-banner[data-tilt].is-tilting {
-  box-shadow: inset 0 1px 0 var(--hl), var(--shadow-lg), 0 0 46px rgba(181, 160, 255, 0.32);
+  box-shadow: inset 0 1px 0 var(--hl), var(--shadow-lg), 0 0 46px rgba(255, 45, 149, 0.3);
 }
 
 html[data-fx~="glow"] .place-card:hover {
@@ -6871,7 +6871,7 @@ html.caffeinated body { animation: jitter 0.12s steps(2) 12; }
   z-index: 2;
   border-radius: inherit;
   pointer-events: none;
-  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(214, 200, 255, 0.55), rgba(214, 200, 255, 0.14) 30%, transparent 60%);
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 140, 200, 0.5), rgba(255, 45, 149, 0.12) 30%, transparent 60%);
   mix-blend-mode: soft-light;
   opacity: 0;
   transition: opacity 400ms var(--ease);
@@ -7296,23 +7296,23 @@ html.pt-leave-blur :is(main, .site-header, .site-footer, .holiday-banner) {
   animation-name: sw-settle;
 }
 
-/* 4. Research card: a soft lavender halo that slowly swells and fades behind it */
+/* 4. Research card: a soft Vice City pink halo that slowly swells and fades behind it */
 .rb-halo {
   position: absolute;
   inset: 0;
   z-index: -1;
   border-radius: 20px;
   pointer-events: none;
-  animation: rb-breathe 4.5s ease-in-out infinite alternate;
+  animation: rb-breathe 3.5s ease-in-out infinite alternate;
 }
 
 @keyframes rb-breathe {
-  from { box-shadow: 0 0 18px 0 rgba(181, 160, 255, 0.1); }
-  to { box-shadow: 0 0 46px 6px rgba(181, 160, 255, 0.34); }
+  from { box-shadow: 0 0 18px 0 rgba(255, 45, 149, 0.08); }
+  to { box-shadow: 0 0 46px 6px rgba(255, 45, 149, 0.3); }
 }
 
 .lite .rb-halo { animation-play-state: paused; }
 
 @media (prefers-reduced-motion: reduce) {
-  .rb-halo { animation: none; box-shadow: 0 0 30px rgba(181, 160, 255, 0.2); }
+  .rb-halo { animation: none; box-shadow: 0 0 30px rgba(255, 45, 149, 0.18); }
 }

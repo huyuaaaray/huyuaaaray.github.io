@@ -70,10 +70,11 @@ home:
     text: "My research focuses on trustworthy machine learning and clinical AI, with an emphasis on reliable LLM reasoning, evidence grounding, and generalization across patient populations and healthcare settings."
 
   about_title: About
+  slogan_show: false
   slogan: "Building trustworthy AI that generalizes across patients and clinical settings."
 
   bio: |
-    I'm a healthcare AI researcher at the University of Florida College of Medicine, working with the Quality & Patient Safety group. My research focuses on making AI reliable, generalizable, and trustworthy in real-world clinical practice. My work spans clinical LLM evaluation, evidence grounding, clinician-in-the-loop validation, and trustworthy machine learning, including research on algorithmic fairness and causal inference using real-world health data. I'm particularly interested in developing AI systems that clinicians can trust and that generalize across diverse patient populations and healthcare settings.
+    I'm a healthcare AI researcher at the University of Florida College of Medicine. My research focuses on making AI reliable, generalizable, and trustworthy in real-world clinical practice. My work spans clinical LLM evaluation, evidence grounding, clinician-in-the-loop validation, and trustworthy machine learning, including research on algorithmic fairness and causal inference using real-world health data. I'm particularly interested in developing AI systems that clinicians can trust and that generalize across diverse patient populations and healthcare settings.
 
   stats:
     - number: 7
