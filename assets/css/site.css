@@ -5588,7 +5588,7 @@ html.header-hidden[data-fx~="smarthead"] .site-header {
   inset: 0;
   z-index: -2;
   pointer-events: none;
-  opacity: 0.34;
+  opacity: var(--hdr-sky-opacity, 0.29);      /* _config.yml → header.sky_opacity */
   transition: background 1s var(--ease);
 }
 
@@ -7380,42 +7380,128 @@ html.pt-leave-blur :is(main, .site-header, .site-footer, .holiday-banner) {
 }
 
 /* =========================================================
-   Icons under the photo: a breathing glow that lights them one after another
+   Icons under the photo: they glow one at a time, left to right (effects → icon_glow).
+   fx-plus.js adds .is-glow to the next icon every few seconds (home → icon_glow_seconds);
+   each glow fades in, holds, then fades out while the next one fades in.
    ========================================================= */
-.photo-links .icon-btn {
-  animation: icon-breathe 3.5s ease-in-out infinite;
+html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-visible) {
+  animation: icon-glow var(--glow-dur, 3.2s) ease-in-out;
 }
 
-/* each icon glows for about a second, the next one starts half a second later,
-   so the light travels along the row; then a short pause before it starts again */
-.photo-links .icon-btn:nth-child(1) { animation-delay: 0s; }
-.photo-links .icon-btn:nth-child(2) { animation-delay: 0.5s; }
-.photo-links .icon-btn:nth-child(3) { animation-delay: 1s; }
-.photo-links .icon-btn:nth-child(4) { animation-delay: 1.5s; }
-.photo-links .icon-btn:nth-child(5) { animation-delay: 2s; }
-.photo-links .icon-btn:nth-child(6) { animation-delay: 2.5s; }
-.photo-links .icon-btn:nth-child(7) { animation-delay: 3s; }
-
-@keyframes icon-breathe {
-  0%, 30%, 100% {
+@keyframes icon-glow {
+  0%, 100% {
     color: var(--muted);
     box-shadow: 0 0 0 0 transparent;
   }
-  15% {
+  22%, 78% {
     color: var(--brand, var(--accent));
     box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand, var(--accent)) 28%, transparent),
       0 0 16px 2px color-mix(in srgb, var(--brand, var(--accent)) 42%, transparent);
   }
 }
 
-/* pointing at an icon shows its normal hover look */
-.photo-links .icon-btn:hover,
-.photo-links .icon-btn:focus-visible {
-  animation: none;
-}
-
-.lite .photo-links .icon-btn { animation-play-state: paused; }
+.lite .photo-links .icon-btn.is-glow { animation: none; }
 
 @media (prefers-reduced-motion: reduce) {
-  .photo-links .icon-btn { animation: none; }
+  .photo-links .icon-btn.is-glow { animation: none; }
+}
+
+/* =========================================================
+   Slogan, quote style: one sentence after a big pale quote mark, with highlighter
+   strokes on a few words (home → slogan_style: quote, slogan_marker, slogan_highlight)
+   ========================================================= */
+.slogan.slogan-quote {
+  --sl-size: clamp(26.4px, 2.97vw, 35.2px);
+  max-width: 68ch;
+  margin: 0 0 30px;
+  padding: 6px 0 0 calc(var(--sl-size) * 1.95);
+}
+
+.slogan-quote .slogan-text {
+  font-size: var(--sl-size);
+}
+
+/* the quote mark (replaces the bar of the other styles) */
+.slogan.slogan-quote::before,
+.slogan.slogan-quote.is-settled::before,
+.slogan.slogan-quote.is-instant::before {
+  content: "\201C";
+  left: calc(var(--sl-size) * -0.16);
+  top: calc(var(--sl-size) * -0.98);
+  bottom: auto;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  font: 700 calc(var(--sl-size) * 4.3) / 1 var(--serif);
+  color: color-mix(in srgb, var(--mark) 30%, transparent);
+  pointer-events: none;
+  transform: none;
+  transition: opacity 700ms var(--ease), transform 900ms cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+/* with JavaScript it pops in when the slogan scrolls into view */
+.js .slogan.slogan-quote::before {
+  opacity: 0;
+  transform: translateY(10px) scale(0.8);
+  transform-origin: 20% 40%;
+}
+
+.js .slogan.slogan-quote.is-lit::before,
+.js .slogan.slogan-quote.is-instant::before {
+  opacity: 1;
+  transform: none;
+}
+
+:root[data-theme="dark"] .slogan.slogan-quote::before,
+:root.theme-night .slogan.slogan-quote::before {
+  color: color-mix(in srgb, var(--mark) 42%, transparent);
+}
+
+/* highlighter: a slightly uneven marker stroke across the lower part of the words */
+.slogan-quote .sl-hl {
+  --hl: var(--mark);
+  color: inherit;
+  padding: 0 4px;
+  margin: 0 -2px;
+  border-radius: 3px;
+  background: linear-gradient(104deg,
+      color-mix(in srgb, var(--hl) 10%, transparent) 0%,
+      color-mix(in srgb, var(--hl) 30%, transparent) 6%,
+      color-mix(in srgb, var(--hl) 24%, transparent) 94%,
+      color-mix(in srgb, var(--hl) 8%, transparent) 100%) 0 62% / 100% 52% no-repeat;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+:root[data-theme="dark"] .slogan-quote .sl-hl,
+:root.theme-night .slogan-quote .sl-hl {
+  background-image: linear-gradient(104deg,
+      color-mix(in srgb, var(--hl) 14%, transparent) 0%,
+      color-mix(in srgb, var(--hl) 38%, transparent) 6%,
+      color-mix(in srgb, var(--hl) 32%, transparent) 94%,
+      color-mix(in srgb, var(--hl) 12%, transparent) 100%);
+}
+
+/* with JavaScript each stroke is drawn left to right, just after its words light up */
+.js .slogan-quote .sl-hl {
+  background-size: 0% 52%;
+  transition: background-size 750ms cubic-bezier(0.6, 0.1, 0.3, 1);
+}
+
+.js .slogan-quote.is-lit .sl-hl {
+  background-size: 100% 52%;
+  transition-delay: var(--hl-delay, 1000ms);
+}
+
+.js .slogan-quote.is-instant .sl-hl {
+  background-size: 100% 52%;
+  transition: none;
+}
+
+.lite .slogan-quote .sl-hl { transition: none; }
+
+@media (max-width: 600px) {
+  .slogan.slogan-quote { padding-left: calc(var(--sl-size) * 1.6); }
 }

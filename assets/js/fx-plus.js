@@ -620,7 +620,35 @@
   /* ---------- Slogan: its words light up in orange, one after another ---------- */
   var slogan = document.querySelector('.slogan');
   if (slogan) {
+    // quote style: the sentence arrives as plain text (with <mark> around the highlighted words),
+    // so wrap each word in its own span here
+    var sText = slogan.querySelector('.slogan-quote .slogan-text');
+    if (sText) {
+      var wrapWords = function (parent) {
+        Array.prototype.slice.call(parent.childNodes).forEach(function (n) {
+          if (n.nodeType === 1) { wrapWords(n); return; }
+          if (n.nodeType !== 3 || !n.nodeValue.trim()) return;
+          var frag = document.createDocumentFragment();
+          n.nodeValue.split(/(\s+)/).forEach(function (part) {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+            var sp = document.createElement('span');
+            sp.className = 'sw';
+            sp.textContent = part;
+            frag.appendChild(sp);
+          });
+          parent.replaceChild(frag, n);
+        });
+      };
+      wrapWords(sText);
+    }
     Array.prototype.forEach.call(slogan.querySelectorAll('.sw'), function (w, i) { w.style.setProperty('--i', i); });
+    // each highlighter stroke starts just after the first word under it has lit up
+    Array.prototype.forEach.call(slogan.querySelectorAll('.sl-hl'), function (m) {
+      var first = m.querySelector('.sw');
+      var i = first ? Number(first.style.getPropertyValue('--i')) || 0 : 0;
+      m.style.setProperty('--hl-delay', (430 + i * 315 + 650) + 'ms');
+    });
     if (reduceMotion || !('IntersectionObserver' in window)) slogan.classList.add('is-lit', 'is-instant');
     else {
       var nWords = slogan.querySelectorAll('.sw').length;
@@ -634,6 +662,30 @@
         }, 300);
       }, { threshold: 0.6 });
       sio.observe(slogan);
+    }
+  }
+
+  /* ---------- Icons under the photo: they glow one at a time, left to right ---------- */
+  var iconRow = document.querySelector('.photo-links');
+  if (has('iconglow') && iconRow && !reduceMotion) {
+    var glowIcons = Array.prototype.filter.call(iconRow.querySelectorAll('.icon-btn'), function (b) { return b.getClientRects().length; });
+    var glowStep = Math.max(0.5, Number(D.iconSeconds) || 2.5) * 1000;      // how long each icon stays lit
+    iconRow.style.setProperty('--glow-dur', (glowStep + 700) + 'ms');       // + a short fade, so neighbours cross-fade
+    var glowAt = 0;
+    glowIcons.forEach(function (b) {
+      b.addEventListener('animationend', function (e) { if (e.animationName === 'icon-glow') b.classList.remove('is-glow'); });
+    });
+    var glowNext = function () {
+      if (!glowIcons.length || document.hidden) return;
+      if (isLite()) { glowIcons.forEach(function (b) { b.classList.remove('is-glow'); }); return; }
+      var b = glowIcons[glowAt];
+      b.classList.remove('is-glow');
+      void b.offsetWidth;                                                   // restart its animation
+      b.classList.add('is-glow');
+      glowAt = (glowAt + 1) % glowIcons.length;
+    };
+    if (glowIcons.length) {
+      setTimeout(function () { glowNext(); setInterval(glowNext, glowStep); }, 600);
     }
   }
 

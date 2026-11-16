@@ -68,9 +68,10 @@
   /* ---------- Scroll line: a hand-drawn line down the home page that draws itself as you scroll ---------- */
   var main = document.querySelector('main');
   if (has('scrollline') && intro && main) {
-    var stops = Array.prototype.filter.call(
-      document.querySelectorAll('.intro-about .section-title, .research-wrap, .stat-strip, .home-news .section-title, .ask .section-title'),
-      Boolean);
+    // the first stop is the top of the About column: the slogan, or the About title when there is no slogan
+    var aboutTop = document.querySelector('.intro-about .slogan') || document.querySelector('.intro-about .section-title');
+    var stops = [aboutTop].concat(Array.prototype.slice.call(
+      document.querySelectorAll('.research-wrap, .stat-strip, .home-news .section-title, .ask .section-title'))).filter(Boolean);
     if (stops.length > 1) {
       var NS = 'http://www.w3.org/2000/svg';
       var svg = document.createElementNS(NS, 'svg');

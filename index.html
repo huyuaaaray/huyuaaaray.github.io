@@ -53,6 +53,7 @@ scripts:
 
     <div class="intro-about reveal-delay-2" data-reveal>
       {%- if h.slogan_show and h.slogan_big %}
+      {%- if h.slogan_style == "magazine" %}
       {%- assign slogan_words = h.slogan_big | split: " " %}
       <div class="slogan slogan-mag">
         <p class="slogan-text"><span class="visually-hidden">{{ h.slogan_big | escape }} {{ h.slogan | escape }}</span>{% for w in slogan_words %}<span class="sw" aria-hidden="true">{{ w | escape }}</span>{% unless forloop.last %}&#32;{% endunless %}{% endfor %}</p>
@@ -60,8 +61,36 @@ scripts:
         <p class="slogan-sub" aria-hidden="true">{{ h.slogan | escape }}</p>
         {%- endif %}
       </div>
+      {%- else %}
+      {%- comment %} Quote style: one sentence after a big pale quote mark; the words listed in slogan_highlight get a highlighter stroke {% endcomment %}
+      {%- capture slogan_full %}{{ h.slogan_big | strip }}{% if h.slogan %} {{ h.slogan | strip }}{% endif %}{% endcapture %}
+      {%- assign slogan_html = slogan_full | escape %}
+      {%- if h.slogan_marker and h.slogan_highlight %}
+      {%- comment %} first swap each phrase for a placeholder, so a later phrase can't match inside an earlier one {% endcomment %}
+      {%- for hl in h.slogan_highlight %}
+      {%- assign hl_text = hl | strip | escape %}
+      {%- if hl_text != "" %}
+      {%- capture hl_token %}[[SLHL{{ forloop.index }}]]{% endcapture %}
+      {%- assign slogan_html = slogan_html | replace_first: hl_text, hl_token %}
       {%- endif %}
+      {%- endfor %}
+      {%- for hl in h.slogan_highlight %}
+      {%- assign hl_text = hl | strip | escape %}
+      {%- capture hl_token %}[[SLHL{{ forloop.index }}]]{% endcapture %}
+      {%- capture hl_mark %}<mark class="sl-hl">{{ hl_text }}</mark>{% endcapture %}
+      {%- assign slogan_html = slogan_html | replace_first: hl_token, hl_mark %}
+      {%- endfor %}
+      {%- endif %}
+      <div class="slogan slogan-quote">
+        <p class="slogan-text">{{ slogan_html }}</p>
+      </div>
+      {%- endif %}
+      {%- endif %}
+      {%- if h.about_title_show == false %}
+      <h2 class="visually-hidden">{{ h.about_title | escape }}</h2>
+      {%- else %}
       <h2 class="section-title">{{ h.about_title | escape }}</h2>
+      {%- endif %}
       <div class="prose">
         {{ h.bio | markdownify }}
       </div>

@@ -50,6 +50,7 @@
   {%- if site.effects.header_fireflies %} fireflies{% endif -%}
   {%- if site.effects.header_gator %} headgator{% endif -%}
   {%- if site.effects.header_blink %} blink{% endif -%}
+  {%- if site.effects.icon_glow %} iconglow{% endif -%}
   {%- if site.effects.holiday_colors %} holidaycolors{% endif -%}
   {%- if site.effects.footer_skyline %} skyline{% endif -%}
   {%- if site.effects.footer_swimmer %} swimmer{% endif -%}
@@ -77,7 +78,7 @@
   {%- if site.effects.globe_planes %} planes{% endif -%}
   {%- if site.effects.polaroids %} polaroids{% endif -%}
 {%- endcapture -%}
-<html lang="en"{% if page.theme %} class="theme-{{ page.theme }}"{% endif %} data-fx="{{ fx | strip }}"{% if site.easter_egg.enabled %} data-egg="{{ site.easter_egg.secret | downcase | escape }}" data-egg-msg="{{ site.easter_egg.message | escape }}"{% if site.easter_egg.sound %} data-egg-sound{% endif %}{% if site.easter_egg.image and site.easter_egg.image != "" %} data-egg-img="{{ site.easter_egg.image | relative_url }}"{% endif %}{% endif %}>
+<html lang="en"{% if page.theme %} class="theme-{{ page.theme }}"{% endif %} data-fx="{{ fx | strip }}" style="--hdr-sky-opacity: {{ site.header.sky_opacity | default: 0.29 }}"{% if site.easter_egg.enabled %} data-egg="{{ site.easter_egg.secret | downcase | escape }}" data-egg-msg="{{ site.easter_egg.message | escape }}"{% if site.easter_egg.sound %} data-egg-sound{% endif %}{% if site.easter_egg.image and site.easter_egg.image != "" %} data-egg-img="{{ site.easter_egg.image | relative_url }}"{% endif %}{% endif %}>
 <head>
 {% include head.html %}
 </head>
@@ -114,7 +115,7 @@
 <script src="/assets/js/site.js?v={{ site.time | date: '%s' }}"></script>
 <script src="/assets/js/cursor-fx.js?v={{ site.time | date: '%s' }}"></script>
 <script src="/assets/js/extras.js?v={{ site.time | date: '%s' }}"></script>
-<script id="egg-data" type="application/json">{"eggs": {{ site.eggs | jsonify }}, "tz": {{ site.footer_clock.timezone | default: "America/New_York" | jsonify }}, "highlights": {{ site.cv.highlights | jsonify }}, "greeting": {{ site.home.greeting | jsonify }}, "orbit": {{ site.home.orbit_icons | jsonify }}, "code": {{ site.home.code_rain | jsonify }}, "joke": {{ site.home.ask_joke | jsonify }}, "email": {{ site.author.email | jsonify }}}</script>
+<script id="egg-data" type="application/json">{"eggs": {{ site.eggs | jsonify }}, "tz": {{ site.footer_clock.timezone | default: "America/New_York" | jsonify }}, "highlights": {{ site.cv.highlights | jsonify }}, "greeting": {{ site.home.greeting | jsonify }}, "iconSeconds": {{ site.home.icon_glow_seconds | default: 2.5 | jsonify }}, "orbit": {{ site.home.orbit_icons | jsonify }}, "code": {{ site.home.code_rain | jsonify }}, "joke": {{ site.home.ask_joke | jsonify }}, "email": {{ site.author.email | jsonify }}}</script>
 <script src="/assets/js/eggs.js?v={{ site.time | date: '%s' }}"></script>
 <script src="/assets/js/more-fx.js?v={{ site.time | date: '%s' }}"></script>
 <script src="/assets/js/fx-plus.js?v={{ site.time | date: '%s' }}"></script>

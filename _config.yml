@@ -54,6 +54,9 @@ nav:
     url: /cv/
     hover_icon: page
 
+header:
+  sky_opacity: 0.29
+
 home:
   description: "Yu Hu is a healthcare AI researcher at the University of Florida College of Medicine, focusing on trustworthy machine learning, clinical LLM evaluation, and the reliability and generalizability of AI in real-world healthcare."
 
@@ -70,9 +73,16 @@ home:
     text: "My research focuses on trustworthy machine learning and clinical AI, with an emphasis on reliable LLM reasoning, evidence grounding, and generalization across patient populations and healthcare settings."
 
   about_title: About
+  about_title_show: false
   slogan_show: true
+  slogan_style: quote
   slogan_big: "Trustworthy AI"
   slogan: "that generalizes across patients and clinical settings."
+  slogan_marker: true
+  slogan_highlight:
+    - "Trustworthy AI"
+    - "generalizes"
+  icon_glow_seconds: 2.5
 
   bio: |
     I'm a healthcare AI researcher at the University of Florida College of Medicine. My research focuses on making AI reliable, generalizable, and trustworthy in real-world clinical practice. My work spans clinical LLM evaluation, evidence grounding, clinician-in-the-loop validation, and trustworthy machine learning, including research on algorithmic fairness and causal inference using real-world health data. I'm particularly interested in developing AI systems that clinicians can trust and that generalize across diverse patient populations and healthcare settings.
@@ -722,6 +732,7 @@ effects:
   header_fireflies: true
   header_gator: false
   header_blink: true
+  icon_glow: true
   holiday_colors: true
   footer_skyline: false
   footer_swimmer: false
