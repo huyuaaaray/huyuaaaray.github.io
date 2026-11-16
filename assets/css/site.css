@@ -5588,7 +5588,7 @@ html.header-hidden[data-fx~="smarthead"] .site-header {
   inset: 0;
   z-index: -2;
   pointer-events: none;
-  opacity: var(--hdr-sky-opacity, 0.29);      /* _config.yml → header.sky_opacity */
+  opacity: var(--hdr-sky-opacity, 0.17);      /* _config.yml → header.sky_opacity */
   transition: background 1s var(--ease);
 }
 
@@ -7411,10 +7411,23 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
    strokes on a few words (home → slogan_style: quote, slogan_marker, slogan_highlight)
    ========================================================= */
 .slogan.slogan-quote {
-  --sl-size: clamp(33px, 3.2vw, 38px);      /* always at least 10% larger than the About title (30px) */
+  /* The sentence is as wide as the About text and fits on two lines, so its size follows the
+     column width: 40px on a desktop, a little less on narrower windows, never below 33px
+     (the About title is 30px). */
+  --sl-size: clamp(33px, calc(6.25vw - 30.25px), 40px);
+  --sl-q: calc(var(--sl-size) * 3.6);                     /* size of the quote mark */
   max-width: 68ch;
   margin: 0 0 30px;
-  padding: 6px 0 0 calc(var(--sl-size) * 1.95);
+  /* the quote mark sits above the sentence; this leaves room for it */
+  padding: calc(var(--sl-q) * 0.297 + var(--sl-size) * 0.1) 0 0;
+}
+
+@media (max-width: 1000px) {
+  .slogan.slogan-quote { --sl-size: clamp(33px, calc(6.25vw - 4px), 40px); }
+}
+
+@media (max-width: 640px) {
+  .slogan.slogan-quote { --sl-size: clamp(33px, calc(6.25vw - 2px), 40px); }
 }
 
 .slogan-quote .slogan-text {
@@ -7426,16 +7439,16 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
 .slogan.slogan-quote.is-settled::before,
 .slogan.slogan-quote.is-instant::before {
   content: "\201C";
-  left: calc(var(--sl-size) * -0.16);
-  top: calc(var(--sl-size) * -0.22);    /* the top of the mark lines up with the top of the photo */
+  left: calc(var(--sl-q) * -0.031);     /* the mark's left edge lines up with the text */
+  top: calc(var(--sl-q) * -0.0475);     /* the top of the mark lines up with the top of the photo */
   bottom: auto;
   width: auto;
   height: auto;
   border-radius: 0;
   background: none;
   box-shadow: none;
-  font: 700 calc(var(--sl-size) * 4.3) / 1 var(--serif);
-  color: color-mix(in srgb, var(--sl-hl, #ff9a1a) 55%, transparent);   /* the same color as the highlighter */
+  font: 700 var(--sl-q) / 1 var(--serif);
+  color: color-mix(in srgb, var(--sl-hl, #fa4616) 62%, transparent);   /* the same color as the highlighter */
   pointer-events: none;
   transform: none;
   transition: opacity 700ms var(--ease), transform 900ms cubic-bezier(0.3, 1.4, 0.5, 1);
@@ -7456,7 +7469,7 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
 
 :root[data-theme="dark"] .slogan.slogan-quote::before,
 :root.theme-night .slogan.slogan-quote::before {
-  color: color-mix(in srgb, var(--sl-hl, #ff9a1a) 46%, transparent);
+  color: color-mix(in srgb, var(--sl-hl, #fa4616) 50%, transparent);
 }
 
 /* highlighter: a slightly uneven marker stroke across the lower part of the words */
@@ -7467,10 +7480,10 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
   border-radius: 3px;
   /* the color comes from home → slogan_marker_color (set as --sl-hl on the slogan) */
   background: linear-gradient(104deg,
-      color-mix(in srgb, var(--sl-hl, #ff9a1a) 20%, transparent) 0%,
-      color-mix(in srgb, var(--sl-hl, #ff9a1a) 55%, transparent) 6%,
-      color-mix(in srgb, var(--sl-hl, #ff9a1a) 48%, transparent) 94%,
-      color-mix(in srgb, var(--sl-hl, #ff9a1a) 18%, transparent) 100%) 0 62% / 100% 52% no-repeat;
+      color-mix(in srgb, var(--sl-hl, #fa4616) 22%, transparent) 0%,
+      color-mix(in srgb, var(--sl-hl, #fa4616) 62%, transparent) 6%,
+      color-mix(in srgb, var(--sl-hl, #fa4616) 55%, transparent) 94%,
+      color-mix(in srgb, var(--sl-hl, #fa4616) 20%, transparent) 100%) 0 62% / 100% 52% no-repeat;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
@@ -7478,10 +7491,10 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
 :root[data-theme="dark"] .slogan-quote .sl-hl,
 :root.theme-night .slogan-quote .sl-hl {
   background-image: linear-gradient(104deg,
-      color-mix(in srgb, var(--sl-hl, #ff9a1a) 16%, transparent) 0%,
-      color-mix(in srgb, var(--sl-hl, #ff9a1a) 46%, transparent) 6%,
-      color-mix(in srgb, var(--sl-hl, #ff9a1a) 40%, transparent) 94%,
-      color-mix(in srgb, var(--sl-hl, #ff9a1a) 14%, transparent) 100%);
+      color-mix(in srgb, var(--sl-hl, #fa4616) 16%, transparent) 0%,
+      color-mix(in srgb, var(--sl-hl, #fa4616) 50%, transparent) 6%,
+      color-mix(in srgb, var(--sl-hl, #fa4616) 44%, transparent) 94%,
+      color-mix(in srgb, var(--sl-hl, #fa4616) 14%, transparent) 100%);
 }
 
 /* with JavaScript each stroke is drawn left to right, just after its words light up */
@@ -7502,9 +7515,6 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
 
 .lite .slogan-quote .sl-hl { transition: none; }
 
-@media (max-width: 600px) {
-  .slogan.slogan-quote { padding-left: calc(var(--sl-size) * 1.6); }
-}
 
 /* home → slogan_glow: false — the words don't light up; they are shown in the normal text color
    and only the highlighter strokes are drawn */
