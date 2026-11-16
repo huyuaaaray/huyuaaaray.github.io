@@ -63,7 +63,8 @@ scripts:
       </div>
       {%- else %}
       {%- comment %} Quote style: one sentence after a big pale quote mark; the words listed in slogan_highlight get a highlighter stroke {% endcomment %}
-      {%- capture slogan_full %}{{ h.slogan_big | strip }}{% if h.slogan %} {{ h.slogan | strip }}{% endif %}{% endcapture %}
+      {%- comment %} slogan_break: the first line holds only slogan_big; the rest wraps on its own {% endcomment %}
+      {%- capture slogan_full %}{{ h.slogan_big | strip }}{% if h.slogan %}{% if h.slogan_break %}[[SLBR]]{% else %} {% endif %}{{ h.slogan | strip }}{% endif %}{% endcapture %}
       {%- assign slogan_html = slogan_full | escape %}
       {%- if h.slogan_marker and h.slogan_highlight %}
       {%- comment %} first swap each phrase for a placeholder, so a later phrase can't match inside an earlier one {% endcomment %}
@@ -81,7 +82,10 @@ scripts:
       {%- assign slogan_html = slogan_html | replace_first: hl_token, hl_mark %}
       {%- endfor %}
       {%- endif %}
-      <div class="slogan slogan-quote{% if h.slogan_glow == false %} no-glow{% endif %}"{% if h.slogan_marker_color %} style="--sl-hl: {{ h.slogan_marker_color | escape }}"{% endif %}>
+      {%- assign slogan_html = slogan_html | replace: "[[SLBR]]", "<br>" %}
+      {%- assign sl_hl_o = h.slogan_marker_strength | default: 24 | divided_by: 100.0 %}
+      {%- assign sl_q_o = h.slogan_quote_strength | default: 45 | divided_by: 100.0 %}
+      <div class="slogan slogan-quote{% if h.slogan_glow == false %} no-glow{% endif %}" style="{% if h.slogan_marker_color %}--sl-hl: {{ h.slogan_marker_color | escape }}; {% endif %}--sl-hl-o: {{ sl_hl_o }}; --sl-q-o: {{ sl_q_o }}">
         <p class="slogan-text">{{ slogan_html }}</p>
       </div>
       {%- endif %}

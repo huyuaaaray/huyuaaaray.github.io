@@ -7407,19 +7407,18 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
 }
 
 /* =========================================================
-   Slogan, quote style: one sentence after a big pale quote mark, with highlighter
-   strokes on a few words (home → slogan_style: quote, slogan_marker, slogan_highlight)
+   Slogan, quote style: a big quote mark on the left, the sentence beside it, and soft
+   highlighter strokes on a few words (home → slogan_style: quote, slogan_marker, slogan_highlight)
    ========================================================= */
 .slogan.slogan-quote {
-  /* The sentence is as wide as the About text and fits on two lines, so its size follows the
-     column width: 40px on a desktop, a little less on narrower windows, never below 33px
-     (the About title is 30px). */
+  /* 40px on a desktop, a little less in narrower columns, never below 33px */
   --sl-size: clamp(33px, calc(6.25vw - 30.25px), 40px);
-  --sl-q: calc(var(--sl-size) * 3.6);                     /* size of the quote mark */
-  max-width: 68ch;
+  --sl-q: calc(var(--sl-size) * 4);              /* size of the quote mark */
+  --sl-gap: calc(var(--sl-size) * 0.32);         /* space between the mark and the words */
+  max-width: 68ch;                               /* as wide as the About text */
   margin: 0 0 30px;
-  /* the quote mark sits above the sentence; this leaves room for it */
-  padding: calc(var(--sl-q) * 0.297 + var(--sl-size) * 0.1) 0 0;
+  /* the mark's left edge lines up with the About text; the words start just right of it */
+  padding: 0 0 0 calc(var(--sl-q) * 0.422 + var(--sl-gap));
 }
 
 @media (max-width: 1000px) {
@@ -7430,8 +7429,15 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
   .slogan.slogan-quote { --sl-size: clamp(33px, calc(6.25vw - 2px), 40px); }
 }
 
+@media (max-width: 600px) {
+  .slogan.slogan-quote { --sl-q: calc(var(--sl-size) * 3.2); --sl-gap: calc(var(--sl-size) * 0.26); }
+}
+
 .slogan-quote .slogan-text {
+  position: relative;
+  z-index: 0;                                    /* the highlighter strokes sit just behind the words */
   font-size: var(--sl-size);
+  text-wrap: pretty;
 }
 
 /* the quote mark (replaces the bar of the other styles) */
@@ -7439,7 +7445,7 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
 .slogan.slogan-quote.is-settled::before,
 .slogan.slogan-quote.is-instant::before {
   content: "\201C";
-  left: calc(var(--sl-q) * -0.031);     /* the mark's left edge lines up with the text */
+  left: calc(var(--sl-q) * -0.031);     /* the mark's left edge lines up with the About text */
   top: calc(var(--sl-q) * -0.0475);     /* the top of the mark lines up with the top of the photo */
   bottom: auto;
   width: auto;
@@ -7448,7 +7454,9 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
   background: none;
   box-shadow: none;
   font: 700 var(--sl-q) / 1 var(--serif);
-  color: color-mix(in srgb, var(--sl-hl, #fa4616) 62%, transparent);   /* the same color as the highlighter */
+  /* the same color as the highlighter (home → slogan_marker_color), at home → slogan_quote_strength */
+  color: var(--sl-hl, #0021a5);
+  opacity: var(--sl-q-o, 0.45);
   pointer-events: none;
   transform: none;
   transition: opacity 700ms var(--ease), transform 900ms cubic-bezier(0.3, 1.4, 0.5, 1);
@@ -7463,58 +7471,61 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
 
 .js .slogan.slogan-quote.is-lit::before,
 .js .slogan.slogan-quote.is-instant::before {
-  opacity: 1;
+  opacity: var(--sl-q-o, 0.45);
   transform: none;
 }
 
+/* dark backgrounds: a lighter tint of the same color, so it still shows */
 :root[data-theme="dark"] .slogan.slogan-quote::before,
 :root.theme-night .slogan.slogan-quote::before {
-  color: color-mix(in srgb, var(--sl-hl, #fa4616) 50%, transparent);
+  color: color-mix(in srgb, var(--sl-hl, #0021a5) 45%, #fff);
 }
 
-/* highlighter: a slightly uneven marker stroke across the lower part of the words */
+/* highlighter: a soft-edged marker band across the lower part of the words */
 .slogan-quote .sl-hl {
+  position: relative;
   color: inherit;
-  padding: 0 4px;
-  margin: 0 -2px;
-  border-radius: 3px;
-  /* the color comes from home → slogan_marker_color (set as --sl-hl on the slogan) */
-  background: linear-gradient(104deg,
-      color-mix(in srgb, var(--sl-hl, #fa4616) 22%, transparent) 0%,
-      color-mix(in srgb, var(--sl-hl, #fa4616) 62%, transparent) 6%,
-      color-mix(in srgb, var(--sl-hl, #fa4616) 55%, transparent) 94%,
-      color-mix(in srgb, var(--sl-hl, #fa4616) 20%, transparent) 100%) 0 62% / 100% 52% no-repeat;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
+  background: none;
+  padding: 0;
 }
 
-:root[data-theme="dark"] .slogan-quote .sl-hl,
-:root.theme-night .slogan-quote .sl-hl {
-  background-image: linear-gradient(104deg,
-      color-mix(in srgb, var(--sl-hl, #fa4616) 16%, transparent) 0%,
-      color-mix(in srgb, var(--sl-hl, #fa4616) 50%, transparent) 6%,
-      color-mix(in srgb, var(--sl-hl, #fa4616) 44%, transparent) 94%,
-      color-mix(in srgb, var(--sl-hl, #fa4616) 14%, transparent) 100%);
+.slogan-quote .sl-hl::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: -0.14em;
+  right: -0.14em;
+  top: 0.46em;
+  bottom: 0.02em;
+  border-radius: 0.4em;
+  background: var(--sl-hl, #0021a5);
+  opacity: var(--sl-hl-o, 0.24);                 /* home → slogan_marker_strength */
+  filter: blur(calc(var(--sl-size) * 0.1));      /* feathered edges instead of a hard cut */
+  pointer-events: none;
 }
 
-/* with JavaScript each stroke is drawn left to right, just after its words light up */
-.js .slogan-quote .sl-hl {
-  background-size: 0% 52%;
-  transition: background-size 750ms cubic-bezier(0.6, 0.1, 0.3, 1);
+:root[data-theme="dark"] .slogan-quote .sl-hl::before,
+:root.theme-night .slogan-quote .sl-hl::before {
+  background: color-mix(in srgb, var(--sl-hl, #0021a5) 45%, #fff);
+  opacity: calc(var(--sl-hl-o, 0.24) * 1.4);
 }
 
-.js .slogan-quote.is-lit .sl-hl {
-  background-size: 100% 52%;
+/* with JavaScript each stroke is drawn left to right */
+.js .slogan-quote .sl-hl::before {
+  clip-path: inset(-0.5em calc(100% + 0.5em) -0.5em -0.5em);
+  transition: clip-path 800ms cubic-bezier(0.6, 0.1, 0.3, 1);
+}
+
+.js .slogan-quote.is-lit .sl-hl::before {
+  clip-path: inset(-0.5em -0.5em -0.5em -0.5em);
   transition-delay: var(--hl-delay, 1000ms);
 }
 
-.js .slogan-quote.is-instant .sl-hl {
-  background-size: 100% 52%;
+.js .slogan-quote.is-instant .sl-hl::before,
+.lite .slogan-quote .sl-hl::before {
+  clip-path: inset(-0.5em -0.5em -0.5em -0.5em);
   transition: none;
 }
-
-.lite .slogan-quote .sl-hl { transition: none; }
-
 
 /* home → slogan_glow: false — the words don't light up; they are shown in the normal text color
    and only the highlighter strokes are drawn */
@@ -7555,4 +7566,17 @@ html:not(.js) .slogan.no-glow .sw {
 .research-banner.is-repl .code-rain {
   -webkit-mask-image: linear-gradient(transparent 0, transparent 24%, #000 44%, #000 75%, transparent);
   mask-image: linear-gradient(transparent 0, transparent 24%, #000 44%, #000 75%, transparent);
+}
+
+/* =========================================================
+   Page and section titles, scaled by _config.yml → titles.scale (now 0.8).
+   The big name and the slogan are not affected.
+   ========================================================= */
+.section-title { font-size: calc(30px * var(--title-scale, 1)); }
+.page-head h1,
+.not-found h1 { font-size: calc(48px * var(--title-scale, 1)); }
+.cv-section > h2 { font-size: calc(28px * var(--title-scale, 1)); }
+
+@media (max-width: 640px) {
+  .page-head h1 { font-size: calc(36px * var(--title-scale, 1)); }
 }

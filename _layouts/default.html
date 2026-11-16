@@ -78,7 +78,7 @@
   {%- if site.effects.globe_planes %} planes{% endif -%}
   {%- if site.effects.polaroids %} polaroids{% endif -%}
 {%- endcapture -%}
-<html lang="en"{% if page.theme %} class="theme-{{ page.theme }}"{% endif %} data-fx="{{ fx | strip }}" style="--hdr-sky-opacity: {{ site.header.sky_opacity | default: 0.17 }}"{% if site.easter_egg.enabled %} data-egg="{{ site.easter_egg.secret | downcase | escape }}" data-egg-msg="{{ site.easter_egg.message | escape }}"{% if site.easter_egg.sound %} data-egg-sound{% endif %}{% if site.easter_egg.image and site.easter_egg.image != "" %} data-egg-img="{{ site.easter_egg.image | relative_url }}"{% endif %}{% endif %}>
+<html lang="en"{% if page.theme %} class="theme-{{ page.theme }}"{% endif %} data-fx="{{ fx | strip }}" style="--hdr-sky-opacity: {{ site.header.sky_opacity | default: 0.17 }}; --title-scale: {{ site.titles.scale | default: 1 }}"{% if site.easter_egg.enabled %} data-egg="{{ site.easter_egg.secret | downcase | escape }}" data-egg-msg="{{ site.easter_egg.message | escape }}"{% if site.easter_egg.sound %} data-egg-sound{% endif %}{% if site.easter_egg.image and site.easter_egg.image != "" %} data-egg-img="{{ site.easter_egg.image | relative_url }}"{% endif %}{% endif %}>
 <head>
 {% include head.html %}
 </head>
