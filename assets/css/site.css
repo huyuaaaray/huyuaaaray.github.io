@@ -7458,7 +7458,7 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
   box-shadow: none;
   font: 700 var(--sl-q) / 1 var(--serif);
   /* the same color as the highlighter (home → slogan_marker_color), at home → slogan_quote_strength */
-  color: var(--sl-hl, #fa4616);
+  color: var(--sl-hl, #fb7349);
   opacity: var(--sl-q-o, 0.62);
   pointer-events: none;
   transform: none;
@@ -7481,10 +7481,11 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
 /* dark backgrounds: a lighter tint of the same color, so it still shows */
 :root[data-theme="dark"] .slogan.slogan-quote::before,
 :root.theme-night .slogan.slogan-quote::before {
-  color: color-mix(in srgb, var(--sl-hl, #fa4616) 70%, #fff);
+  color: color-mix(in srgb, var(--sl-hl, #fb7349) 70%, #fff);
 }
 
-/* highlighter: a soft-edged marker band across the lower part of the words */
+/* highlighter: a hand-drawn marker stroke across the lower part of the words —
+   uneven edges and a slight tilt, like a real highlighter pen */
 .slogan-quote .sl-hl {
   position: relative;
   color: inherit;
@@ -7493,43 +7494,50 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
 }
 
 .slogan-quote .sl-hl::before {
-  --c: var(--sl-hl, #fa4616);
+  --c: var(--sl-hl, #fb7349);
+  --tilt: -1.4deg;
   content: "";
   position: absolute;
   z-index: -1;
-  left: -0.12em;
-  right: -0.12em;
-  top: 0.34em;                                   /* from just above the small letters ... */
-  bottom: 0.13em;                                /* ... to just below the baseline */
-  /* a solid band whose four edges fade out over a few pixels (left/right by the gradient,
-     top/bottom by the mask), instead of a hard cut */
-  background: linear-gradient(90deg, transparent, var(--c) 6px, var(--c) calc(100% - 6px), transparent);
-  -webkit-mask-image: linear-gradient(transparent, #000 4px, #000 calc(100% - 4px), transparent);
-  mask-image: linear-gradient(transparent, #000 4px, #000 calc(100% - 4px), transparent);
+  left: -0.16em;
+  right: -0.1em;
+  top: 0.36em;                                   /* from just above the small letters ... */
+  bottom: 0.1em;                                 /* ... to just below the baseline */
+  border-radius: 4px;
+  background: var(--c);
   opacity: var(--sl-hl-o, 0.6);                  /* home → slogan_marker_strength */
+  clip-path: polygon(1% 22%, 4% 6%, 22% 12%, 48% 3%, 75% 9%, 97% 2%, 100% 30%, 98% 72%, 99% 95%, 74% 90%, 50% 98%, 26% 92%, 3% 99%, 0% 70%);
+  transform: rotate(var(--tilt));
+  transform-origin: left center;
   pointer-events: none;
+}
+
+/* every other stroke has a different outline and leans the other way, so they don't look stamped */
+.slogan-quote .sl-hl:nth-of-type(2n)::before {
+  --tilt: 1deg;
+  clip-path: polygon(0% 12%, 18% 4%, 41% 10%, 63% 2%, 86% 8%, 99% 4%, 100% 40%, 97% 88%, 80% 97%, 55% 91%, 30% 99%, 8% 93%, 1% 96%, 2% 55%);
 }
 
 :root[data-theme="dark"] .slogan-quote .sl-hl::before,
 :root.theme-night .slogan-quote .sl-hl::before {
-  --c: color-mix(in srgb, var(--sl-hl, #fa4616) 70%, #fff);
+  --c: color-mix(in srgb, var(--sl-hl, #fb7349) 70%, #fff);
   opacity: calc(var(--sl-hl-o, 0.6) * 0.8);
 }
 
 /* with JavaScript each stroke is drawn left to right */
 .js .slogan-quote .sl-hl::before {
-  clip-path: inset(-0.5em calc(100% + 0.5em) -0.5em -0.5em);
-  transition: clip-path 800ms cubic-bezier(0.6, 0.1, 0.3, 1);
+  transform: rotate(var(--tilt)) scaleX(0);
+  transition: transform 800ms cubic-bezier(0.6, 0.1, 0.3, 1);
 }
 
 .js .slogan-quote.is-lit .sl-hl::before {
-  clip-path: inset(-0.5em -0.5em -0.5em -0.5em);
+  transform: rotate(var(--tilt)) scaleX(1);
   transition-delay: var(--hl-delay, 1000ms);
 }
 
 .js .slogan-quote.is-instant .sl-hl::before,
 .lite .slogan-quote .sl-hl::before {
-  clip-path: inset(-0.5em -0.5em -0.5em -0.5em);
+  transform: rotate(var(--tilt)) scaleX(1);
   transition: none;
 }
 
@@ -7580,3 +7588,23 @@ html:not(.js) .slogan.no-glow .sw {
    ========================================================= */
 .intro-about > .section-title,
 #news-title { font-size: calc(30px * var(--home-title-scale, 1)); }
+
+/* =========================================================
+   Header: a light frosted glass — mostly see-through, the page shows through blurred.
+   How see-through: _config.yml → header → glass_opacity (percent of the page color; now 45).
+   ========================================================= */
+.site-header,
+html.scrolled[data-fx~="shrink"] .site-header {
+  background: color-mix(in srgb, var(--bg) var(--hdr-glass, 45%), transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+}
+
+html.scrolled[data-fx~="shrink"] .site-header {
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+}
+
+.theme-night .site-header,
+html.scrolled[data-fx~="shrink"].theme-night .site-header {
+  background: color-mix(in srgb, rgb(7, 11, 31) var(--hdr-glass, 45%), transparent);
+}
