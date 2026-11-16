@@ -7411,7 +7411,7 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
    strokes on a few words (home → slogan_style: quote, slogan_marker, slogan_highlight)
    ========================================================= */
 .slogan.slogan-quote {
-  --sl-size: clamp(26.4px, 2.97vw, 35.2px);
+  --sl-size: clamp(33px, 3.2vw, 38px);      /* always at least 10% larger than the About title (30px) */
   max-width: 68ch;
   margin: 0 0 30px;
   padding: 6px 0 0 calc(var(--sl-size) * 1.95);
@@ -7427,7 +7427,7 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
 .slogan.slogan-quote.is-instant::before {
   content: "\201C";
   left: calc(var(--sl-size) * -0.16);
-  top: calc(var(--sl-size) * -0.98);
+  top: calc(var(--sl-size) * -0.22);    /* the top of the mark lines up with the top of the photo */
   bottom: auto;
   width: auto;
   height: auto;
@@ -7435,7 +7435,7 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
   background: none;
   box-shadow: none;
   font: 700 calc(var(--sl-size) * 4.3) / 1 var(--serif);
-  color: color-mix(in srgb, var(--mark) 30%, transparent);
+  color: color-mix(in srgb, var(--sl-hl, #ff9a1a) 55%, transparent);   /* the same color as the highlighter */
   pointer-events: none;
   transform: none;
   transition: opacity 700ms var(--ease), transform 900ms cubic-bezier(0.3, 1.4, 0.5, 1);
@@ -7456,21 +7456,21 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
 
 :root[data-theme="dark"] .slogan.slogan-quote::before,
 :root.theme-night .slogan.slogan-quote::before {
-  color: color-mix(in srgb, var(--mark) 42%, transparent);
+  color: color-mix(in srgb, var(--sl-hl, #ff9a1a) 46%, transparent);
 }
 
 /* highlighter: a slightly uneven marker stroke across the lower part of the words */
 .slogan-quote .sl-hl {
-  --hl: var(--mark);
   color: inherit;
   padding: 0 4px;
   margin: 0 -2px;
   border-radius: 3px;
+  /* the color comes from home → slogan_marker_color (set as --sl-hl on the slogan) */
   background: linear-gradient(104deg,
-      color-mix(in srgb, var(--hl) 10%, transparent) 0%,
-      color-mix(in srgb, var(--hl) 30%, transparent) 6%,
-      color-mix(in srgb, var(--hl) 24%, transparent) 94%,
-      color-mix(in srgb, var(--hl) 8%, transparent) 100%) 0 62% / 100% 52% no-repeat;
+      color-mix(in srgb, var(--sl-hl, #ff9a1a) 20%, transparent) 0%,
+      color-mix(in srgb, var(--sl-hl, #ff9a1a) 55%, transparent) 6%,
+      color-mix(in srgb, var(--sl-hl, #ff9a1a) 48%, transparent) 94%,
+      color-mix(in srgb, var(--sl-hl, #ff9a1a) 18%, transparent) 100%) 0 62% / 100% 52% no-repeat;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
@@ -7478,10 +7478,10 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
 :root[data-theme="dark"] .slogan-quote .sl-hl,
 :root.theme-night .slogan-quote .sl-hl {
   background-image: linear-gradient(104deg,
-      color-mix(in srgb, var(--hl) 14%, transparent) 0%,
-      color-mix(in srgb, var(--hl) 38%, transparent) 6%,
-      color-mix(in srgb, var(--hl) 32%, transparent) 94%,
-      color-mix(in srgb, var(--hl) 12%, transparent) 100%);
+      color-mix(in srgb, var(--sl-hl, #ff9a1a) 16%, transparent) 0%,
+      color-mix(in srgb, var(--sl-hl, #ff9a1a) 46%, transparent) 6%,
+      color-mix(in srgb, var(--sl-hl, #ff9a1a) 40%, transparent) 94%,
+      color-mix(in srgb, var(--sl-hl, #ff9a1a) 14%, transparent) 100%);
 }
 
 /* with JavaScript each stroke is drawn left to right, just after its words light up */
@@ -7504,4 +7504,45 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
 
 @media (max-width: 600px) {
   .slogan.slogan-quote { padding-left: calc(var(--sl-size) * 1.6); }
+}
+
+/* home → slogan_glow: false — the words don't light up; they are shown in the normal text color
+   and only the highlighter strokes are drawn */
+.js .slogan.no-glow .sw,
+html:not(.js) .slogan.no-glow .sw {
+  animation: none !important;
+  color: inherit;
+  text-shadow: none;
+}
+
+/* =========================================================
+   Research card, Python prompt style (home → research → label_style: repl):
+   ">>> yu.research_interests" on top, and the sentence is the string it returns, in quotes
+   ========================================================= */
+.research-label.research-repl {
+  display: block;
+  margin: 0 0 10px;
+  font: 500 clamp(15px, 1.55vw, 18px) / 1.5 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text);
+}
+
+.research-repl .rp,
+.research-text .rq {
+  color: var(--muted);
+}
+
+.research-text .rq {
+  font-weight: 400;
+}
+
+.research-repl .ra {
+  color: var(--mark);
+}
+
+/* keep the code rain out of the prompt line, so the two kinds of code don't overlap */
+.research-banner.is-repl .code-rain {
+  -webkit-mask-image: linear-gradient(transparent 0, transparent 24%, #000 44%, #000 75%, transparent);
+  mask-image: linear-gradient(transparent 0, transparent 24%, #000 44%, #000 75%, transparent);
 }

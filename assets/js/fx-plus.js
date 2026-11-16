@@ -623,7 +623,8 @@
     // quote style: the sentence arrives as plain text (with <mark> around the highlighted words),
     // so wrap each word in its own span here
     var sText = slogan.querySelector('.slogan-quote .slogan-text');
-    if (sText) {
+    var noGlow = slogan.classList.contains('no-glow');       // home → slogan_glow: false (words stay plain)
+    if (sText && !noGlow) {
       var wrapWords = function (parent) {
         Array.prototype.slice.call(parent.childNodes).forEach(function (n) {
           if (n.nodeType === 1) { wrapWords(n); return; }
@@ -643,8 +644,10 @@
       wrapWords(sText);
     }
     Array.prototype.forEach.call(slogan.querySelectorAll('.sw'), function (w, i) { w.style.setProperty('--i', i); });
-    // each highlighter stroke starts just after the first word under it has lit up
-    Array.prototype.forEach.call(slogan.querySelectorAll('.sl-hl'), function (m) {
+    // each highlighter stroke starts just after the first word under it has lit up;
+    // without the word glow the strokes simply follow one another
+    Array.prototype.forEach.call(slogan.querySelectorAll('.sl-hl'), function (m, k) {
+      if (noGlow) { m.style.setProperty('--hl-delay', (450 + k * 520) + 'ms'); return; }
       var first = m.querySelector('.sw');
       var i = first ? Number(first.style.getPropertyValue('--i')) || 0 : 0;
       m.style.setProperty('--hl-delay', (430 + i * 315 + 650) + 'ms');

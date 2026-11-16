@@ -81,7 +81,7 @@ scripts:
       {%- assign slogan_html = slogan_html | replace_first: hl_token, hl_mark %}
       {%- endfor %}
       {%- endif %}
-      <div class="slogan slogan-quote">
+      <div class="slogan slogan-quote{% if h.slogan_glow == false %} no-glow{% endif %}"{% if h.slogan_marker_color %} style="--sl-hl: {{ h.slogan_marker_color | escape }}"{% endif %}>
         <p class="slogan-text">{{ slogan_html }}</p>
       </div>
       {%- endif %}
@@ -99,13 +99,23 @@ scripts:
     {%- if h.research.text %}
     <div class="research-wrap" data-reveal>
       <span class="rb-halo" aria-hidden="true"></span>
-      <div class="research-banner" data-tilt="0.4">
+      {%- assign r_repl = false %}
+      {%- if h.research.label_style == "repl" %}{% assign r_repl = true %}{% endif %}
+      <div class="research-banner{% if r_repl %} is-repl{% endif %}" data-tilt="0.4">
         <span class="glare" aria-hidden="true"></span>
+        {%- if r_repl %}
+        {%- comment %} Python prompt style: ">>> yu.research_interests", and the sentence below is the string it returns {% endcomment %}
+        {%- assign repl_line = h.research.repl | default: "yu.research_interests" %}
+        {%- assign repl_obj = repl_line | split: "." | first %}
+        {%- assign repl_rest = repl_line | remove_first: repl_obj %}
+        <p class="research-label research-repl"><span class="visually-hidden">{{ h.research.label | escape }}</span><span aria-hidden="true"><span class="rp">&gt;&gt;&gt;</span> {{ repl_obj | escape }}<span class="ra">{{ repl_rest | escape }}</span></span></p>
+        {%- else %}
         <p class="research-label">{% include icon.html name="spark" %}{{ h.research.label | escape }}</p>
+        {%- endif %}
         <p class="research-text">
           <span class="visually-hidden">{{ h.research.text | escape }}</span>
-          <span class="research-ghost" aria-hidden="true">{{ h.research.text | escape }}</span>
-          <span class="research-live" aria-hidden="true"><span class="research-typed" data-type-once="{{ h.research.text | escape }}">{{ h.research.text | escape }}</span><span class="caret"></span></span>
+          <span class="research-ghost" aria-hidden="true">{% if r_repl %}<span class="rq">&#39;</span>{% endif %}{{ h.research.text | escape }}{% if r_repl %}<span class="rq">&#39;</span>{% endif %}</span>
+          <span class="research-live" aria-hidden="true">{% if r_repl %}<span class="rq">&#39;</span>{% endif %}<span class="research-typed" data-type-once="{{ h.research.text | escape }}">{{ h.research.text | escape }}</span>{% if r_repl %}<span class="rq">&#39;</span>{% endif %}<span class="caret"></span></span>
         </p>
       </div>
     </div>
