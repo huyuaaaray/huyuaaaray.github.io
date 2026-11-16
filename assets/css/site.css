@@ -7417,8 +7417,11 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
   --sl-gap: calc(var(--sl-size) * 0.32);         /* space between the mark and the words */
   max-width: 68ch;                               /* as wide as the About text */
   margin: 0 0 30px;
-  /* the mark's left edge lines up with the About text; the words start just right of it */
-  padding: 0 0 0 calc(var(--sl-q) * 0.422 + var(--sl-gap));
+  /* the mark's left edge lines up with the About text; the words start just right of it.
+     The words sit a little lower, so the bottom of the mark is level with the middle of the
+     capital letters on the first line (--sl-qb = the mark's height as a share of its size). */
+  --sl-qb: 0.297;
+  padding: max(0px, calc(var(--sl-q) * var(--sl-qb) - var(--sl-size) * 0.5)) 0 0 calc(var(--sl-q) * 0.422 + var(--sl-gap));
 }
 
 @media (max-width: 1000px) {
@@ -7455,8 +7458,8 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
   box-shadow: none;
   font: 700 var(--sl-q) / 1 var(--serif);
   /* the same color as the highlighter (home → slogan_marker_color), at home → slogan_quote_strength */
-  color: var(--sl-hl, #0021a5);
-  opacity: var(--sl-q-o, 0.45);
+  color: var(--sl-hl, #fa4616);
+  opacity: var(--sl-q-o, 0.62);
   pointer-events: none;
   transform: none;
   transition: opacity 700ms var(--ease), transform 900ms cubic-bezier(0.3, 1.4, 0.5, 1);
@@ -7471,14 +7474,14 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
 
 .js .slogan.slogan-quote.is-lit::before,
 .js .slogan.slogan-quote.is-instant::before {
-  opacity: var(--sl-q-o, 0.45);
+  opacity: var(--sl-q-o, 0.62);
   transform: none;
 }
 
 /* dark backgrounds: a lighter tint of the same color, so it still shows */
 :root[data-theme="dark"] .slogan.slogan-quote::before,
 :root.theme-night .slogan.slogan-quote::before {
-  color: color-mix(in srgb, var(--sl-hl, #0021a5) 45%, #fff);
+  color: color-mix(in srgb, var(--sl-hl, #fa4616) 70%, #fff);
 }
 
 /* highlighter: a soft-edged marker band across the lower part of the words */
@@ -7490,24 +7493,27 @@ html[data-fx~="iconglow"] .photo-links .icon-btn.is-glow:not(:hover):not(:focus-
 }
 
 .slogan-quote .sl-hl::before {
+  --c: var(--sl-hl, #fa4616);
   content: "";
   position: absolute;
   z-index: -1;
-  left: -0.14em;
-  right: -0.14em;
-  top: 0.46em;
-  bottom: 0.02em;
-  border-radius: 0.4em;
-  background: var(--sl-hl, #0021a5);
-  opacity: var(--sl-hl-o, 0.24);                 /* home → slogan_marker_strength */
-  filter: blur(calc(var(--sl-size) * 0.1));      /* feathered edges instead of a hard cut */
+  left: -0.12em;
+  right: -0.12em;
+  top: 0.34em;                                   /* from just above the small letters ... */
+  bottom: 0.13em;                                /* ... to just below the baseline */
+  /* a solid band whose four edges fade out over a few pixels (left/right by the gradient,
+     top/bottom by the mask), instead of a hard cut */
+  background: linear-gradient(90deg, transparent, var(--c) 6px, var(--c) calc(100% - 6px), transparent);
+  -webkit-mask-image: linear-gradient(transparent, #000 4px, #000 calc(100% - 4px), transparent);
+  mask-image: linear-gradient(transparent, #000 4px, #000 calc(100% - 4px), transparent);
+  opacity: var(--sl-hl-o, 0.6);                  /* home → slogan_marker_strength */
   pointer-events: none;
 }
 
 :root[data-theme="dark"] .slogan-quote .sl-hl::before,
 :root.theme-night .slogan-quote .sl-hl::before {
-  background: color-mix(in srgb, var(--sl-hl, #0021a5) 45%, #fff);
-  opacity: calc(var(--sl-hl-o, 0.24) * 1.4);
+  --c: color-mix(in srgb, var(--sl-hl, #fa4616) 70%, #fff);
+  opacity: calc(var(--sl-hl-o, 0.6) * 0.8);
 }
 
 /* with JavaScript each stroke is drawn left to right */
@@ -7569,14 +7575,8 @@ html:not(.js) .slogan.no-glow .sw {
 }
 
 /* =========================================================
-   Page and section titles, scaled by _config.yml → titles.scale (now 0.8).
-   The big name and the slogan are not affected.
+   Home page: the About and News titles, scaled by _config.yml → home → title_scale (now 0.85).
+   Titles on the other pages keep their size.
    ========================================================= */
-.section-title { font-size: calc(30px * var(--title-scale, 1)); }
-.page-head h1,
-.not-found h1 { font-size: calc(48px * var(--title-scale, 1)); }
-.cv-section > h2 { font-size: calc(28px * var(--title-scale, 1)); }
-
-@media (max-width: 640px) {
-  .page-head h1 { font-size: calc(36px * var(--title-scale, 1)); }
-}
+.intro-about > .section-title,
+#news-title { font-size: calc(30px * var(--home-title-scale, 1)); }

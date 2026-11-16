@@ -57,9 +57,6 @@ nav:
 header:
   sky_opacity: 0.17
 
-titles:
-  scale: 0.8
-
 home:
   description: "Yu Hu is a healthcare AI researcher at the University of Florida College of Medicine, focusing on trustworthy machine learning, clinical LLM evaluation, and the reliability and generalizability of AI in real-world healthcare."
 
@@ -86,9 +83,10 @@ home:
   slogan_glow: false
   slogan_marker: true
   slogan_break: true
-  slogan_marker_color: "#0021a5"
-  slogan_marker_strength: 24
-  slogan_quote_strength: 45
+  slogan_marker_color: "#fa4616"
+  slogan_marker_strength: 60
+  slogan_quote_strength: 62
+  title_scale: 0.85
   slogan_highlight:
     - "Trustworthy AI"
     - "generalizes"
@@ -738,7 +736,7 @@ effects:
   paper_grain: true
   name_drink: true
   smart_header: true
-  header_sky: true
+  header_sky: false
   header_fireflies: true
   header_gator: false
   header_blink: true

@@ -83,8 +83,8 @@ scripts:
       {%- endfor %}
       {%- endif %}
       {%- assign slogan_html = slogan_html | replace: "[[SLBR]]", "<br>" %}
-      {%- assign sl_hl_o = h.slogan_marker_strength | default: 24 | divided_by: 100.0 %}
-      {%- assign sl_q_o = h.slogan_quote_strength | default: 45 | divided_by: 100.0 %}
+      {%- assign sl_hl_o = h.slogan_marker_strength | default: 60 | divided_by: 100.0 %}
+      {%- assign sl_q_o = h.slogan_quote_strength | default: 62 | divided_by: 100.0 %}
       <div class="slogan slogan-quote{% if h.slogan_glow == false %} no-glow{% endif %}" style="{% if h.slogan_marker_color %}--sl-hl: {{ h.slogan_marker_color | escape }}; {% endif %}--sl-hl-o: {{ sl_hl_o }}; --sl-q-o: {{ sl_q_o }}">
         <p class="slogan-text">{{ slogan_html }}</p>
       </div>
